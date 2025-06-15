@@ -1,11 +1,11 @@
 import React from 'react'
-import RegisterForm from '@/components/register-form'
+import LoginForm from '@/components/login-form'
 import Logo from '../logo'
 import { Typewriter } from 'react-simple-typewriter'
 
-const RegisterPage = () => {
+const LoginPage = () => {
   return (
-    <div className="grid min-h-screen lg:grid-cols-2">
+    <div className="grid min-h-svh lg:grid-cols-2">
       
       <div className="bg-gray-100 relative hidden lg:flex lg:flex-col justify-center items-center">
 
@@ -26,10 +26,7 @@ const RegisterPage = () => {
                     </h1>
             </div>
       </div>
-
-
-
-      <div className="flex flex-col gap-4 p-6 md:p-10   overflow-y-auto h-screen">
+      <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 ">
           <a href="/" className="flex items-center gap-2 font-medium">
             
@@ -39,7 +36,7 @@ const RegisterPage = () => {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <RegisterForm />
+            <LoginForm />
           </div>
         </div>
       </div>
@@ -47,4 +44,4 @@ const RegisterPage = () => {
   )
 }
 
-export default RegisterPage
+export default LoginPage
