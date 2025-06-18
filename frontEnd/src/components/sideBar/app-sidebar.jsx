@@ -19,7 +19,6 @@ import {
 import { NavMain } from "@/components/sideBar/nav-main"
 import { NavDefault } from "@/components/sideBar/nav-default"
 import { NavUser } from "@/components/sideBar/nav-user"
-import { TeamSwitcher } from "@/components/sideBar/team-switcher"
 import {
   Sidebar,
   SidebarContent,
@@ -40,40 +39,40 @@ const data = {
   navMain: [
     {
       title: "Groups",
-      url: "#",
+      url: "/dashboard/groups",
       icon: Users,
       isActive: true,
       items: [
         {
           title: "Group1",
-          url: "#",
+          url: "/dashboard/group/1",
         },
         {
           title: "Group2",
-          url: "#",
+          url: "/dashboard/group/2",
         },
         {
           title: "Group3",
-          url: "#",
+          url: "/dashboard/group/3",
         },
       ],
     },
     {
       title: "Contacts",
-      url: "#",
+      url: "/dashboard/contacts",
       icon: User,
       items: [
         {
           title: "JainDoe0034",
-          url: "#",
+          url: `/dashboard/contact/1`,
         },
         {
           title: "RohitKumar03",
-          url: "#",
+          url: "/dashboard/contact/2",
         },
         {
           title: "SindgManish",
-          url: "#",
+          url: "/dashboard/contact/3",
         },
       ],
     } 
@@ -82,17 +81,17 @@ const data = {
     default: [
     {
       name: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: LayoutDashboard,
     },
     {
       name: "Spend Analysis",
-      url: "#",
+      url: "/dashboard/spend-analysis",
       icon: PieChart,
     },
     {
       name: "Transactions",
-      url: "#",
+      url: "/dashboard/transactions",
       icon: Landmark,
     },
   ],
@@ -102,6 +101,7 @@ export function AppSidebar({
   ...props
 }) {
   return (
+    // collapsible="icon"
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <div className="mb-5 flex mt-2 pl-1">

@@ -11,6 +11,8 @@ import AllContactsPage from './components/allContactsPage/AllContactsPage'
 import AllGroupsPage from './components/allGroupsPage/AllGroupsPage'
 import GenericGroup from './components/genericGroup/GenericGroup'
 import GenericContact from './components/genericContact/GenericContact'
+import SpendAnalysis from './components/spendAnalysis/SpendAnalysis'
+import Transactions from './components/transactions/Transactions'
 
 
 
@@ -27,16 +29,18 @@ const App = () => {
       <Route path="/" element={<HomePage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/login" element={<LoginPage />} />
+
+
+
       {/* Dashboard Layout Outlet */}
       <Route path='/dashboard' element={<DashboardLayout/>}>
-        <Route index element={<MainDashboard />} />       
-        
-        <Route path="spend" element={<MainDashboard />} />
-        <Route path="transactions" element={<MainDashboard />} />
-        <Route path="groups" element={<AllGroupsPage/>} />
-        <Route path="contacts" element={<AllContactsPage/>} />
-        <Route path="group/*" element={<GenericGroup />}/>
-        <Route path="contact/*" element={<GenericContact/>} />
+          <Route index element={<MainDashboard />} />         
+          <Route path="spend-analysis" element={<SpendAnalysis/>} />
+          <Route path="transactions" element={<Transactions/>} />
+          <Route path="groups" element={<AllGroupsPage/>} />
+          <Route path="contacts" element={<AllContactsPage/>} />
+          <Route path="group/*" element={<GenericGroup />}/>
+          <Route path="contact/*" element={<GenericContact/>} />
       </Route>
       {/* 404 route */}
       <Route path="*" element={<NotFoundPage/>} />

@@ -18,6 +18,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import { Link } from "react-router-dom"
 
 export function NavMain({ items }) {
   const [openKey, setOpenKey] = useState(null)
@@ -53,17 +54,20 @@ export function NavMain({ items }) {
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild className={``} > 
-                        <a href={subItem.url}>
+                        <Link  to={subItem.url} >
                           <span>{subItem.title}</span>
-                        </a>
+                        </Link>
+                        {/* <a href={subItem.url}>
+                          <span>{subItem.title}</span>
+                        </a> */}
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}
                   <SidebarMenuSubItem className="border-t py-2 ">
                       <SidebarMenuSubButton asChild className="text-muted-foreground font-semibold text-sm hover:text-primary">
-                        <a href="#">
+                        <Link to={item.url} >
                           <span>See All</span>
-                        </a>
+                        </Link>
                       </SidebarMenuSubButton>
                 </SidebarMenuSubItem>
                 </SidebarMenuSub>
