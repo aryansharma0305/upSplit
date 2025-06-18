@@ -35,7 +35,8 @@ const MainDashboard = () => {
         </Button>
       </div>
 
-      <div className="grid  sm:grid-cols-6 lg:grid-cols-12 gap-4 p-6">
+      <div className="grid  sm:grid-cols-6 lg:grid-cols-12 gap-4  py-6 sm:px-6">
+        
         <MotionCard className="col-span-6 lg:col-span-4 shadow-lg" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
           <CardHeader>
             <CardDescription className="text-emerald-600 font-bold">Money yet to <strong>Receive</strong></CardDescription>
