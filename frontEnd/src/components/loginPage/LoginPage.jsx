@@ -1,5 +1,5 @@
 import React from 'react'
-import LoginForm from '@/components/login-form'
+import LoginForm from '@/components/ui/login-form'
 import Logo from '../logo'
 import { Typewriter } from 'react-simple-typewriter'
 

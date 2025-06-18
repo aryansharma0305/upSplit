@@ -110,8 +110,6 @@
   --sidebar-ring: oklch(0.556 0 0);
 } */
 
-
-
 :root {
   --radius: 0.65rem;
 
@@ -157,12 +155,6 @@
   --sidebar-ring: oklch(59.6% 0.145 163.225);
 }
 
-
-
-
-
-
-
 .dark {
   --background: oklch(20% 0.01 163.225);
   --foreground: oklch(98% 0 0);
@@ -204,4 +196,16 @@
   --sidebar-accent-foreground: oklch(98% 0 0);
   --sidebar-border: oklch(100% 0 0 / 10%);
   --sidebar-ring: oklch(59.6% 0.145 163.225);
+}
+
+/* 
+---break--- */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

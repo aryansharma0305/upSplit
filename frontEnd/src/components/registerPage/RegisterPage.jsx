@@ -1,5 +1,5 @@
 import React from 'react'
-import RegisterForm from '@/components/register-form'
+import RegisterForm from '@/components/ui/register-form'
 import Logo from '../logo'
 import { Typewriter } from 'react-simple-typewriter'
 
