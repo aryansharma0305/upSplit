@@ -11,8 +11,8 @@ import AllContactsPage from './components/allContactsPage/AllContactsPage'
 import AllGroupsPage from './components/allGroupsPage/AllGroupsPage'
 import GenericGroup from './components/genericGroup/GenericGroup'
 import GenericContact from './components/genericContact/GenericContact'
-import SpendAnalysis from './components/spendAnalysis/SpendAnalysis'
-import Transactions from './components/transactions/Transactions'
+import PaymentCardList from './components/pendingPayments/PendingPayments'
+import TransactionHistoryTable from './components/transactionHistory/TransactionHistory'
 
 
 
@@ -35,8 +35,8 @@ const App = () => {
       {/* Dashboard Layout Outlet */}
       <Route path='/dashboard' element={<DashboardLayout/>}>
           <Route index element={<MainDashboard />} />         
-          <Route path="spend-analysis" element={<SpendAnalysis/>} />
-          <Route path="transactions" element={<Transactions/>} />
+          <Route path="pending-payments" element={<PaymentCardList/>} />
+          <Route path="transaction-history" element={<TransactionHistoryTable/>} />
           <Route path="groups" element={<AllGroupsPage/>} />
           <Route path="contacts" element={<AllContactsPage/>} />
           <Route path="group/*" element={<GenericGroup />}/>

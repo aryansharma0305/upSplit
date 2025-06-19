@@ -85,13 +85,13 @@ const data = {
       icon: LayoutDashboard,
     },
     {
-      name: "Spend Analysis",
-      url: "/dashboard/spend-analysis",
+      name: "Pending Payments",
+      url: "/dashboard/pending-payments",
       icon: PieChart,
     },
     {
-      name: "Transactions",
-      url: "/dashboard/transactions",
+      name: "Transaction History",
+      url: "/dashboard/transaction-history",
       icon: Landmark,
     },
   ],
