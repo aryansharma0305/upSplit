@@ -1,27 +1,35 @@
 "use client"
 
 import React, { useState } from "react"
+import { motion } from "framer-motion"
 import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
   CardFooter,
 } from "@/components/ui/card"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Settings, Mail, Phone, ArrowLeft, ArrowRight, UserPlus } from "lucide-react"
-import { Switch } from "@/components/ui/switch"
-import CharBar from "@/components/genericContact/CharBar"
+import { Mail, Phone, ArrowRight } from "lucide-react"
 import {
   Tabs,
   TabsList,
   TabsTrigger,
   TabsContent,
 } from "@/components/ui/tabs"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import CharBar from "@/components/genericContact/CharBar"
+import AddExpense from "./AddExpense"
+import Settings from "./Settings"
 
-// Mock contact data
 const contactData = {
   id: "user123",
   name: "Tanish Sharma",
@@ -52,172 +60,187 @@ const contactData = {
   ],
 }
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      duration: 0.3,
+    },
+  },
+}
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.3,
+      ease: "easeOut",
+    },
+  },
+}
+
+const rowVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+}
+
 export default function GenericContact() {
   const {
     name,
     email,
     phone,
     profilePic,
-    sharedGroups,
-    notes,
     recentTransactions,
     summary,
     analytics,
   } = contactData
 
-  const [notificationsOn, setNotificationsOn] = useState(true)
-  const [remindersOn, setRemindersOn] = useState(false)
-
   return (
-    <div className="w-full min-h-screen px-8 py-10 space-y-12">
+    <motion.div
+      className="w-full min-h-screen px-4 sm:px-6 lg:px-8 py-12"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {/* HEADER */}
-      <header className="flex flex-col lg:flex-row items-center justify-between gap-6">
-        <div className="flex items-center p-5 gap-4">
-          
-          <Avatar className="w-20 h-20">
-            <AvatarImage src={profilePic} />
-            <AvatarFallback>{name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div>
-            <h1 className="text-3xl font-bold text-emerald-600">{name}</h1>
-            <p className="text-sm text-muted-foreground flex items-center gap-2">
-              <Mail size={14} /> {email}
-            </p>
-            <p className="text-sm text-muted-foreground flex items-center gap-2">
-              <Phone size={14} /> {phone}
-            </p>
-          </div>
-        </div>
-
-        {/* SUMMARY */}
-        <div className="flex gap-4">
-          <Card className="w-44">
-            <CardContent className="text-center py-4">
-              <p className="text-xs text-muted-foreground uppercase">I Owe</p>
-              <p className="text-2xl font-bold text-red-500">₹{summary.owe}</p>
-            </CardContent>
-          </Card>
-          <Card className="w-44">
-            <CardContent className="text-center py-4">
-              <p className="text-xs text-muted-foreground uppercase">I Will Receive</p>
-              <p className="text-2xl font-bold text-green-600">₹{summary.toReceive}</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* ACTIONS */}
-        <div className="flex gap-3">
-          <Button variant="outline" size="lg" className="flex items-center gap-1">
-            <Settings className="w-4 h-4" /> Settings
-          </Button>
-          <Button variant="default" size="lg" className="flex items-center gap-1">
-            <UserPlus className="w-4 h-4" /> Add Expense
-          </Button>
-        </div>
-      </header>
-
-      {/* GROUPS & NOTES
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Shared Groups</CardTitle>
-            <CardDescription className="text-muted-foreground">
-              Groups you both participate in
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-1 text-sm">
-            {sharedGroups.map((g) => (
-              <p key={g} className="flex items-center gap-2">
-                • {g}
-              </p>
-            ))}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Notes</CardTitle>
-            <CardDescription className="text-muted-foreground">
-              Private remarks about this contact
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-sm text-muted-foreground">
-            {notes}
-          </CardContent>
-        </Card>
-      </section> */}
-
-      {/* PREFERENCES */}
-      {/* <section>
-        <Card>
-          <CardHeader>
-            <CardTitle>Preferences</CardTitle>
-            <CardDescription>Contact-specific settings</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span>Notifications</span>
-              <Switch checked={notificationsOn} onCheckedChange={setNotificationsOn} />
+      <motion.header variants={cardVariants}>
+        <Card className="bg-white rounded-2xl shadow-lg p-6 mb-8 border">
+          <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <Avatar className="w-16 h-16 ring-2 ring-emerald-600">
+                <AvatarImage src={profilePic} />
+                <AvatarFallback className="bg-emerald-50 text-emerald-600">{name.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <div>
+                <h1 className="text-2xl font-semibold text-gray-800">{name}</h1>
+                <div className="flex flex-col gap-1 mt-1">
+                  <p className="text-sm text-gray-500 flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-gray-400" /> {email}
+                  </p>
+                  <p className="text-sm text-gray-500 flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-gray-400" /> {phone}
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center justify-between">
-              <span>Auto Reminders</span>
-              <Switch checked={remindersOn} onCheckedChange={setRemindersOn} />
-            </div>
-          </CardContent>
-        </Card>
-      </section> */}
-
-      {/* TRANSACTIONS TABS */}
-      <section>
-        <Tabs defaultValue="all">
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="debit">To Pay</TabsTrigger>
-            <TabsTrigger value="credit">To Receive</TabsTrigger>
-          </TabsList>
-          {['all', 'debit', 'credit'].map((key) => (
-            <TabsContent key={key} value={key} className="pt-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold">Recent Transactions</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 mt-5">
-                  {recentTransactions
-                    .filter((txn) => key === 'all' || txn.type === key)
-                    .slice(0, 5)
-                    .map((txn) => (
-                      <div key={txn.id} className="flex justify-between items-center">
-                        <div className="flex-1">
-                          <p className="font-medium truncate">{txn.description}</p>
-                          <p className="text-xs text-muted-foreground">{txn.date}</p>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <p className={txn.amount < 0 ? "text-red-500" : "text-green-600"}>
-                            ₹{Math.abs(txn.amount)}
-                          </p>
-                          <Button size="sm" variant="outline">
-                            {txn.type === "debit" ? "Settle Up" : "Reminder"}
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
+            
+            {/* SUMMARY */}
+            <div className="grid grid-cols-2 gap-4 w-full xl:w-auto">
+              <Card className="bg-red-50 border-red-100">
+                <CardContent className="p-4 text-center">
+                  <p className="text-xs text-red-600 uppercase font-medium">I Owe</p>
+                  <p className="text-xl font-bold text-red-600 mt-1">₹{summary.owe}</p>
                 </CardContent>
-                <CardFooter className="flex pt-6 justify-end">
-                  <Button variant="link" size="sm">
-                    View All <ArrowRight className="w-4 h-4 ml-1" />
-                  </Button>
-                </CardFooter>
               </Card>
-            </TabsContent>
-          ))}
-        </Tabs>
-      </section>
+              <Card className="bg-green-50 border-green-100">
+                <CardContent className="p-4 text-center">
+                  <p className="text-xs text-green-600 uppercase font-medium">I Will Receive</p>
+                  <p className="text-xl font-bold text-green-600 mt-1">₹{summary.toReceive}</p>
+                </CardContent>
+              </Card>
+            </div>
 
+            {/* ACTIONS */}
+            <div className="flex gap-3 items-center">
+              <Settings />
+              <AddExpense />
+            </div>
+          </div>
+        </Card>
+      </motion.header>
 
-      {/* ANALYTICS GRAPHS */}
-      <section className="grid grid-cols-1 w-full lg:grid-cols-2 gap-6">
-        <CharBar data={analytics} />
-        {/* <ChartBarMultiple /> */}
-      </section>
-    </div>
+      {/* MAIN CONTENT */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        {/* TRANSACTIONS TABS */}
+        <motion.section variants={cardVariants} className="xl:col-span-2">
+          <Card className="bg-white shadow-lg border">
+            <CardHeader>
+              <CardTitle className="text-xl font-semibold text-gray-800">Recent Transactions</CardTitle>
+            </CardHeader>
+            <Tabs defaultValue="all" className="w-full">
+              <TabsList className="flex justify-start gap-2 bg-gray-50 p-2 rounded-lg mx-4">
+                {['All', 'To Pay', 'To Receive'].map((label, index) => (
+                  <TabsTrigger
+                    key={label.toLowerCase()}
+                    value={['all', 'debit', 'credit'][index]}
+                    className="px-4 py-3 text-sm font-medium rounded-md data-[state=active]:bg-emerald-600 data-[state=active]:text-white"
+                  >
+                    {label}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+              {['all', 'debit', 'credit'].map((key) => (
+                <TabsContent key={key} value={key} className="px-4">
+                  <CardContent className="mt-4 overflow-hidden">
+                    <motion.div
+                      variants={containerVariants}
+                      initial="hidden"
+                      animate="visible"
+                    >
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="text-gray-600">Description</TableHead>
+                            <TableHead className="text-gray-600">Date</TableHead>
+                            <TableHead className="text-gray-600">Amount</TableHead>
+                            <TableHead className="text-gray-600">Action</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {recentTransactions
+                            .filter((txn) => key === 'all' || txn.type === key)
+                            .slice(0, 5)
+                            .map((txn) => (
+                              <motion.tr
+                                key={txn.id}
+                                variants={rowVariants}
+                              >
+                                <TableCell className="font-medium text-gray-800 truncate max-w-xs">
+                                  {txn.description}
+                                </TableCell>
+                                <TableCell className="text-gray-500">{txn.date}</TableCell>
+                                <TableCell className={`font-medium ${txn.amount < 0 ? "text-red-500" : "text-green-600"}`}>
+                                  ₹{Math.abs(txn.amount)}
+                                </TableCell>
+                                <TableCell>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="border-gray-200 hover:bg-emerald-50"
+                                  >
+                                    {txn.type === "debit" ? "Settle Up" : "Send Reminder"}
+                                  </Button>
+                                </TableCell>
+                              </motion.tr>
+                            ))}
+                        </TableBody>
+                      </Table>
+                    </motion.div>
+                  </CardContent>
+                  <CardFooter className="flex justify-end pt-4">
+                    <Button variant="link" size="sm" className="text-emerald-600 hover:text-emerald-700">
+                      View All <ArrowRight className="w-4 h-4 ml-1" />
+                    </Button>
+                  </CardFooter>
+                </TabsContent>
+              ))}
+            </Tabs>
+          </Card>
+        </motion.section>
+
+        {/* ANALYTICS */}
+        <motion.section variants={cardVariants} className="xl:col-span-1">
+          <Card className="bg-white shadow-lg border">
+            <CardContent>
+              <CharBar data={analytics} className="w-full" />
+            </CardContent>
+          </Card>
+        </motion.section>
+      </div>
+    </motion.div>
   )
 }
