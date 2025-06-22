@@ -115,7 +115,7 @@ export default function TransactionHistoryTable() {
           />
         </div>
 
-        <div className="flex flex-row gap-4 w-full md:w-auto">
+        <div className="flex flex-wrap flex-row gap-4 w-full md:w-auto">
           <div className="space-y-1 text-sm">
             <Label htmlFor="direction">Direction</Label>
             <Select value={filterDirection} onValueChange={setFilterDirection}>
