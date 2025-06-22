@@ -38,16 +38,18 @@ const data = [
     due: "2024-06-22",
     sector: "Food",
     description: "Dinner at restaurant with friends. Everyone split except Riya.",
+    profilePic: "https://randomuser.me/api/portraits/women/1.jpg",
   },
   {
     id: "2",
-    party: "Netflix Group",
+    party: "Netflix Group skjfsd fksdbfkhdskf jsdkbfklsdflsdfkb",
     direction: "To Pay",
     amount: 250,
     created: "2024-06-14",
     due: "2024-06-20",
     sector: "Entertainment",
     description: "Monthly Netflix subscription share for June.",
+    profilePic: "https://randomuser.me/api/portraits/lego/3.jpg",
   },
   {
     id: "3",
@@ -58,6 +60,7 @@ const data = [
     due: "2024-06-19",
     sector: "Travel",
     description: "Cab ride back from airport. Paid entirely by Rohan.",
+    profilePic: "https://randomuser.me/api/portraits/men/75.jpg",
   },
   {
     id: "4",
@@ -68,6 +71,7 @@ const data = [
     due: "2024-06-25",
     sector: "Food",
     description: "Home delivery for group dinner. Aryan paid the full amount.",
+    profilePic: "https://randomuser.me/api/portraits/lego/6.jpg",
   },
 ]
 
@@ -77,7 +81,7 @@ const containerVariants = {
     opacity: 1,
     transition: {
       staggerChildren: 0.1,
-      duration:0.15,
+      duration: 0.15,
     },
   },
 }
@@ -107,8 +111,7 @@ export default function PaymentCardList() {
 
   return (
     <div className="w-full px-4 p-4">
-
-          <h1 className="mb-5 text-xl font-semibold text-emerald-600">Pending Payments</h1>
+      <h1 className="mb-5 text-xl font-semibold text-emerald-600">Pending Payments</h1>
 
       <div className="flex flex-col md:flex-row gap-4 pb-3 items-end">
         <div className="space-y-1 w-full text-sm">
@@ -177,10 +180,17 @@ export default function PaymentCardList() {
                   View details
                 </div>
 
-                <div className="font-semibold text-base flex items-center gap-2">
-                  <Landmark className="w-4 h-4 text-muted-foreground" />
-                  {item.party}
+                <div className="flex items-center gap-3">
+                  <img
+                    src={item.profilePic}
+                    alt={item.party}
+                    className="w-8 h-8 rounded-full border"
+                  />
+                 <div className="font-semibold text-base flex items-center gap-2 max-w-full pr-20 overflow-hidden">
+                  <span className="truncate whitespace-nowrap overflow-hidden ">{item.party}</span>
                 </div>
+                </div>
+
 
                 <div className="flex flex-wrap gap-2 items-center">
                   <span

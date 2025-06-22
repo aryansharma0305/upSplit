@@ -24,7 +24,7 @@ const MotionCard = motion(Card)
 const MainDashboard = () => {
   return (
     <>
-      <div className="w-full px-6 pt-2 flex  sm:justify-end flex-wrap gap-3 items-center">
+      <div className="w-full sm:px-6 pt-2 flex  sm:justify-end flex-wrap gap-4 px-1 items-center">
         <Button className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2 hover:-translate-y-1 transition-all duration-200">
           <PlusCircle className="w-4 h-4" />
           Add Contact
@@ -35,7 +35,7 @@ const MainDashboard = () => {
         </Button>
       </div>
 
-      <div className="grid  sm:grid-cols-6 lg:grid-cols-12 gap-4  py-6 sm:px-6">
+      <div className="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-12 gap-4  py-6 sm:px-6">
         
         <MotionCard className="col-span-6 lg:col-span-4 shadow-lg" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
           <CardHeader>
@@ -73,7 +73,7 @@ const MainDashboard = () => {
               <DashboardTransactionsTable />
             </CardContent>
             <CardFooter className="flex-col items-start py-1 text-sm">
-              <Link to='/transactions' className="font-medium text-gray-500 hover:text-gray-700">
+              <Link to='/dashboard/transaction-history' className="font-medium text-gray-500 hover:text-gray-700">
                 View all transactions
               </Link>
             </CardFooter>
@@ -98,7 +98,7 @@ const MainDashboard = () => {
               <UpcomingPaymentsCard />
             </CardContent>
             <CardFooter className="flex-col items-start py-1 text-sm">
-              <Link to='/transactions' className="font-medium text-gray-500 hover:text-gray-700">
+              <Link to='/dashboard/pending-payments' className="font-medium text-gray-500 hover:text-gray-700">
                 View all pending payments
               </Link>
             </CardFooter>

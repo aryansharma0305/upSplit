@@ -13,6 +13,7 @@ import GenericGroup from './components/genericGroup/GenericGroup'
 import GenericContact from './components/genericContact/GenericContact'
 import PaymentCardList from './components/pendingPayments/PendingPayments'
 import TransactionHistoryTable from './components/transactionHistory/TransactionHistory'
+import NotificationPage from './components/notificationsPage/NotificationPage'
 
 
 
@@ -41,6 +42,8 @@ const App = () => {
           <Route path="contacts" element={<AllContactsPage/>} />
           <Route path="group/*" element={<GenericGroup />}/>
           <Route path="contact/*" element={<GenericContact/>} />
+          {/* <Route path="notifications" element={<NotificationPage/>} /> */}
+          <Route path="*" element={<NotFoundPage/>} />
       </Route>
       {/* 404 route */}
       <Route path="*" element={<NotFoundPage/>} />
