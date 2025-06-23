@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React from "react"
 import { motion } from "framer-motion"
 import {
   Card,
@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Mail, Phone, ArrowRight } from "lucide-react"
+import { AlarmClock, ArrowRightLeft, Mail, Phone, Trash2 } from "lucide-react"
 import {
   Tabs,
   TabsList,
@@ -26,9 +26,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
 import CharBar from "@/components/genericContact/CharBar"
 import AddExpense from "./AddExpense"
 import Settings from "./Settings"
+import { History } from "./History"
 
 const contactData = {
   id: "user123",
@@ -40,11 +42,11 @@ const contactData = {
   notes:
     "Always pays on time. Prefers digital payments. Met at the annual trip in March.",
   recentTransactions: [
-    { id: "txn1", description: "Paid ₹500 for dinner", date: "2025-06-08", amount: -500, type: "debit" },
-    { id: "txn2", description: "Received ₹1000 for groceries", date: "2025-06-05", amount: 1000, type: "credit" },
-    { id: "txn3", description: "Paid ₹250 for Netflix", date: "2025-06-03", amount: -250, type: "debit" },
-    { id: "txn4", description: "Received ₹700 from Rohan", date: "2025-06-01", amount: 700, type: "credit" },
-    { id: "txn5", description: "Paid ₹400 for cab", date: "2025-05-30", amount: -400, type: "debit" },
+    { id: "txn1", description: "Paid ₹500 for dinner", date: "2025-06-08", amount: -500, type: "debit", settled: false },
+    { id: "txn2", description: "Received ₹1000 for groceries", date: "2025-06-05", amount: 1000, type: "credit", settled: false },
+    { id: "txn3", description: "Paid ₹250 for Netflix", date: "2025-06-03", amount: -250, type: "debit", settled: false },
+    { id: "txn4", description: "Received ₹700 from Rohan", date: "2025-06-01", amount: 700, type: "credit", settled: true },
+    { id: "txn5", description: "Paid ₹400 for cab", date: "2025-05-30", amount: -400, type: "debit", settled: true },
   ],
   summary: {
     owe: 1200,
@@ -65,7 +67,7 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2,
+      staggerChildren: 0.1,
       duration: 0.3,
     },
   },
@@ -98,6 +100,16 @@ export default function GenericContact() {
     summary,
     analytics,
   } = contactData
+
+  const handleDelete = () => {
+    console.log(`Delete contact ${name} with ID ${contactData.id}`)
+    // Replace with actual delete logic (e.g., API call)
+  }
+
+  const handleDeleteTransaction = (txnId) => {
+    console.log(`Delete transaction ${txnId} for contact ${name}`)
+    // Replace with actual delete logic (e.g., API call)
+  }
 
   return (
     <motion.div
@@ -132,22 +144,23 @@ export default function GenericContact() {
             <div className="grid grid-cols-2 gap-4 w-full xl:w-auto">
               <Card className="bg-red-50 border-red-100">
                 <CardContent className="p-4 text-center">
-                  <p className="text-xs text-red-600 uppercase font-medium">I Owe</p>
-                  <p className="text-xl font-bold text-red-600 mt-1">₹{summary.owe}</p>
+                  <p className="text-xs text-red-700 uppercase font-medium">I Owe</p>
+                  <p className="text-xl font-bold text-red-700 mt-1">₹{summary.owe}</p>
                 </CardContent>
               </Card>
               <Card className="bg-green-50 border-green-100">
                 <CardContent className="p-4 text-center">
-                  <p className="text-xs text-green-600 uppercase font-medium">I Will Receive</p>
-                  <p className="text-xl font-bold text-green-600 mt-1">₹{summary.toReceive}</p>
+                  <p className="text-xs text-green-700 uppercase font-medium">I Will Receive</p>
+                  <p className="text-xl font-bold text-green-700 mt-1">₹{summary.toReceive}</p>
                 </CardContent>
               </Card>
             </div>
 
             {/* ACTIONS */}
-            <div className="flex gap-3 items-center">
+            <div className="flex gap-2 items-center">
               <Settings />
               <AddExpense />
+              
             </div>
           </div>
         </Card>
@@ -190,7 +203,7 @@ export default function GenericContact() {
                             <TableHead className="text-gray-600">Action</TableHead>
                           </TableRow>
                         </TableHeader>
-                        <TableBody>
+                        <TableBody className="">
                           {recentTransactions
                             .filter((txn) => key === 'all' || txn.type === key)
                             .slice(0, 5)
@@ -198,22 +211,40 @@ export default function GenericContact() {
                               <motion.tr
                                 key={txn.id}
                                 variants={rowVariants}
+                                className="hover:bg-gray-100"
                               >
-                                <TableCell className="font-medium text-gray-800 truncate max-w-xs">
+                                <TableCell className="font-medium text-gray-800  truncate  max-w-xs">
                                   {txn.description}
                                 </TableCell>
                                 <TableCell className="text-gray-500">{txn.date}</TableCell>
                                 <TableCell className={`font-medium ${txn.amount < 0 ? "text-red-500" : "text-green-600"}`}>
                                   ₹{Math.abs(txn.amount)}
                                 </TableCell>
-                                <TableCell>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="border-gray-200 hover:bg-emerald-50"
-                                  >
-                                    {txn.type === "debit" ? "Settle Up" : "Send Reminder"}
-                                  </Button>
+                                <TableCell className="px-2">
+                                  {txn.settled ? (
+                                    <Badge variant="secondary" className="py-1 my-0.5" >
+                                      Settled
+                                    </Badge>
+                                  ) : (
+                                    <div className="flex gap-2 justify-between">
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => console.log(`Action: ${txn.type === "debit" ? "Settle Up" : "Send Reminder"} for ${txn.id}`)}
+                                      >
+                                        {txn.type === "debit" ? (<>Settle Up <ArrowRightLeft className="w-4 h-4" /></> ) : (<>Send Reminder <AlarmClock className="w-4 h-4" /></>)}
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        className="border-red-300 text-red-600 hover:bg-red-50"
+                                        onClick={() => handleDeleteTransaction(txn.id)}
+                                        aria-label={`Delete transaction ${txn.description}`}
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </Button>
+                                    </div>
+                                  )}
                                 </TableCell>
                               </motion.tr>
                             ))}
@@ -222,9 +253,7 @@ export default function GenericContact() {
                     </motion.div>
                   </CardContent>
                   <CardFooter className="flex justify-end pt-4">
-                    <Button variant="link" size="sm" className="text-emerald-600 hover:text-emerald-700">
-                      View All <ArrowRight className="w-4 h-4 ml-1" />
-                    </Button>
+                    <History user="Rohan" />
                   </CardFooter>
                 </TabsContent>
               ))}

@@ -226,6 +226,7 @@ const Settings = () => {
         <Button
           variant="outline"
           size="lg"
+          className="hover:-translate-y-1 transition-all duration-200"
         >
           <Settings2 className="w-4 h-4" />
           Settings
