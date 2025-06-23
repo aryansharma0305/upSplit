@@ -110,7 +110,9 @@
   --sidebar-ring: oklch(0.556 0 0);
 } */
 
-:root {
+:root
+
+ {
   --radius: 0.65rem;
 
   --background: oklch(100% 0.00011 271.152); /* near white */

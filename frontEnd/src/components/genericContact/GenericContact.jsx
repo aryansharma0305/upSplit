@@ -123,7 +123,7 @@ export default function GenericContact() {
         <Card className="bg-white rounded-2xl shadow-lg p-6 mb-8 border">
           <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <Avatar className="w-16 h-16 ring-2 ring-emerald-600">
+              <Avatar className="w-20 h-20 ring-2 ring-emerald-600">
                 <AvatarImage src={profilePic} />
                 <AvatarFallback className="bg-emerald-50 text-emerald-600">{name.charAt(0)}</AvatarFallback>
               </Avatar>
@@ -142,15 +142,15 @@ export default function GenericContact() {
             
             {/* SUMMARY */}
             <div className="grid grid-cols-2 gap-4 w-full xl:w-auto">
-              <Card className="bg-red-50 border-red-100">
+              <Card className=" border-red-100 px-10 bg-white">
                 <CardContent className="p-4 text-center">
-                  <p className="text-xs text-red-700 uppercase font-medium">I Owe</p>
-                  <p className="text-xl font-bold text-red-700 mt-1">₹{summary.owe}</p>
+                  <p className="text-xs text-red-600 uppercase font-medium">To Pay</p>
+                  <p className="text-xl font-bold text-red-600 mt-1">₹{summary.owe}</p>
                 </CardContent>
               </Card>
-              <Card className="bg-green-50 border-green-100">
-                <CardContent className="p-4 text-center">
-                  <p className="text-xs text-green-700 uppercase font-medium">I Will Receive</p>
+              <Card className=" border-green-100 ">
+                <CardContent className="p-4 text-center bg-white">
+                  <p className="text-xs text-green-700 uppercase font-medium">To Receive</p>
                   <p className="text-xl font-bold text-green-700 mt-1">₹{summary.toReceive}</p>
                 </CardContent>
               </Card>
