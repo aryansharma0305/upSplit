@@ -23,14 +23,13 @@ const config = {
 } 
 const CharBar = () => {
   return (
-    <Card className="border-none shadow-none bg-white w-full" >
+    <Card className="border-none shadow-none bg-white  " >
       <CardHeader>
-        <CardTitle>Monthly Breakdown</CardTitle>
-        <CardDescription>Last 6 Months Breakdown</CardDescription>
+        <CardTitle className="text-xl font-bold mb-5 text-emerald-600">Monthly Breakdown</CardTitle>
       </CardHeader>
       <CardContent>
-        <div  className='w-full mt-10'>
-          <ChartContainer className="w-full" config={config}>
+        <div  className=' mt-10'>
+          <ChartContainer className="h-[200px] w-full" config={config}>
             <BarChart data={data}>
               <CartesianGrid vertical={false} />
               <XAxis dataKey="month" tickLine={false} axisLine={false} />

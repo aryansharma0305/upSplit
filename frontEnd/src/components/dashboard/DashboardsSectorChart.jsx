@@ -38,7 +38,7 @@ const DashboardSectorChart = () => {
     
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square h-full w-full max-h-[250px]"
+          className="mx-auto aspect-square h-full w-full border-none max-h-[250px]"
         >
           <PieChart>
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />

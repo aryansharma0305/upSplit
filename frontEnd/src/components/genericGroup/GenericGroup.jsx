@@ -2,16 +2,11 @@
 
 import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -22,15 +17,12 @@ import {
 } from "@/components/ui/select";
 import {
   Users,
-  DollarSign,
   Trash2,
+  AlarmCheck,
   ArrowRightLeft,
-  AlarmClock,
-  CalendarDays,
-  BadgePercent,
-  Info,
-  ChevronUp,
-  ChevronDown,
+  ArrowDownCircle,
+  ArrowUpCircle,
+  Check,
 } from "lucide-react";
 import {
   Table,
@@ -40,49 +32,68 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  TooltipProvider,
-} from "@/components/ui/tooltip";
+import AddGroupExpense from "./AddGroupExpense";
+import { GroupSettings } from "./GroupSettings";
+import { GlowingEffect } from "../ui/glowing-effect";
 
-// Sample group data
+// Sample group data with payment status for each member
 const groupData = {
   id: "group456",
   name: "Weekend Trip",
   members: [
-    { id: "user1", name: "Tanish Patel", profilePic: "https://randomuser.me/api/portraits/men/30.jpg" },
-    { id: "user2", name: "Rohan Sharma", profilePic: "https://randomuser.me/api/portraits/men/31.jpg" },
-    { id: "user3", name: "Priya Desai", profilePic: "https://randomuser.me/api/portraits/women/30.jpg" },
+    {
+      id: "user1",
+      name: "Tanish Patel",
+      profilePic: "https://randomuser.me/api/portraits/men/30.jpg",
+    },
+    {
+      id: "user2",
+      name: "Rohan Sharma",
+      profilePic: "https://randomuser.me/api/portraits/men/31.jpg",
+    },
+    {
+      id: "user3",
+      name: "Priya Desai",
+      profilePic: "https://randomuser.me/api/portraits/women/30.jpg",
+    },
   ],
   notes: "Group for our annual weekend getaway. Split expenses evenly.",
-  recentTransactions: [
+  transactions: [
     {
       id: "txn1",
-      description: "Hotel booking",
+      description: "Beach booking",
       date: "2025-06-10",
       amount: 4500,
       paidBy: "Tanish Patel",
       split: "even",
       settled: false,
       direction: "To Receive",
-      party: "Group",
+      party: "Party",
       sector: "Travel",
-      due: "2025-06-17",
+      due: "2025-07-17",
+      memberShares: {
+        "Tanish Patel": { amount: 1500, paid: true },
+        "Rohan Sharma": { amount: 1500, paid: true },
+        "Priya Desai": { amount: 1500, paid: false },
+      },
     },
     {
       id: "txn2",
       description: "Dinner at Zest",
-      date: "2025-06-09",
+      date: "2025-06-15",
       amount: 1800,
       paidBy: "Rohan Sharma",
       split: "even",
       settled: false,
       direction: "To Pay",
-      party: "Group",
+      party: "Food",
       sector: "Food",
-      due: "2025-06-16",
+      due: "2025-07-16",
+      memberShares: {
+        "Tanish Patel": { amount: 600, paid: false },
+        "Rohan Sharma": { amount: 600, paid: true },
+        "Priya Desai": { amount: 600, paid: true },
+      },
     },
     {
       id: "txn3",
@@ -92,10 +103,15 @@ const groupData = {
       paidBy: "Priya Desai",
       split: "even",
       settled: true,
-      direction: "To Pay",
-      party: "Group",
+      direction: "Paid",
+      party: "Travel",
       sector: "Travel",
-      due: "2025-06-15",
+      due: "2025-07-15",
+      memberShares: {
+        "Tanish Patel": { amount: 200, paid: true },
+        "Rohan Sharma": { amount: 200, paid: true },
+        "Priya Desai": { amount: 200, paid: true },
+      },
     },
     {
       id: "txn4",
@@ -106,9 +122,14 @@ const groupData = {
       split: "even",
       settled: false,
       direction: "To Receive",
-      party: "Group",
+      party: "Entertainment",
       sector: "Entertainment",
-      due: "2025-06-14",
+      due: "2025-07-14",
+      memberShares: {
+        "Tanish Patel": { amount: 800, paid: true },
+        "Rohan Sharma": { amount: 800, paid: false },
+        "Priya Desai": { amount: 800, paid: false },
+      },
     },
     {
       id: "txn5",
@@ -119,9 +140,14 @@ const groupData = {
       split: "even",
       settled: true,
       direction: "To Pay",
-      party: "Group",
+      party: "Food",
       sector: "Food",
-      due: "2025-06-13",
+      due: "2025-07-13",
+      memberShares: {
+        "Tanish Patel": { amount: 300, paid: true },
+        "Rohan Sharma": { amount: 300, paid: true },
+        "Priya Desai": { amount: 300, paid: true },
+      },
     },
   ],
 };
@@ -130,24 +156,44 @@ const currentUser = "Tanish Patel"; // Assuming current user is Tanish Patel
 
 const calculateBalances = (transactions, currentUser, members) => {
   const balances = {};
-  members.forEach(member => {
+  members.forEach((member) => {
     if (member.name !== currentUser) {
-      balances[member.name] = 0;
+      balances[member.name] = {
+        split: 0, // Total amount each member should contribute
+        iOwe: 0, // Amount current user owes to member
+        iOwed: 0, // Amount member owes to current user
+        net: 0, // Net balance
+      };
     }
   });
-  transactions.forEach(txn => {
+
+  transactions.forEach((txn) => {
     if (txn.settled) return; // Skip settled transactions
     const share = txn.amount / members.length;
+    // Update split for all members except current user
+    members.forEach((member) => {
+      if (member.name !== currentUser) {
+        balances[member.name].split += share;
+      }
+    });
+    // Update iOwe and iOwed
     if (txn.paidBy === currentUser) {
-      members.forEach(member => {
-        if (member.name !== currentUser) {
-          balances[member.name] += share;
+      members.forEach((member) => {
+        if (member.name !== currentUser && !txn.memberShares[member.name].paid) {
+          balances[member.name].iOwed += share;
         }
       });
-    } else if (members.some(m => m.name === txn.paidBy)) {
-      balances[txn.paidBy] -= share;
+    } else if (members.some((m) => m.name === txn.paidBy) && !txn.memberShares[currentUser].paid) {
+      balances[txn.paidBy].iOwe += share;
     }
   });
+
+  // Calculate net balance for each member
+  Object.keys(balances).forEach((memberName) => {
+    balances[memberName].net =
+      balances[memberName].iOwed - balances[memberName].iOwe;
+  });
+
   return balances;
 };
 
@@ -173,15 +219,24 @@ const rowVariants = {
 };
 
 export default function GenericGroup() {
-  const { name, members, recentTransactions } = groupData;
+  const { name, members, transactions } = groupData;
   const [filterText, setFilterText] = useState("");
   const [filterDirection, setFilterDirection] = useState("All");
   const [filterSector, setFilterSector] = useState("All");
   const [expandedRows, setExpandedRows] = useState([]);
 
-  const balances = useMemo(() => calculateBalances(recentTransactions, currentUser, members), [recentTransactions, members]);
-  const myReceive = Object.values(balances).filter(b => b > 0).reduce((sum, b) => sum + b, 0);
-  const myOwe = Object.values(balances).filter(b => b < 0).reduce((sum, b) => sum + -b, 0);
+  const balances = useMemo(
+    () => calculateBalances(transactions, currentUser, members),
+    [transactions, members]
+  );
+  const myReceive = Object.values(balances)
+    .map((b) => b.net)
+    .filter((b) => b > 0)
+    .reduce((sum, b) => sum + b, 0);
+  const myOwe = Object.values(balances)
+    .map((b) => b.net)
+    .filter((b) => b < 0)
+    .reduce((sum, b) => sum + -b, 0);
 
   const resetFilters = () => {
     setFilterText("");
@@ -189,21 +244,31 @@ export default function GenericGroup() {
     setFilterSector("All");
   };
 
-  const filteredTransactions = recentTransactions.filter((txn) => {
-    const matchesText = txn.description.toLowerCase().includes(filterText.toLowerCase());
-    const matchesDirection = filterDirection !== "All" ? txn.direction === filterDirection : true;
-    const matchesSector = filterSector !== "All" ? txn.sector === filterSector : true;
+  const filteredTransactions = transactions.filter((txn) => {
+    const matchesText = txn.description
+      .toLowerCase()
+      .includes(filterText.toLowerCase());
+    const matchesDirection =
+      filterDirection !== "All" ? txn.direction === filterDirection : true;
+    const matchesSector =
+      filterSector !== "All" ? txn.sector === filterSector : true;
     return matchesText && matchesDirection && matchesSector;
   });
 
   const handleDeleteGroup = () => {
     console.log(`Delete group ${name} with ID ${groupData.id}`);
-    // Replace with actual delete logic (e.g., API call)
   };
 
   const handleDeleteTransaction = (txnId) => {
     console.log(`Delete transaction ${txnId} for group ${name}`);
-    // Replace with actual delete logic (e.g., API call)
+  };
+
+  const handleSettle = (memberName) => {
+    console.log(`Settle balance with ${memberName}`);
+  };
+
+  const handleReminder = (memberName) => {
+    console.log(`Send reminder to ${memberName}`);
   };
 
   const toggleRow = (id) => {
@@ -214,87 +279,198 @@ export default function GenericGroup() {
 
   return (
     <motion.div
-      className="w-full min-h-screen px-4 sm:px-6 lg:px-8 py-12"
+      className="w-full min-h-screen px-4 sm:px-6 lg:px-8 py-6"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
       {/* HEADER */}
       <motion.header variants={cardVariants}>
-        <Card className="bg-white rounded-2xl shadow-lg p-6 mb-8 border">
-          <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <Avatar className="w-20 h-20 ring-2 ring-emerald-600">
-                <AvatarImage src="https://randomuser.me/api/portraits/lego/3.jpg" />
-                <AvatarFallback className="bg-emerald-50 text-emerald-600">{name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div>
-                <h1 className="text-2xl font-semibold text-gray-800">{name}</h1>
-                <div className="flex flex-col gap-1 mt-1">
-                  <p className="text-sm text-gray-500 flex items-center gap-2">
-                    <Users className="w-4 h-4 text-gray-400" /> {members.length} Members
-                  </p>
-                  <p className="text-sm text-gray-500">{groupData.notes}</p>
+        <div className="p-[1px] rounded-lg bg-gradient-to-r from-gray-700 via-slate-500 to-slate-400 mb-6">
+        <Card className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6  border">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <Avatar className="w-12 h-12 sm:w-16 sm:h-16 ring-2 ring-emerald-600">
+                  <AvatarImage src="https://randomuser.me/api/portraits/lego/3.jpg" />
+                  <AvatarFallback className="bg-emerald-50 text-emerald-600">
+                    {name.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <h1 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100">
+                    {name}
+                  </h1>
+                  <div className="flex flex-col gap-1 mt-1">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                      <Users className="w-4 h-4 text-gray-400" /> {members.length} Members
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {groupData.notes}
+                    </p>
+                  </div>
                 </div>
               </div>
+              <div className="flex gap-2">
+                <GroupSettings />
+                <AddGroupExpense />
+              </div>
             </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full sm:w-auto">
 
-            {/* SUMMARY */}
-            <div className="grid grid-cols-2 gap-4 w-full xl:w-auto">
-              <Card className="border-red-100 px-10 bg-white">
-                <CardContent className="p-4 text-center">
-                  <p className="text-xs text-red-600 uppercase font-medium">To Pay</p>
-                  <p className="text-xl font-bold text-red-600 mt-1">₹{myOwe.toFixed(2)}</p>
+              <div className="p-[1px] rounded-xl bg-gradient-to-r from-pink-400 via-pink-600 to-red-600 ">
+              <Card className="border-none shadow-none rounded-xl bg-white dark:bg-gray-800">
+                <CardContent className="p-3 text-center">
+                  <p className="text-xs text-red-600 uppercase font-medium">
+                    To Pay
+                  </p>
+                  <p className="text-lg font-bold text-red-600 mt-1">
+                    ₹{myOwe.toFixed(2)}
+                  </p>
                 </CardContent>
               </Card>
-              <Card className="border-green-100 px-10 bg-white">
-                <CardContent className="p-4 text-center">
-                  <p className="text-xs text-green-600 uppercase font-medium">To Receive</p>
-                  <p className="text-xl font-bold text-green-600 mt-1">₹{myReceive.toFixed(2)}</p>
+              </div>
+              <div className="p-[1px] rounded-xl bg-gradient-to-r from-green-500 via-teal-600 to-emerald-700">
+              <Card className="border-none shadow-none bg-white dark:bg-gray-800">
+                <CardContent className="p-3 text-center">
+                  <p className="text-xs text-emerald-600 uppercase font-medium">
+                    To Receive
+                  </p>
+                  <p className="text-lg font-bold text-emerald-600 mt-1">
+                    ₹{myReceive.toFixed(2)}
+                  </p>
                 </CardContent>
               </Card>
-            </div>
+              </div>
 
-            {/* ACTIONS */}
-            <div className="flex gap-2 items-center">
-              {/* <GroupSettings /> */}
-              {/* <AddGroupExpense /> */}
-              <Button
-                variant="outline"
-                className="border-red-300 text-red-600 hover:bg-red-50"
-                onClick={handleDeleteGroup}
-                aria-label={`Delete group ${name}`}
-              >
-                <Trash2 className="w-4 h-4" />
-              </Button>
             </div>
           </div>
         </Card>
+        </div>
       </motion.header>
 
       {/* MAIN CONTENT */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-        {/* MY OUTSTANDING TRANSACTIONS */}
-        <motion.section variants={cardVariants} className="xl:col-span-2">
-          <Card className="bg-white shadow-lg border">
+      <div className="space-y-6">
+        {/* GROUP MEMBERS BALANCES */}
+        <motion.section variants={cardVariants}>
+
+         
+          
+          <Card className="bg-white dark:bg-gray-800 shadow-none border-none">
             <CardHeader>
-              <CardTitle className="text-xl font-semibold text-emerald-600">My Outstanding Transactions</CardTitle>
+              <CardTitle className="text-xl mb-10 font-semibold   text-emerald-600 dark:text-emerald-400">
+                Group Members
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pb-0">
+               
+              <motion.div
+                className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+              >
+           
+                {members
+                  .filter((member) => member.name !== currentUser)
+                  .map((member) => {
+                    const balance = balances[member.name];
+                    const isOwed = balance.net > 0;
+                    return (
+                      <>
+                           <motion.div
+                        key={member.id}
+                        variants={cardVariants}
+                        className="relative rounded-md border p-4 shadow-lg bg-white dark:bg-gray-800 text-sm duration-200 hover:-translate-y-1">
+                        
+                        <GlowingEffect variant={""} blur={0.5} borderWidth={1.5} spread={150} glow={true} disabled={false} proximity={4} inactiveZone={0.1}/>
+                      
+                        <div className="flex items-center gap-3 ">
+                          <Avatar className="w-8 h-8">
+                            <AvatarImage src={member.profilePic} />
+                            <AvatarFallback>
+                              {member.name.charAt(0)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="font-medium text-base truncate">
+                            {member.name}
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-gray-500 dark:text-gray-400">
+                            You owe: ₹{balance.iOwe.toFixed(2)}
+                          </p>
+                          <p className="text-gray-500 dark:text-gray-400">
+                            They owe: ₹{balance.iOwed.toFixed(2)}
+                          </p>
+                          <p
+                            className={
+                              balance.net >= 0
+                                ? "text-emerald-600 font-semibold"
+                                : "text-red-600 font-semibold"
+                            }
+                          >
+                            Net: ₹{Math.abs(balance.net).toFixed(2)}{" "}
+                            {balance.net >= 0 ? "(They owe you)" : "(You owe them)"}
+                          </p>
+                        </div>
+                        <div className="flex justify-end gap-2 mt-2">
+                          {isOwed ? (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleReminder(member.name)}
+                            >
+                              Send Reminder <AlarmCheck className="w-4 h-4 ml-1" />
+                            </Button>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleSettle(member.name)}
+                            >
+                              Settle Up <ArrowRightLeft className="w-4 h-4 ml-1" />
+                            </Button>
+                          )}
+                        </div>
+                      </motion.div>
+                      </>
+                    );
+                  })}
+              </motion.div>
+            </CardContent>
+          </Card>
+        </motion.section>
+
+        <Separator className="my-4" />
+
+        {/* ALL TRANSACTIONS */}
+        <motion.section variants={cardVariants}>
+          <Card className="bg-white dark:bg-gray-800 shadow-none border-none">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold text-emerald-600 dark:text-emerald-400 mb-3">
+                All Group Transactions
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col md:flex-row gap-4 pb-3 items-end">
-                <div className="space-y-1 w-full text-sm">
+              <div className="flex flex-col gap-4 pb-4">
+                <div className="space-y-2 w-full">
                   <Label htmlFor="search">Search by Description</Label>
                   <Input
                     id="search"
                     placeholder="e.g. Hotel booking"
                     value={filterText}
                     onChange={(e) => setFilterText(e.target.value)}
+                    className="w-full max-w-md"
                   />
                 </div>
-                <div className="flex flex-row gap-4 w-full md:w-auto">
-                  <div className="space-y-1 text-sm">
+                <div className="flex flex-col sm:flex-row gap-4 w-full">
+                  <div className="space-y-2 w-full sm:w-40">
                     <Label htmlFor="direction">Direction</Label>
-                    <Select value={filterDirection} onValueChange={setFilterDirection}>
+                    <Select
+                      value={filterDirection}
+                      onValueChange={setFilterDirection}
+                    >
                       <SelectTrigger id="direction">
                         <SelectValue placeholder="All Directions" />
                       </SelectTrigger>
@@ -305,9 +481,12 @@ export default function GenericGroup() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="space-y-1 text-sm">
+                  <div className="space-y-2 w-full sm:w-40">
                     <Label htmlFor="sector">Sector</Label>
-                    <Select value={filterSector} onValueChange={setFilterSector}>
+                    <Select
+                      value={filterSector}
+                      onValueChange={setFilterSector}
+                    >
                       <SelectTrigger id="sector">
                         <SelectValue placeholder="All Sectors" />
                       </SelectTrigger>
@@ -319,285 +498,138 @@ export default function GenericGroup() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="flex items-end pt-1">
-                    <Button variant="secondary" onClick={resetFilters}>
-                      Reset Filters
+                  <div className="flex items-end">
+                    <Button variant="outline" onClick={resetFilters}>
+                      Reset
                     </Button>
                   </div>
                 </div>
               </div>
-
-              <TooltipProvider>
-                <motion.div
-                  className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-                  variants={containerVariants}
-                  initial="hidden"
-                  animate="visible"
-                >
-                  {filteredTransactions.length ? (
-                    filteredTransactions
-                      .filter((txn) => !txn.settled)
-                      .map((txn) => {
-                        const share = (txn.amount / members.length).toFixed(2);
-                        const isPayer = txn.paidBy === currentUser;
-                        const descriptionText = isPayer
-                          ? `You paid ₹${txn.amount} for ${txn.description}, each member owes you ₹${share}`
-                          : `${txn.paidBy} paid ₹${txn.amount} for ${txn.description}, you owe ${txn.paidBy} ₹${share}`;
-                        return (
-                          <motion.div
-                            key={txn.id}
-                            variants={cardVariants}
-                            className="relative rounded-lg border p-4 shadow-lg bg-white text-sm space-y-3 flex flex-col justify-between"
-                          >
-                            <div className="absolute top-3 right-4 text-xs text-muted-foreground underline cursor-pointer">
-                              View details
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <Avatar className="w-8 h-8">
-                                <AvatarImage src="/group-placeholder.jpg" />
-                                <AvatarFallback>{txn.party.charAt(0)}</AvatarFallback>
-                              </Avatar>
-                              <div className="font-semibold text-base flex items-center gap-2 max-w-full pr-20 overflow-hidden">
-                                <span className="truncate whitespace-nowrap overflow-hidden">{txn.description}</span>
-                              </div>
-                            </div>
-                            <div className="flex flex-wrap gap-2 items-center">
-                              <span
-                                className={
-                                  txn.direction === "To Pay"
-                                    ? "bg-red-100 text-red-700 px-2 py-0.5 rounded-full text-xs font-medium"
-                                    : "bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-xs font-medium"
-                                }
-                              >
-                                ₹{isPayer ? (share * (members.length - 1)).toFixed(2) : share}
-                              </span>
-                              <span className="bg-muted px-2 py-0.5 rounded-full text-xs font-medium">
-                                {txn.sector}
-                              </span>
-                            </div>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <div className="text-xs text-muted-foreground truncate flex items-center gap-1 cursor-default">
-                                  <Info className="w-3.5 h-3.5 text-muted-foreground" />
-                                  <span className="truncate">{descriptionText}</span>
-                                </div>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>{descriptionText}</p>
-                              </TooltipContent>
-                            </Tooltip>
-                            <div className="grid gap-1">
-                              <div className="flex items-center gap-1 text-muted-foreground">
-                                <CalendarDays className="w-4 h-4" />
-                                <span className="text-xs">
-                                  Created: <strong className="text-foreground">{txn.date}</strong>
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-1 text-muted-foreground">
-                                <BadgePercent className="w-4 h-4" />
-                                <span className="text-xs">
-                                  Due: <strong className="text-foreground">{txn.due}</strong>
-                                </span>
-                              </div>
-                            </div>
-                            <div className="flex justify-between items-center mt-2">
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="text-red-500"
-                                onClick={() => handleDeleteTransaction(txn.id)}
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          </motion.div>
-                        );
-                      })
-                  ) : (
-                    <div className="col-span-full text-center text-muted-foreground text-sm">
-                      No outstanding transactions.
-                    </div>
-                  )}
-                </motion.div>
-              </TooltipProvider>
-            </CardContent>
-          </Card>
-        </motion.section>
-
-        {/* MEMBERS PAY VS RECEIVE AND ANALYTICS */}
-        <div className="xl:col-span-1 space-y-8 h-full">
-          {/* MEMBERS PAY VS RECEIVE */}
-          <motion.section variants={cardVariants}>
-            <Card className="bg-white shadow-lg border">
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold text-gray-800">
-                  Member Balances
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+              <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="text-gray-600">Member</TableHead>
-                      <TableHead className="text-gray-600">Balance</TableHead>
+                      <TableHead className="w-12"></TableHead>
+                      <TableHead className="text-gray-600 dark:text-gray-300 min-w-[150px]">
+                        Description
+                      </TableHead>
+                      <TableHead className="text-gray-600 dark:text-gray-300 min-w-[100px]">
+                        Date
+                      </TableHead>
+                      <TableHead className="text-gray-600 dark:text-gray-300 min-w-[100px]">
+                        Amount
+                      </TableHead>
+                      <TableHead className="text-gray-600 dark:text-gray-300 min-w-[100px]">
+                        Paid By
+                      </TableHead>
+                      <TableHead className="text-gray-600 dark:text-gray-300 min-w-[80px]">
+                        Split
+                      </TableHead>
+                      <TableHead className="text-gray-600 dark:text-gray-300 min-w-[80px]">
+                        Status
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {members.map((member) => {
-                      if (member.name === currentUser) return null;
-                      const balance = balances[member.name];
-                      return (
+                    {filteredTransactions.map((txn) => (
+                      <React.Fragment key={txn.id}>
                         <motion.tr
-                          key={member.id}
                           variants={rowVariants}
-                          className="hover:bg-gray-100"
+                          className="hover:bg-gray-50 dark:hover:bg-gray-700"
                         >
-                          <TableCell className="font-medium text-gray-800 flex items-center gap-2">
-                            <Avatar className="w-8 h-8">
-                              <AvatarImage src={member.profilePic} />
-                              <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            {member.name}
+                          <TableCell>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => toggleRow(txn.id)}
+                            >
+                              {expandedRows.includes(txn.id) ? (
+                                <ArrowUpCircle className="w-4 h-4" />
+                              ) : (
+                                <ArrowDownCircle className="w-4 h-4" />
+                              )}
+                            </Button>
                           </TableCell>
-                          <TableCell
-                            className={`font-medium ${balance >= 0 ? "text-green-600" : "text-red-500"}`}
-                          >
-                            {balance >= 0 ? `${member.name} owes you ₹${balance.toFixed(2)}` : `You owe ${member.name} ₹${(-balance).toFixed(2)}`}
+                          <TableCell className="font-medium text-gray-800 dark:text-gray-100">
+                            {txn.description}
+                          </TableCell>
+                          <TableCell className="text-gray-500 dark:text-gray-400">
+                            {txn.date}
+                          </TableCell>
+                          <TableCell className="font-medium text-emerald-600">
+                            ₹{txn.amount.toFixed(2)}
+                          </TableCell>
+                          <TableCell className="text-gray-500 dark:text-gray-400">
+                            {txn.paidBy}
+                          </TableCell>
+                          <TableCell className="text-gray-500 dark:text-gray-400">
+                            {txn.split}
+                          </TableCell>
+                          <TableCell className="px-2">
+                            <span className="bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 px-2 py-0.5 rounded-full text-xs font-medium">
+                              {txn.settled ? "Settled" : "Pending"}
+                            </span>
                           </TableCell>
                         </motion.tr>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </motion.section>
-
-          {/* ANALYTICS */}
-          {/* <motion.section variants={cardVariants}>
-            <Card className="bg-white shadow-lg border">
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold text-gray-800">
-                  Spending Trends
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {/* <CharBarChart data={analytics} className="w-full" /> */}
-              {/* </CardContent>
-            </Card>
-          </motion.section> */} 
-        </div>
-      </div>
-
-      {/* ALL TRANSACTIONS */}
-      <motion.section variants={cardVariants} className="mt-8">
-        <Card className="bg-white shadow-lg border">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold text-gray-800">All Group Transactions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-10"></TableHead>
-                    <TableHead className="text-gray-600">Description</TableHead>
-                    <TableHead className="text-gray-600">Date</TableHead>
-                    <TableHead className="text-gray-600">Amount</TableHead>
-                    <TableHead className="text-gray-600">Paid By</TableHead>
-                    <TableHead className="text-gray-600">Split Type</TableHead>
-                    <TableHead className="text-gray-600">Action</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {recentTransactions.map((txn) => (
-                    <React.Fragment key={txn.id}>
-                      <motion.tr variants={rowVariants} className="hover:bg-gray-100">
-                        <TableCell>
-                          <Button variant="ghost" size="sm" onClick={() => toggleRow(txn.id)}>
-                            {expandedRows.includes(txn.id) ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                          </Button>
-                        </TableCell>
-                        <TableCell className="font-medium text-gray-800 truncate max-w-xs">
-                          {txn.description}
-                        </TableCell>
-                        <TableCell className="text-gray-500">{txn.date}</TableCell>
-                        <TableCell className="font-medium text-emerald-600">
-                          ₹{txn.amount}
-                        </TableCell>
-                        <TableCell className="text-gray-500">{txn.paidBy}</TableCell>
-                        <TableCell className="text-gray-500">{txn.split}</TableCell>
-                        <TableCell className="px-2">
-                          {txn.settled ? (
-                            <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full text-xs font-medium">
-                              Settled
-                            </span>
-                          ) : (
-                            <div className="flex gap-2 justify-between">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => console.log(`Action: Settle transaction ${txn.id}`)}
-                              >
-                                Settle Up <ArrowRightLeft className="w-4 h-4 ml-1" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="border-red-300 text-red-600 hover:bg-red-50"
-                                onClick={() => handleDeleteTransaction(txn.id)}
-                                aria-label={`Delete transaction ${txn.description}`}
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          )}
-                        </TableCell>
-                      </motion.tr>
-                      {expandedRows.includes(txn.id) && (
-                        <tr>
-                          <td colSpan={7}>
-                            <div className="p-4 bg-gray-50">
-                              <h4 className="font-semibold text-gray-800">Transaction Details</h4>
-                              <p><strong>Paid By:</strong> {txn.paidBy} (₹{txn.amount})</p>
-                              <p><strong>Split Type:</strong> {txn.split}</p>
-                              <h5 className="font-semibold mt-2 text-gray-800">Member Shares:</h5>
-                              <ul className="list-disc pl-5">
-                                {members.map((member) => (
-                                  <li key={member.id}>
-                                    {member.name}: ₹{(txn.amount / members.length).toFixed(2)}
-                                  </li>
-                                ))}
-                              </ul>
-                              <h5 className="font-semibold mt-2 text-gray-800">Owed Amounts:</h5>
-                              <ul className="list-disc pl-5">
-                                {members
-                                  .filter((member) => member.name !== txn.paidBy)
-                                  .map((member) => (
+                        {expandedRows.includes(txn.id) && (
+                          <tr>
+                            <td colSpan={7} className="p-0">
+                              <div className="p-4 bg-gray-50 dark:bg-gray-900">
+                                <h4 className="font-semibold text-gray-800 dark:text-gray-100">
+                                  Transaction Details
+                                </h4>
+                                <p className="text-gray-700 dark:text-gray-300">
+                                  <strong>Paid By:</strong> {txn.paidBy} (₹
+                                  {txn.amount.toFixed(2)})
+                                </p>
+                                <p className="text-gray-700 dark:text-gray-300">
+                                  <strong>Split Type:</strong> {txn.split}
+                                </p>
+                                <p className="text-gray-700 dark:text-gray-300">
+                                  <strong>Date:</strong> {txn.date}
+                                </p>
+                                <p className="text-gray-700 dark:text-gray-300">
+                                  <strong>Due Date:</strong> {txn.due}
+                                </p>
+                                <p className="text-gray-700 dark:text-gray-300">
+                                  <strong>Sector:</strong> {txn.sector}
+                                </p>
+                                <h5 className="font-semibold mt-2 text-gray-800 dark:text-gray-100">
+                                  Transaction Description:
+                                </h5>
+                                <p className="text-gray-700 dark:text-gray-300">
+                                  {txn.paidBy} paid ₹{txn.amount.toFixed(2)} for {txn.description} on {txn.date}
+                                </p>
+                                <h5 className="font-semibold mt-2 text-gray-800 dark:text-gray-100">
+                                  Member Shares:
+                                </h5>
+                                <ul className="list-disc pl-5 text-gray-700 dark:text-gray-300">
+                                  {members.map((member) => (
                                     <li key={member.id}>
-                                      {member.name} owes {txn.paidBy} ₹{(txn.amount / members.length).toFixed(2)}
+                                      {member.name}: ₹{txn.memberShares[member.name].amount.toFixed(2)}
+                                      {txn.memberShares[member.name].paid ? (
+                                        <span className="ml-2 text-emerald-600">
+                                          Paid <Check className="w-4 h-4 inline" />
+                                        </span>
+                                      ) : (
+                                        <span className="ml-2 text-red-600">Not paid</span>
+                                      )}
                                     </li>
                                   ))}
-                              </ul>
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </React.Fragment>
-                  ))}
-                </TableBody>
-              </Table>
-            </motion.div>
-          </CardContent>
-          <CardFooter className="flex justify-end pt-4">
-            {/* <GroupHistory group={name} /> */}
-          </CardFooter>
-        </Card>
-      </motion.section>
+                                </ul>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.section>
+      </div>
     </motion.div>
   );
 }

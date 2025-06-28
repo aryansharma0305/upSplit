@@ -1,23 +1,23 @@
-"use client"
+"use client";
 
-import React from "react"
-import { motion } from "framer-motion"
+import React from "react";
+import { motion } from "framer-motion";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
   CardFooter,
-} from "@/components/ui/card"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { AlarmClock, ArrowRightLeft, Mail, Phone, Trash2 } from "lucide-react"
+} from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { AlarmClock, ArrowRightLeft, Mail, Phone, Trash2 } from "lucide-react";
 import {
   Tabs,
   TabsList,
   TabsTrigger,
   TabsContent,
-} from "@/components/ui/tabs"
+} from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -25,12 +25,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import CharBar from "@/components/genericContact/CharBar"
-import AddExpense from "./AddExpense"
-import Settings from "./Settings"
-import { History } from "./History"
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import CharBar from "@/components/genericContact/CharBar";
+import AddExpense from "./AddExpense";
+import Settings from "./Settings";
+import { History } from "./History";
+import { Separator } from "@/components/ui/separator";
+
+
 
 const contactData = {
   id: "user123",
@@ -42,11 +45,56 @@ const contactData = {
   notes:
     "Always pays on time. Prefers digital payments. Met at the annual trip in March.",
   recentTransactions: [
-    { id: "txn1", description: "Paid ₹500 for dinner", date: "2025-06-08", amount: -500, type: "debit", settled: false },
-    { id: "txn2", description: "Received ₹1000 for groceries", date: "2025-06-05", amount: 1000, type: "credit", settled: false },
-    { id: "txn3", description: "Paid ₹250 for Netflix", date: "2025-06-03", amount: -250, type: "debit", settled: false },
-    { id: "txn4", description: "Received ₹700 from Rohan", date: "2025-06-01", amount: 700, type: "credit", settled: true },
-    { id: "txn5", description: "Paid ₹400 for cab", date: "2025-05-30", amount: -400, type: "debit", settled: true },
+    {
+      id: "txn1",
+      description: "Paid ₹500 for dinner",
+      date: "2025-06-08",
+      dueDate: "2025-07-08",
+      amount: -500,
+      type: "debit",
+      settled: false,
+      sector: "Food",
+    },
+    {
+      id: "txn2",
+      description: "Received ₹1000 for groceries",
+      date: "2025-06-05",
+      dueDate: "2025-07-05",
+      amount: 1000,
+      type: "credit",
+      settled: false,
+      sector: "Groceries",
+    },
+    {
+      id: "txn3",
+      description: "Paid ₹250 for Netflix",
+      date: "2025-06-03",
+      dueDate: "2025-07-03",
+      amount: -250,
+      type: "debit",
+      settled: false,
+      sector: "Entertainment",
+    },
+    {
+      id: "txn4",
+      description: "Received ₹700 from Rohan",
+      date: "2025-06-01",
+      dueDate: "2025-07-01",
+      amount: 700,
+      type: "credit",
+      settled: true,
+      sector: "Miscellaneous",
+    },
+    {
+      id: "txn5",
+      description: "Paid ₹400 for cab",
+      date: "2025-05-30",
+      dueDate: "2025-06-30",
+      amount: -400,
+      type: "debit",
+      settled: true,
+      sector: "Travel",
+    },
   ],
   summary: {
     owe: 1200,
@@ -60,7 +108,7 @@ const contactData = {
     { month: "May", owe: 209, receive: 130 },
     { month: "Jun", owe: 214, receive: 140 },
   ],
-}
+};
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -71,7 +119,7 @@ const containerVariants = {
       duration: 0.3,
     },
   },
-}
+};
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -83,12 +131,12 @@ const cardVariants = {
       ease: "easeOut",
     },
   },
-}
+};
 
 const rowVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
-}
+};
 
 export default function GenericContact() {
   const {
@@ -99,17 +147,17 @@ export default function GenericContact() {
     recentTransactions,
     summary,
     analytics,
-  } = contactData
+  } = contactData;
 
   const handleDelete = () => {
-    console.log(`Delete contact ${name} with ID ${contactData.id}`)
+    console.log(`Delete contact ${name} with ID ${contactData.id}`);
     // Replace with actual delete logic (e.g., API call)
-  }
+  };
 
   const handleDeleteTransaction = (txnId) => {
-    console.log(`Delete transaction ${txnId} for contact ${name}`)
+    console.log(`Delete transaction ${txnId} for contact ${name}`);
     // Replace with actual delete logic (e.g., API call)
-  }
+  };
 
   return (
     <motion.div
@@ -142,14 +190,14 @@ export default function GenericContact() {
             
             {/* SUMMARY */}
             <div className="grid grid-cols-2 gap-4 w-full xl:w-auto">
-              <Card className=" border-red-100 px-10 bg-white">
+              <Card className="border-red-100 bg-white w-full min-w-36">
                 <CardContent className="p-4 text-center">
                   <p className="text-xs text-red-600 uppercase font-medium">To Pay</p>
                   <p className="text-xl font-bold text-red-600 mt-1">₹{summary.owe}</p>
                 </CardContent>
               </Card>
-              <Card className=" border-green-100 ">
-                <CardContent className="p-4 text-center bg-white">
+              <Card className="border-green-100 bg-white w-full min-w-36">
+                <CardContent className="p-4 text-center">
                   <p className="text-xs text-green-700 uppercase font-medium">To Receive</p>
                   <p className="text-xl font-bold text-green-700 mt-1">₹{summary.toReceive}</p>
                 </CardContent>
@@ -160,22 +208,21 @@ export default function GenericContact() {
             <div className="flex gap-2 items-center">
               <Settings />
               <AddExpense />
-              
             </div>
           </div>
         </Card>
       </motion.header>
 
       {/* MAIN CONTENT */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+      <div className="space-y-8">
         {/* TRANSACTIONS TABS */}
-        <motion.section variants={cardVariants} className="xl:col-span-2">
-          <Card className="bg-white shadow-lg border">
+        <motion.section variants={cardVariants}>
+          <Card className="bg-white shadow-none border-none">
             <CardHeader>
-              <CardTitle className="text-xl font-semibold text-gray-800">Recent Transactions</CardTitle>
+              <CardTitle className="text-xl font-semibold text-emerald-600">Recent Transactions</CardTitle>
             </CardHeader>
             <Tabs defaultValue="all" className="w-full">
-              <TabsList className="flex justify-start gap-2 bg-gray-50 p-2 rounded-lg mx-4">
+              <TabsList className="flex justify-start gap-2 bg-gray-50 p-2 mb-3 mt-3 rounded-lg mx-4">
                 {['All', 'To Pay', 'To Receive'].map((label, index) => (
                   <TabsTrigger
                     key={label.toLowerCase()}
@@ -198,31 +245,34 @@ export default function GenericContact() {
                         <TableHeader>
                           <TableRow>
                             <TableHead className="text-gray-600">Description</TableHead>
-                            <TableHead className="text-gray-600">Date</TableHead>
+                            <TableHead className="text-gray-600">Date Created</TableHead>
+                            <TableHead className="text-gray-600">Due Date</TableHead>
                             <TableHead className="text-gray-600">Amount</TableHead>
+                            <TableHead className="text-gray-600">Sector</TableHead>
                             <TableHead className="text-gray-600">Action</TableHead>
                           </TableRow>
                         </TableHeader>
-                        <TableBody className="">
+                        <TableBody>
                           {recentTransactions
                             .filter((txn) => key === 'all' || txn.type === key)
-                            .slice(0, 5)
                             .map((txn) => (
                               <motion.tr
                                 key={txn.id}
                                 variants={rowVariants}
                                 className="hover:bg-gray-100"
                               >
-                                <TableCell className="font-medium text-gray-800  truncate  max-w-xs">
+                                <TableCell className="font-medium text-gray-800 truncate max-w-xs">
                                   {txn.description}
                                 </TableCell>
                                 <TableCell className="text-gray-500">{txn.date}</TableCell>
+                                <TableCell className="text-gray-500">{txn.dueDate}</TableCell>
                                 <TableCell className={`font-medium ${txn.amount < 0 ? "text-red-500" : "text-green-600"}`}>
                                   ₹{Math.abs(txn.amount)}
                                 </TableCell>
+                                <TableCell className="text-gray-500">{txn.sector}</TableCell>
                                 <TableCell className="px-2">
                                   {txn.settled ? (
-                                    <Badge variant="secondary" className="py-1 my-0.5" >
+                                    <Badge variant="secondary" className="py-1 my-0.5">
                                       Settled
                                     </Badge>
                                   ) : (
@@ -232,7 +282,15 @@ export default function GenericContact() {
                                         variant="outline"
                                         onClick={() => console.log(`Action: ${txn.type === "debit" ? "Settle Up" : "Send Reminder"} for ${txn.id}`)}
                                       >
-                                        {txn.type === "debit" ? (<>Settle Up <ArrowRightLeft className="w-4 h-4" /></> ) : (<>Send Reminder <AlarmClock className="w-4 h-4" /></>)}
+                                        {txn.type === "debit" ? (
+                                          <>
+                                            Settle Up <ArrowRightLeft className="w-4 h-4" />
+                                          </>
+                                        ) : (
+                                          <>
+                                            Send Reminder <AlarmClock className="w-4 h-4" />
+                                          </>
+                                        )}
                                       </Button>
                                       <Button
                                         size="sm"
@@ -252,7 +310,8 @@ export default function GenericContact() {
                       </Table>
                     </motion.div>
                   </CardContent>
-                  <CardFooter className="flex justify-end pt-4">
+                  <CardFooter className="flex justify-start gap-2 pt-4">
+                    
                     <History user="Rohan" />
                   </CardFooter>
                 </TabsContent>
@@ -261,9 +320,11 @@ export default function GenericContact() {
           </Card>
         </motion.section>
 
+        <Separator className="my-8" />
+
         {/* ANALYTICS */}
-        <motion.section variants={cardVariants} className="xl:col-span-1">
-          <Card className="bg-white shadow-lg border">
+        <motion.section variants={cardVariants}>
+          <Card className="bg-white shadow-none border-none">
             <CardContent>
               <CharBar data={analytics} className="w-full" />
             </CardContent>
@@ -271,5 +332,5 @@ export default function GenericContact() {
         </motion.section>
       </div>
     </motion.div>
-  )
+  );
 }

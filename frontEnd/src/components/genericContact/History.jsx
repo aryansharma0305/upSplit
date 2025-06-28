@@ -120,7 +120,7 @@ export function History({ user }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="link">View All Transactions</Button>
+        <Button variant="link" className="px-2">View All Transactions</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[900px]">
         <div className="overflow-y-scroll max-h-[80vh] flex flex-col gap-4 mt-6 px-2">

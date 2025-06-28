@@ -31,7 +31,7 @@ const DashboardRadarChart = () => {
   return (
     <ChartContainer
       config={chartConfig}
-      className="mx-auto aspect-square h-full w-full max-h-[250px]"
+      className="mx-auto aspect-square h-full border-none shadow-none w-full max-h-[250px]"
     >
       <RadarChart data={chartData}>
         <ChartTooltip
