@@ -1,5 +1,15 @@
 "use client"
 
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+
 import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -23,6 +33,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Info, Download, Trash2 } from "lucide-react"
 import { motion } from "framer-motion"
 import { handleExportPDF } from "./handleExportPdf"
+import { Separator } from "../ui/separator"
 
 // Transaction data (dueDate and dateCreated assumed to be added)
 const data = [
@@ -59,19 +70,22 @@ export default function TransactionHistoryTable() {
 
 
   return (
-    <motion.div
-      className="p-4"
+    <div className="w-full px-4 p-4 ">
+    {/* <motion.div
+      className="p-4 w-full" 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-    >
-      <h1 className="mb-5 text-xl font-semibold text-emerald-600">Transaction History</h1>
-
+      
+    > */}
+      <div className="flex flex-wrap justify-between">
+      <h1 className="mb-5 text-2xl font-semibold  bg-gradient-to-r from-emerald-600  to-teal-600 bg-clip-text text-transparent">Transaction History</h1>
+      </div>
       <motion.div
-        className="flex flex-col md:flex-row gap-4 pb-3 items-end"
+        className="flex flex-col md:flex-row gap-4 pb-3 items-end "
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
+        transition={{ delay: 0.2 ,duration: 0.2}}
       >
         <div className="space-y-1 w-full text-sm">
           <Label htmlFor="search">Search by Name</Label>
@@ -130,12 +144,12 @@ export default function TransactionHistoryTable() {
       </motion.div>
 
       <motion.div
-        className="rounded-md border overflow-x-auto"
+        className="rounded-md border  overflow-x-auto"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
-        <Table className="min-w-[900px]">
+        <Table className="w-full min-w-[600px]">
           <TableHeader className="bg-gray-100 dark:bg-gray-800">
             <TableRow>
               <TableHead className="w-36">Party</TableHead>
@@ -186,7 +200,41 @@ export default function TransactionHistoryTable() {
             )}
           </TableBody>
         </Table>
+
+        
+
+
+          
       </motion.div>
-    </motion.div>
+    {/* </motion.div> */}
+      
+
+        <Pagination className={'mt-10  '}>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious href="#" />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink href="#" isActive>1</PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink href="#" >
+            2
+          </PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink href="#">3</PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationEllipsis />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext href="#" />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
+
+
+    </div>
   )
 }

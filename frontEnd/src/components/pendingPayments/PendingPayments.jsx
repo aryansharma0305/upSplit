@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { MovingBorder } from "../ui/moving-border"
 import {
   Select,
   SelectContent,
@@ -27,6 +28,7 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip"
+import { GlowingEffect } from "../ui/glowing-effect"
 
 const data = [
   {
@@ -75,21 +77,40 @@ const data = [
   },
 ]
 
+
+
+
+
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      duration: 0.15,
+      staggerChildren: 0.05,
+      delayChildren: 0.05,
     },
   },
-}
+};
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-}
+  hidden: { opacity: 0, y: 20, },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.06,
+    },
+  },
+};
+
+
+
+
+
+
+
+
 
 export default function PaymentCardList() {
   const [filterText, setFilterText] = useState("")
@@ -110,10 +131,14 @@ export default function PaymentCardList() {
   })
 
   return (
-    <div className="w-full px-4 p-4">
-      <h1 className="mb-5 text-xl font-semibold text-emerald-600">Pending Payments</h1>
-
+    <div className="w-full  p-4">
+      <div className="flex mb-5 flex-wrap">
+        <h1 className="text-2xl font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+          Pending Payments
+        </h1>
+      </div>
       <div className="flex flex-col md:flex-row gap-4 pb-3 items-end">
+       
         <div className="space-y-1 w-full text-sm">
           <Label htmlFor="search">Search by Name</Label>
           <Input
@@ -164,18 +189,30 @@ export default function PaymentCardList() {
 
       <TooltipProvider>
         <motion.div
-          className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+          className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-3"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
           {filteredData.length ? (
             filteredData.map((item) => (
-              <motion.div
+                <motion.div
                 key={item.id}
                 variants={cardVariants}
-                className="relative rounded-lg border p-4 shadow-lg bg-white text-sm space-y-3 flex flex-col justify-between"
-              >
+                className="relative rounded-lg border  p-4 shadow-lg gap-3  bg-white text-sm flex flex-col justify-between hover:-translate-y-1 duration-200 "
+                >
+                
+                <GlowingEffect 
+                    blur={0.5}
+                    borderWidth={1.5}
+                    spread={100}
+                    glow={true}
+                    disabled={false}
+                    proximity={20}
+                    inactiveZone={0}
+                    className="z-0"
+                />
+
                 <div className="absolute top-3 right-4 text-xs text-muted-foreground underline cursor-pointer">
                   View details
                 </div>
@@ -209,12 +246,12 @@ export default function PaymentCardList() {
 
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="text-xs text-muted-foreground truncate flex items-center gap-1 cursor-default">
-                      <Info className="w-3.5 h-3.5 text-muted-foreground" />
+                    <div className="text-xs text-muted-foreground truncate flex items-center gap-1 cursor-default ">
+                      <Info className="w-3.5 h-3.5 text-muted-foreground " />
                       <span className="truncate">{item.description}</span>
                     </div>
                   </TooltipTrigger>
-                  <TooltipContent>
+                  <TooltipContent className={"bg-gradient-to-r from-emerald-600  to-teal-600 text-white font-semibold"}>
                     <p>{item.description}</p>
                   </TooltipContent>
                 </Tooltip>
@@ -235,7 +272,7 @@ export default function PaymentCardList() {
                 </div>
 
                 <div className="flex justify-between items-center mt-2">
-                  <Button size="sm" className="w-fit">
+                  <Button size="sm" className="w-fit bg-gradient-to-br from-emerald-600  to-teal-600 ">
                     {item.direction === "To Pay" ? (
                       <>
                         Settle Up <ArrowRightLeft className="w-4 h-4 ml-1" />

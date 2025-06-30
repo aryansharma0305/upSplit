@@ -12,7 +12,7 @@ const NotFoundPage = () => {
       <p className="mt-1 max-w-md text-muted-foreground">
         Sorry, the page you’re looking for doesn’t exist or has been moved.
       </p>
-      <Button onClick={() => navigate("/dashboard")} className="mt-6">
+      <Button onClick={() => navigate("/dashboard")} className="mt-6 bg-gradient-to-r from-emerald-600  to-teal-600  hover:bg-gradient-to-r hover:from-emerald-700 hover:to-teal-700 text-white hover:-translate-y-1">
         <ArrowLeft className="mr-2 h-4 w-4" />
         Go to dashboard
       </Button>

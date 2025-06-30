@@ -5,13 +5,13 @@ import { ArrowRight } from 'lucide-react'
 
 const HomePageTopSection = () => {
   return (
-    <div className='w-full p-5 flex justify-center flex-col items-center '>
+    <div className='w-full px-5 pt-5 flex justify-center flex-col items-center '>
 
       <div className=" w-full flex justify-center mt-20  text-black  sm:text-7xl text-4xl">
         <h1 className='py-1 mr-3 w-auto text-black font-semibold'>
           Split Bills 
         </h1>
-        <h1 className='py-1 w-auto text-emerald-600 font-semibold '>
+        <h1 className='py-1 w-auto  bg-gradient-to-r from-emerald-600 to-teal-600  bg-clip-text text-transparent font-semibold '>
           <Typewriter
             words={[' Smartly', ' Easily','Quickly']}
             loop={true}
@@ -29,7 +29,7 @@ const HomePageTopSection = () => {
          </h1>  
       </div>
       <div className="flex justify-center mt-10">
-        <Button >
+        <Button className="bg-gradient-to-r from-emerald-600 to-teal-600" >
           Get Started  <ArrowRight />
         </Button>
         <Button variant='outline' className='ml-3'>

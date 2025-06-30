@@ -18,9 +18,9 @@ const RegisterForm = ({ className, ...props }) => {
   const [date, setDate] = React.useState(undefined)
 
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
+    <form className={cn("flex flex-col gap-6 mt-12", className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-bold">Make an account</h1>
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent ">Make an account</h1>
         <p className="text-muted-foreground text-sm text-balance">
           Enter your details below to create an account.
         </p>
@@ -78,7 +78,7 @@ const RegisterForm = ({ className, ...props }) => {
           <Input id="password2" type="password" placeholder="********" required />
         </div>
 
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full bg-gradient-to-r from-emerald-600  to-teal-600  hover:bg-gradient-to-r hover:from-emerald-700 hover:to-teal-700 text-white hover:-translate-y-1">
           Create Account
         </Button>
 
@@ -101,7 +101,7 @@ const RegisterForm = ({ className, ...props }) => {
 
       <div className="text-center text-sm">
         Don&apos;t have an account?{" "}
-        <a href="/login" className="underline underline-offset-4">
+        <a href="/login" className="underline underline-offset-4 bg-gradient-to-r from-emerald-600  to-teal-600 bg-clip-text text-transparent hover:text-emerald-700 font-bold">
           Login
         </a>
       </div>

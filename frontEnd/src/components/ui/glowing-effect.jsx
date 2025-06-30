@@ -4,12 +4,46 @@ import { cn } from "@/lib/utils";
 import { animate } from "motion";
 
 const colorMap = {
+  // Emerald
+  "emerald-50": "#ecfdf5",
+  "emerald-100": "#d1fae5",
+  "emerald-200": "#a7f3d0",
+  "emerald-300": "#6ee7b7",
+  "emerald-400": "#34d399",
   "emerald-500": "#10b981",
   "emerald-600": "#059669",
-  "green-400": "#34d399",
+  "emerald-700": "#047857",
+  "emerald-800": "#065f46",
+  "emerald-900": "#064e3b",
+  "emerald-950": "#022c22",
+
+  // Green
+  "green-50": "#f0fdf4",
+  "green-100": "#dcfce7",
+  "green-200": "#bbf7d0",
+  "green-300": "#86efac",
+  "green-400": "#4ade80",
+  "green-500": "#22c55e",
+  "green-600": "#16a34a",
+  "green-700": "#15803d",
+  "green-800": "#166534",
+  "green-900": "#14532d",
+  "green-950": "#052e16",
+
+  // Teal
+  "teal-50": "#f0fdfa",
+  "teal-100": "#ccfbf1",
+  "teal-200": "#99f6e4",
   "teal-300": "#5eead4",
+  "teal-400": "#2dd4bf",
   "teal-500": "#14b8a6",
+  "teal-600": "#0d9488",
+  "teal-700": "#0f766e",
+  "teal-800": "#115e59",
+  "teal-900": "#134e4a",
+  "teal-950": "#042f2e"
 };
+
 function getHex(colorName) {
   return colorMap[colorName] || "#10b981";
 }
@@ -25,9 +59,9 @@ const GlowingEffect = memo(
     movementDuration = 1,
     borderWidth = 1,
     disabled = true,
-    color1 = "emerald-500",
-    color2 = "green-400",
-    color3 = "teal-300",
+    color1 = "emerald-600",
+    color2 = "teal-600",
+    color3 = "teal-600",
   }) => {
     const containerRef = useRef(null);
     const lastPosition = useRef({ x: 0, y: 0 });

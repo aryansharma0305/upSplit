@@ -17,7 +17,7 @@ export const HomePageBar = () => {
     <>
     
     <div className="w-full h-15 fixed top-0 left-0 z-10 flex items-center bg-white justify-between px-6 shadow-md">
-      <Logo className='h-12 text-emerald-600'/>
+      <Logo className='h-12 bg-gradient-to-r from-emerald-600  to-teal-600 bg-clip-text text-transparent'/>
         
       <div className='sm:block hidden font-semibold'> 
          <NavigationMenu>
@@ -44,8 +44,8 @@ export const HomePageBar = () => {
 
 
       <div className=" font-bold flex gap-3">
-      <Button > <a href="/login">Login</a></Button> 
-      <Button><a href="/register">Register</a></Button> 
+      <Button className="bg-gradient-to-r from-emerald-600 to-teal-600"> <a href="/login">Login</a></Button> 
+      <Button className="bg-gradient-to-r from-emerald-600 to-teal-600"><a href="/register">Register</a></Button> 
      </div>
     
     </div>

@@ -25,16 +25,22 @@ const MotionDiv = motion.div
 
 const MainDashboard = () => {
   return (
-    <div className="p-4 sm:p-6 space-y-6">
-      <div className="flex flex-wrap gap-4 justify-end">
-        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2 hover:-translate-y-0.5 transition-all duration-200">
+    <div className="p-4  ">
+      <div className="flex flex-wrap  mb-5 justify-between">
+        <h1 className="text-2xl font-semibold bg-gradient-to-r from-emerald-600  to-teal-600 bg-clip-text text-transparent">
+          Dashboard
+        </h1>
+        <div className='flex gap-2'>
+        <Button className="bg-gradient-to-r from-emerald-600  to-teal-600  hover:bg-gradient-to-r hover:from-emerald-700 hover:to-teal-700  text-white gap-2 hover:-translate-y-0.5 transition-all duration-200">
           <PlusCircle className="w-4 h-4" />
           Add Contact
         </Button>
-        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2 hover:-translate-y-0.5 transition-all duration-200">
+        
+        <Button className="bg-gradient-to-r from-emerald-600  to-teal-600  hover:bg-gradient-to-r hover:from-emerald-700 hover:to-teal-700  text-white gap-2 hover:-translate-y-0.5 transition-all duration-200">
           <Users className="w-4 h-4" />
           Create Group
         </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-6">
@@ -45,7 +51,7 @@ const MainDashboard = () => {
           description: "Money yet to <strong>Receive</strong>",
           value: 1250,
           prefix: "$",
-          bg: "bg-gradient-to-r text-emerald-600 from-green-500 via-teal-600 to-emerald-700"
+          bg: "bg-gradient-to-r text-emerald-600 from-emerald-600 to-teal-600 "
         }, {
           key: 1,
           span: "col-span-1 sm:col-span-1 lg:col-span-4",
@@ -53,7 +59,7 @@ const MainDashboard = () => {
           description: "Money yet to <strong>Pay</strong>",
           value: 250,
           prefix: "$",
-          bg: "text-red-600 bg-gradient-to-r from-red-500 via-pink-600 to-rose-700"
+          bg: "text-red-600 bg-gradient-to-r from-red-600 to-rose-600"
         }, {
           key: 2,
           span: "col-span-1 sm:col-span-1 lg:col-span-4 lg:block hidden",
@@ -61,7 +67,8 @@ const MainDashboard = () => {
           description: "Net after all transactions",
           value: 1000,
           prefix: "+$",
-          bg: "bg-gradient-to-r text-gray-700 from-gray-700 via-slate-400 to-slate-500"
+          bg: "bg-gradient-to-r text-gray-700 from-gray-600  to-slate-600"
+
         }].map(({ key, span, delay, description, value, prefix,bg }) => (
           // <MotionDiv
           //   key={key}
@@ -84,7 +91,7 @@ const MainDashboard = () => {
                   className={` font-bold text-sm`} 
                   dangerouslySetInnerHTML={{ __html: description }} 
                 />
-                <CardTitle className="text-2xl font-semibold tabular-nums">
+                <CardTitle className="text-2xl font-semibold tabular-nums ">
                   <CountUp end={value} duration={1} prefix={prefix} separator="," />
                 </CardTitle>
               </CardHeader>
@@ -119,8 +126,10 @@ const MainDashboard = () => {
             transition={{ duration: 0.4, delay: 0.3 }}
           >
             <CardHeader className="p-4">
-              <CardDescription className="text-emerald-600 font-bold text-sm">
+              <CardDescription className=" font-bold text-sm">
+                <h1 className='bg-gradient-to-r from-emerald-600  to-teal-600 bg-clip-text text-transparent'>
                 Recent Transactions
+                </h1>
               </CardDescription>
             </CardHeader>
             <div className="flex flex-col justify-between h-full">
