@@ -1,4 +1,3 @@
-
 "use client"
 
 import React from "react"
@@ -30,25 +29,25 @@ const DashboardLayout = () => {
     const path = "/" + segments.slice(0, index + 1).join("/")
     
     const label = segment
-                .split("-")
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(" ")
+      .split("-")
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ")
 
-    
     return { label, path }
   })
 
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 justify-between items-center gap-2 shadow transition-[width,height] ease-linear pr-5 md:pr-10 group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4 ">
-            <SidebarTrigger className="md:hidden -ml-1" />
+      <SidebarInset className="overflow-x-hidden">
+        <header className="flex h-16  justify-between items-center gap-2 shadow-md   pr-5 md:pr-10 ">
+          <div className="flex items-center gap-2 px-4" >
+            <SidebarTrigger className="md:hidden -ml-1 custom-class-aryan" />
             <Separator
               orientation="vertical"
-              className="mr-2 data-[orientation=vertical]:h-4"
+              className="mr-2"
             />
+            
             <Breadcrumb className="hidden md:block">
               <BreadcrumbList>
                 {breadcrumbs.map((crumb, idx) => (
@@ -67,20 +66,19 @@ const DashboardLayout = () => {
                 ))}
               </BreadcrumbList>
             </Breadcrumb>
+
+
           </div>
-
-           
-
-          <div className=" mr-4 flex">
-            
-            <Logo className='ml-3 md:hidden h-8'/>
-          </div>
-
-           <Notification className=''/>
           
+          
+
+          <Logo className="ml-3  h-8 md:hidden block"  />
+          <Notification className="w-12 md:w-auto " />
+          
+
         </header>
 
-        <div className="flex flex-1  flex-col p-4">
+        <div className="flex flex-1 flex-col p-4">
           <Outlet />
         </div>
       </SidebarInset>

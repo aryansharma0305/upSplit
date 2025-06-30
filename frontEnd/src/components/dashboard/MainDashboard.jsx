@@ -20,7 +20,7 @@ import DashboardPieChart from './DashboardPieChart'
 import UpcomingPaymentsCard from './UpcomingPaymentsCard'
 import DashboardSectorChart from './DashboardsSectorChart'
 
-const MotionCard = motion(Card)
+const MotionCard = motion.create(Card)
 const MotionDiv = motion.div
 
 const MainDashboard = () => {

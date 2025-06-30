@@ -294,7 +294,7 @@ export default function GenericGroup() {
       {/* HEADER */}
       <motion.header variants={cardVariants}>
         <div className="p-[1px] rounded-lg bg-gradient-to-r from-gray-700 via-slate-500 to-slate-400 mb-6">
-        <Card className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6  border w-full">
+        <Card className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6  border">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
@@ -354,10 +354,6 @@ export default function GenericGroup() {
           </div>
         </Card>
         </div>
-
-
-
-        
       </motion.header>
 
       {/* MAIN CONTENT */}
@@ -386,8 +382,8 @@ export default function GenericGroup() {
                     const balance = balances[member.name];
                     const isOwed = balance.net > 0;
                     return (
-                      <>
-                           <motion.div
+                      
+                        <motion.div
                         key={member.id}
                         variants={cardVariants}
                         className="relative rounded-md border p-4 shadow-lg bg-white dark:bg-gray-800 text-sm duration-200 hover:-translate-y-1">
@@ -445,7 +441,7 @@ export default function GenericGroup() {
                           )}
                         </div>
                       </motion.div>
-                      </>
+                      
                     );
                   })}
               </motion.div>
