@@ -203,11 +203,13 @@ export default function AddGroupExpense() {
             Add Expense <Plus className="w-4 h-4 ml-2" />
           </Button>
         </DialogTrigger>
-        <DialogContent className="max-w-[90vw] sm:max-w-[600px] bg-white rounded-xl shadow-xl border border-gray-100">
-          <div className="overflow-y-scroll mt-4 px-2 max-h-[80vh]">
+        <DialogContent className="max-w-[93vw] sm:max-w-[600px] bg-white rounded-lg shadow-xl border p-1 py-7 border-gray-100">
+          <div className="overflow-y-scroll mt-4 px-4 max-h-[80vh]">
             <DialogHeader>
-              <DialogTitle className="text-xl font-semibold text-gray-800">
-                Add New Group Expense
+              <DialogTitle className="text-xl font-semibold ">
+                <div className="flex flex-wrap"> 
+                   <h1 className=" text-2xl font-semibold  bg-gradient-to-r from-emerald-600  to-teal-600 bg-clip-text text-transparent"> Add an Expense </h1>
+                </div>
               </DialogTitle>
               <DialogDescription className="text-sm text-gray-500">
                 Fill in the details and split the expense among group members.
@@ -357,7 +359,7 @@ export default function AddGroupExpense() {
                     variant="outline"
                     size="sm"
                     onClick={handleSplitEqually}
-                    className="border-emerald-600 text-emerald-600 hover:bg-emerald-50"
+                    className=" "
                   >
                     Split Equally
                   </Button>
@@ -412,14 +414,14 @@ export default function AddGroupExpense() {
                 <DialogClose asChild>
                   <Button
                     variant="outline"
-                    className="border-gray-300 text-gray-700 hover:bg-gray-100"
+                    className="border-gray-300 text-gray-700 hover:bg-gray-100 hover:-translate-y-1 duration-200"
                   >
                     Cancel
                   </Button>
                 </DialogClose>
                 <Button
                   type="submit"
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                  className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 hover:bg-gradient-to-r hover:-translate-y-1 duration-200 text-white"
                 >
                   Add Expense
                 </Button>

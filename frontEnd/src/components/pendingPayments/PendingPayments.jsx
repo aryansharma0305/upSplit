@@ -131,13 +131,13 @@ export default function PaymentCardList() {
   })
 
   return (
-    <div className="w-full  p-4">
+    <div className="w-full p-0 pt-4 sm:p-4">
       <div className="flex mb-5 flex-wrap">
         <h1 className="text-2xl font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
           Pending Payments
         </h1>
       </div>
-      <div className="flex flex-col md:flex-row gap-4 pb-3 items-end">
+      <div className="flex flex-col lg:flex-row gap-4 pb-3 items-end">
        
         <div className="space-y-1 w-full text-sm">
           <Label htmlFor="search">Search by Name</Label>
@@ -149,7 +149,7 @@ export default function PaymentCardList() {
           />
         </div>
 
-        <div className="flex flex-row gap-4 w-full md:w-auto">
+        <div className="flex flex-row gap-4 w-full lg:w-auto">
           <div className="space-y-1 text-sm">
             <Label htmlFor="direction">Direction</Label>
             <Select value={filterDirection} onValueChange={setFilterDirection}>

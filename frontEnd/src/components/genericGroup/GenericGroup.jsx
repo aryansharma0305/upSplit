@@ -284,80 +284,72 @@ export default function GenericGroup() {
   };
 
   return (
-    <div className="w-full  p-4">
+    <div className="w-full  p-0 pt-4 sm:p-4">
     <motion.div
-      className="  min-h-screen px-4 sm:px-6 lg:px-8 py-6"
+      className="  min-h-screen "
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
       {/* HEADER */}
-      <motion.header variants={cardVariants}>
-        <div className="p-[1px] rounded-lg bg-gradient-to-r from-gray-700 via-slate-500 to-slate-400 mb-6">
-        <Card className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6  border">
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <Avatar className="w-12 h-12 sm:w-16 sm:h-16 ring-2 ring-emerald-600">
-                  <AvatarImage src="https://randomuser.me/api/portraits/lego/3.jpg" />
-                  <AvatarFallback className="bg-emerald-50 text-emerald-600">
-                    {name.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <h1 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100">
-                    {name}
-                  </h1>
-                  <div className="flex flex-col gap-1 mt-1">
-                    <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
-                      <Users className="w-4 h-4 text-gray-400" /> {members.length} Members
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {groupData.notes}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <GroupSettings />
-                <AddGroupExpense />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full sm:w-auto">
-
-              <div className="p-[1px] rounded-xl bg-gradient-to-r from-pink-400 via-pink-600 to-red-600 ">
-              <Card className="border-none shadow-none rounded-xl bg-white dark:bg-gray-800">
-                <CardContent className="p-3 text-center">
-                  <p className="text-xs text-red-600 uppercase font-medium">
-                    To Pay
-                  </p>
-                  <p className="text-lg font-bold text-red-600 mt-1">
-                    ₹{myOwe.toFixed(2)}
-                  </p>
-                </CardContent>
-              </Card>
-              </div>
-              <div className="p-[1px] rounded-xl bg-gradient-to-r from-green-500 via-teal-600 to-emerald-700">
-              <Card className="border-none shadow-none bg-white dark:bg-gray-800">
-                <CardContent className="p-3 text-center">
-                  <p className="text-xs text-emerald-600 uppercase font-medium">
-                    To Receive
-                  </p>
-                  <p className="text-lg font-bold text-emerald-600 mt-1">
-                    ₹{myReceive.toFixed(2)}
-                  </p>
-                </CardContent>
-              </Card>
-              </div>
-
+     
+    <motion.header variants={cardVariants}>
+  <div className="p-[1.5px] rounded-[12px] bg-gradient-to-br from-gray-600 to-slate-500 mb-6 shadow-lg">
+    <Card className="bg-white dark:bg-gray-800 rounded-lg p-6 border-none">
+      <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6 flex-wrap">
+        {/* GROUP PROFILE */}
+        <div className="flex items-center gap-4">
+          <Avatar className="w-20 h-20 ring-2 ring-emerald-600">
+            <AvatarImage src={groupData.image || "https://randomuser.me/api/portraits/lego/3.jpg"} />
+            <AvatarFallback className="bg-emerald-50 text-emerald-600">
+              {name.charAt(0)}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">{name}</h1>
+            <div className="flex flex-col gap-1 mt-1">
+              <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                <Users className="w-4 h-4 text-gray-400" /> {members.length} Members
+              </p>
+              
             </div>
           </div>
-        </Card>
         </div>
-      </motion.header>
+
+        {/* SUMMARY */}
+        <div className="grid grid-cols-2 gap-4 w-full xl:w-auto">
+          <div className="p-[1.5px] rounded-[12px] bg-gradient-to-r from-pink-400 via-pink-600 to-red-600">
+            <Card className="border-none shadow-none rounded-lg bg-white dark:bg-gray-800 w-full min-w-36">
+              <CardContent className="p-4 text-center">
+                <p className="text-xs text-red-600 uppercase font-medium">To Pay</p>
+                <p className="text-xl font-bold text-red-600 mt-1">₹{myOwe.toFixed(2)}</p>
+              </CardContent>
+            </Card>
+          </div>
+          <div className="p-[1.5px] rounded-[12px] bg-gradient-to-r from-green-500 via-teal-600 to-emerald-700">
+            <Card className="border-none shadow-none rounded-lg bg-white dark:bg-gray-800 w-full min-w-36">
+              <CardContent className="p-4 text-center">
+                <p className="text-xs text-emerald-600 uppercase font-medium">To Receive</p>
+                <p className="text-xl font-bold text-emerald-600 mt-1">₹{myReceive.toFixed(2)}</p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* ACTIONS */}
+        <div className="flex gap-4 items-center justify-center xl:justify-end w-full xl:w-auto">
+          <GroupSettings />
+          <AddGroupExpense />
+        </div>
+      </div>
+    </Card>
+  </div>
+</motion.header>
+
+
 
       {/* MAIN CONTENT */}
-      <div className="space-y-6">
+      <div className="space-y-6 px-4">
         {/* GROUP MEMBERS BALANCES */}
         <motion.section variants={cardVariants}>
 
@@ -466,9 +458,11 @@ export default function GenericGroup() {
               </CardTitle>
             </CardHeader>
             <CardContent className="px-0">
-              <div className="flex flex-row justify-between pb-4 px-0 align-middle gap-3 content-center flex-wrap" >
+             <div className="flex flex-row justify-between pb-4 px-0 w-full align-middle gap-3 content-center flex-wrap" > 
 
-                <div className="space-y-2 flex-col justify-between flex w-full sm:w-3/4">
+                  
+
+                {/*<div className="space-y-2 flex-col justify-between flex w-full md:w-3/4">
                   <Label htmlFor="search">Search by Description</Label>
                   <Input
                     id="search"
@@ -478,7 +472,9 @@ export default function GenericGroup() {
                     className="w-full "
                   />
                 </div>
-                {/* <div className="flex flex-col sm:flex-row gap-4 w-full"> */}
+                
+                <div className="w-full md:w-1/4 flex gap-4">
+
                   <div className="space-y-2 flex-col justify-between flex">
                     <Label htmlFor="direction">Direction</Label>
                     <Select
@@ -518,11 +514,72 @@ export default function GenericGroup() {
                       Reset
                     </Button>
                   </div>
-                
+                </div> */}
+
+                <motion.div
+        className="flex flex-col w-full lg:flex-row gap-4 pb-3 items-end "
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 ,duration: 0.2}}
+      >
+        <div className="space-y-1 w-full text-sm">
+          <Label htmlFor="search">Search by Name</Label>
+          <Input
+            id="search"
+            placeholder="e.g. Riya"
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
+          />
+        </div>
+
+        <div className="flex flex-wrap sm:flex-nowrap flex-row gap-4 w-full lg:w-auto">
+          <div className="space-y-1 text-sm">
+            <Label htmlFor="direction">Direction</Label>
+            <Select value={filterDirection} onValueChange={setFilterDirection}>
+              <SelectTrigger id="direction">
+                <SelectValue placeholder="All Directions" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All">All</SelectItem>
+                <SelectItem value="Paid">Paid</SelectItem>
+                <SelectItem value="Received">Received</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-1 text-sm">
+            <Label htmlFor="sector">Sector</Label>
+            <Select value={filterSector} onValueChange={setFilterSector}>
+              <SelectTrigger id="sector">
+                <SelectValue placeholder="All Sectors" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All">All</SelectItem>
+                <SelectItem value="Food">Food</SelectItem>
+                <SelectItem value="Entertainment">Entertainment</SelectItem>
+                <SelectItem value="Travel">Travel</SelectItem>
+                <SelectItem value="Shopping">Shopping</SelectItem>
+                <SelectItem value="Utilities">Utilities</SelectItem>
+                <SelectItem value="Health">Health</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex items-end pt-3">
+            <Button variant="secondary" onClick={resetFilters}>
+              Reset Filters
+            </Button>
+          </div>
+          
+        </div>
+      </motion.div>
+
+
+
               </div>
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
+              <div className="overflow-x-auto border-1 rounded-lg">
+                <Table className={""}>
+                  <TableHeader className={"bg-gray-100 dark:bg-gray-700"}>
                     <TableRow>
                       <TableHead className="w-12"></TableHead>
                       <TableHead className="text-gray-600 dark:text-gray-300 min-w-[150px]">

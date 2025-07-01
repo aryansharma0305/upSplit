@@ -70,7 +70,7 @@ export default function TransactionHistoryTable() {
 
 
   return (
-    <div className="w-full px-4 p-4 ">
+    <div className="w-full  p-0 pt-4 sm:p-4 ">
     {/* <motion.div
       className="p-4 w-full" 
       initial={{ opacity: 0, y: 10 }}
@@ -82,7 +82,7 @@ export default function TransactionHistoryTable() {
       <h1 className="mb-5 text-2xl font-semibold  bg-gradient-to-r from-emerald-600  to-teal-600 bg-clip-text text-transparent">Transaction History</h1>
       </div>
       <motion.div
-        className="flex flex-col md:flex-row gap-4 pb-3 items-end "
+        className="flex flex-col lg:flex-row gap-4 pb-3 items-end "
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 ,duration: 0.2}}
@@ -97,7 +97,7 @@ export default function TransactionHistoryTable() {
           />
         </div>
 
-        <div className="flex flex-wrap sm:flex-nowrap flex-row gap-4 w-full md:w-auto">
+        <div className="flex flex-wrap sm:flex-nowrap flex-row gap-4 w-full lg:w-auto">
           <div className="space-y-1 text-sm">
             <Label htmlFor="direction">Direction</Label>
             <Select value={filterDirection} onValueChange={setFilterDirection}>

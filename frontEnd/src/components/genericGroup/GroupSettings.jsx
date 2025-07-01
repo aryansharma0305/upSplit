@@ -18,7 +18,7 @@ export function GroupSettings() {
     <Dialog>
       <form>
         <DialogTrigger asChild>
-          <Button variant="outline">Settings <SettingsIcon/></Button>
+          <Button variant="outline" className={"hover:-translate-y-1 duration-200"}>Settings <SettingsIcon/></Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>

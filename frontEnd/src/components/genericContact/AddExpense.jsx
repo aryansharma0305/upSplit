@@ -142,7 +142,7 @@ const AddExpense = () => {
         <DialogTrigger asChild>
           <Button
             variant="default"
-            size="lg"
+            size=""
             className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-md hover:-translate-y-1 transition-all duration-200"
           >
             Add Expense <Plus className="w-4 h-4 ml-2" />

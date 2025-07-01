@@ -161,57 +161,75 @@ export default function GenericContact() {
 
   return (
     <motion.div
-      className="w-full min-h-screen px-4 sm:px-6 lg:px-8 py-12"
+      className="w-full min-h-screen p-0 pt-4 sm:p-4"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
       {/* HEADER */}
+
+
+
+
+
       <motion.header variants={cardVariants}>
-        <Card className="bg-white rounded-2xl shadow-lg p-6 mb-8 border">
-          <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <Avatar className="w-20 h-20 ring-2 ring-emerald-600">
-                <AvatarImage src={profilePic} />
-                <AvatarFallback className="bg-emerald-50 text-emerald-600">{name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div>
-                <h1 className="text-2xl font-semibold text-gray-800">{name}</h1>
-                <div className="flex flex-col gap-1 mt-1">
-                  <p className="text-sm text-gray-500 flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-gray-400" /> {email}
-                  </p>
-                  <p className="text-sm text-gray-500 flex items-center gap-2">
-                    <Phone className="w-4 h-4 text-gray-400" /> {phone}
-                  </p>
-                </div>
+    <div className="p-[1.5px] rounded-[12px] bg-gradient-to-br from-gray-600 to-slate-500 mb-6 shadow-lg">
+      <Card className="bg-white dark:bg-gray-800 rounded-lg p-6 border-none">
+        <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6 flex-wrap">
+
+          {/* PROFILE */}
+          <div className="flex items-center gap-4">
+            <Avatar className="w-20 h-20 ring-2 ring-emerald-600">
+              <AvatarImage src={profilePic} />
+              <AvatarFallback className="bg-emerald-50 text-emerald-600">
+                {name.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">{name}</h1>
+              <div className="flex flex-col gap-1 mt-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-gray-400" /> {email}
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-gray-400" /> {phone}
+                </p>
               </div>
             </div>
-            
-            {/* SUMMARY */}
-            <div className="grid grid-cols-2 gap-4 w-full xl:w-auto">
-              <Card className="border-red-100 bg-white w-full min-w-36">
+          </div>
+
+          {/* SUMMARY */}
+          <div className="grid grid-cols-2 gap-4 w-full xl:w-auto">
+            <div className="p-[1.5px] rounded-[12px] bg-gradient-to-r from-pink-400 via-pink-600 to-red-600">
+              <Card className="border-none shadow-none rounded-lg bg-white dark:bg-gray-800 w-full min-w-36">
                 <CardContent className="p-4 text-center">
                   <p className="text-xs text-red-600 uppercase font-medium">To Pay</p>
                   <p className="text-xl font-bold text-red-600 mt-1">₹{summary.owe}</p>
                 </CardContent>
               </Card>
-              <Card className="border-green-100 bg-white w-full min-w-36">
+            </div>
+            <div className="p-[1.5px] rounded-[12px] bg-gradient-to-r from-green-500 via-teal-600 to-emerald-700">
+              <Card className="border-none shadow-none rounded-lg bg-white dark:bg-gray-800 w-full min-w-36">
                 <CardContent className="p-4 text-center">
-                  <p className="text-xs text-green-700 uppercase font-medium">To Receive</p>
-                  <p className="text-xl font-bold text-green-700 mt-1">₹{summary.toReceive}</p>
+                  <p className="text-xs text-emerald-600 uppercase font-medium">To Receive</p>
+                  <p className="text-xl font-bold text-emerald-600 mt-1">₹{summary.toReceive}</p>
                 </CardContent>
               </Card>
             </div>
-
-            {/* ACTIONS */}
-            <div className="flex gap-2 items-center">
-              <Settings />
-              <AddExpense />
-            </div>
           </div>
-        </Card>
-      </motion.header>
+
+          {/* ACTIONS */}
+          <div className="flex gap-2 items-center justify-center xl:justify-end w-full xl:w-auto">
+            <Settings />
+            <AddExpense />
+          </div>
+        </div>
+      </Card>
+    </div>
+  </motion.header>
+
+
+
 
       {/* MAIN CONTENT */}
       <div className="space-y-8">

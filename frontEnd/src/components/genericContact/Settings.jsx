@@ -36,8 +36,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { CalendarIcon, ClockIcon } from "lucide-react"
 import { format, parse } from "date-fns"
 import { cn } from "@/lib/utils"
-import { Settings2 } from "lucide-react"
-
+import { SettingsIcon } from "lucide-react"
 // DatePicker Component
 const DatePicker = ({ value, onChange, disabled }) => {
   const [open, setOpen] = useState(false)
@@ -47,12 +46,9 @@ const DatePicker = ({ value, onChange, disabled }) => {
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className={cn(
-            "w-full justify-between font-normal border-gray-300 focus:ring-emerald-500 focus:border-emerald-500",
-            !value && "text-muted-foreground",
-            disabled && "bg-gray-100 text-gray-400"
-          )}
+          
           disabled={disabled}
+          size="sm"
         >
           {value ? format(value, "PPP") : <span>Pick a date</span>}
           <CalendarIcon className="ml-2 h-4 w-4 text-gray-500" />
@@ -225,11 +221,12 @@ const Settings = () => {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          size="lg"
+          size=""
           className="hover:-translate-y-1 transition-all duration-200"
         >
-          <Settings2 className="w-4 h-4" />
           Settings
+
+          <SettingsIcon/>
         </Button>
       </DialogTrigger>
       <motion.form

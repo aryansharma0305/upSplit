@@ -40,7 +40,7 @@ const DashboardLayout = () => {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset className="overflow-x-hidden">
-        <header className="flex h-16  justify-between items-center gap-2 shadow-md   pr-5 md:pr-10 ">
+        <header className="flex h-16  justify-between items-center gap-2 shadow-md    ">
           <div className="flex items-center gap-2 px-4" >
             <SidebarTrigger className="md:hidden -ml-1 custom-class-aryan" />
             <Separator
@@ -78,7 +78,7 @@ const DashboardLayout = () => {
 
         </header>
 
-        <div className="flex flex-1 flex-col p-4">
+        <div className="flex flex-1 flex-col p-3 sm:p-4">
           <Outlet />
         </div>
       </SidebarInset>

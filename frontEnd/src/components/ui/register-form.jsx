@@ -18,7 +18,7 @@ const RegisterForm = ({ className, ...props }) => {
   const [date, setDate] = React.useState(undefined)
 
   return (
-    <form className={cn("flex flex-col gap-6 mt-12", className)} {...props}>
+    <form className={cn("flex flex-col gap-6 sm:mt-12 mt-5", className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent ">Make an account</h1>
         <p className="text-muted-foreground text-sm text-balance">
@@ -100,7 +100,9 @@ const RegisterForm = ({ className, ...props }) => {
       </div>
 
       <div className="text-center text-sm">
-        Don&apos;t have an account?{" "}
+        <h1>
+          Don&apos;t have an account?{" "}
+        </h1>
         <a href="/login" className="underline underline-offset-4 bg-gradient-to-r from-emerald-600  to-teal-600 bg-clip-text text-transparent hover:text-emerald-700 font-bold">
           Login
         </a>

@@ -55,7 +55,7 @@ const Notification = (props) => {
   return (
     <Sheet className={props.className} >
       <SheetTrigger asChild>
-        <div className='p-2 rounded-lg hover:bg-gray-100 shadow-md'>
+        <div className='p-2 rounded-lg hover:bg-gray-100 shadow-md  mx-5 md:mx-10'>
           <Bell strokeWidth={1.4} absoluteStrokeWidth />
         </div>
       </SheetTrigger>

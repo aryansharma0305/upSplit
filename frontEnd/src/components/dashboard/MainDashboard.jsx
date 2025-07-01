@@ -25,9 +25,9 @@ const MotionDiv = motion.div
 
 const MainDashboard = () => {
   return (
-    <div className="p-4  ">
+    <div className="p-0 pt-4 sm:p-4  ">
       <div className="flex flex-wrap  mb-5 justify-between">
-        <h1 className="text-2xl font-semibold bg-gradient-to-r from-emerald-600  to-teal-600 bg-clip-text text-transparent">
+        <h1 className="text-2xl font-semibold bg-gradient-to-r lg:block hidden from-emerald-600  to-teal-600 bg-clip-text text-transparent">
           Dashboard
         </h1>
         <div className='flex gap-2'>
@@ -70,22 +70,15 @@ const MainDashboard = () => {
           bg: "bg-gradient-to-r text-gray-700 from-gray-600  to-slate-600"
 
         }].map(({ key, span, delay, description, value, prefix,bg }) => (
-          // <MotionDiv
-          //   key={key}
-            // className={`relative ${span} rounded-2xl border duration-200 hover:-translate-y-1 p-[1px] bg-amber-300`}
-          //   initial={{ opacity: 0, y: 20 }}
-          //   animate={{ opacity: 1, y: 0 }}
-          //   transition={{ duration: 0.4, delay }}
-          // >
-            
+          
             <MotionCard 
-              className={`relative ${span} z-10 shadow-lg p-[2px] ${bg} border-none   backdrop-blur-sm h-full rounded-[18px] duration-200 hover:-translate-y-1` }
+              className={`relative ${span} z-10 shadow-lg p-[2px] ${bg} border-none   backdrop-blur-sm h-full rounded-[12px] duration-200 hover:-translate-y-1` }
               initial={{ opacity: 0, y: 20 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ duration: 0.2, delay }}
             >
              
-             <div className='relative z-12 bg-white h-full rounded-2xl'>
+             <div className='relative z-12 bg-white h-full rounded-lg'>
               <CardHeader className="p-4">
                 <CardDescription 
                   className={` font-bold text-sm`} 
@@ -104,7 +97,7 @@ const MainDashboard = () => {
       ))}
 
         <MotionDiv 
-          className="relative col-span-1 sm:col-span-2 lg:col-span-8 rounded-2xl border duration-200 hover:-translate-y-1"
+          className="relative col-span-1 sm:col-span-2 lg:col-span-8 rounded-lg border duration-200 hover:-translate-y-1"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
@@ -120,13 +113,13 @@ const MainDashboard = () => {
             className="z-0"
           />
           <MotionCard 
-            className="relative z-10 shadow-lg border-none bg-white/95 backdrop-blur-sm h-full rounded-2xl" 
+            className="relative z-10 shadow-lg border-none bg-white/95 backdrop-blur-sm h-full rounded-lg" 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.4, delay: 0.3 }}
           >
-            <CardHeader className="p-4">
-              <CardDescription className=" font-bold text-sm">
+            <CardHeader className="px-4">
+              <CardDescription className=" font-bold text-lg">
                 <h1 className='bg-gradient-to-r from-emerald-600  to-teal-600 bg-clip-text text-transparent'>
                 Recent Transactions
                 </h1>
@@ -146,7 +139,7 @@ const MainDashboard = () => {
         </MotionDiv>
 
         <MotionDiv 
-          className="relative col-span-1 sm:col-span-1 lg:col-span-4 rounded-2xl border duration-200 hover:-translate-y-1"
+          className="relative col-span-1 sm:col-span-2 lg:col-span-4 rounded-lg border duration-200 hover:-translate-y-1"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.4 }}
@@ -161,25 +154,31 @@ const MainDashboard = () => {
             inactiveZone={0.1}
             className="z-0"
           />
+
+
           <MotionCard 
-            className="relative z-10 shadow-lg border-none bg-white/95 backdrop-blur-sm h-full rounded-2xl " 
+            className="relative z-10 shadow-lg border-none bg-white/95 backdrop-blur-sm h-full w-full rounded-lg " 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.4, delay: 0.4 }}
           >
-            <CardHeader className="p-4 border-none">
-              <CardDescription className="text-emerald-600 font-bold text-sm">
-                Past 6 months summary
+            <CardHeader className="px-4 border-none w-full">
+              <CardDescription className="text-emerald-600 font-bold text-lg">
+                <h1 className='bg-gradient-to-r from-emerald-600  to-teal-600 bg-clip-text text-transparent'>
+                  Past 6 Months Overview
+                </h1>
               </CardDescription>
             </CardHeader>
             <CardContent className="flex items-center justify-center h-full p-4">
               <DashboardPieChart className="h-48 w-full" />
             </CardContent>
           </MotionCard>
+
+
         </MotionDiv>
 
         <MotionDiv 
-          className="relative col-span-1 sm:col-span-2 lg:col-span-8 rounded-2xl border duration-200 hover:-translate-y-1"
+          className="relative col-span-1 sm:col-span-2 lg:col-span-8 rounded-lg border duration-200 hover:-translate-y-1"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.5 }}
@@ -195,14 +194,16 @@ const MainDashboard = () => {
             className="z-0"
           />
           <MotionCard 
-            className="relative z-10 shadow-lg border-none bg-white/95 backdrop-blur-sm h-full  rounded-2xl" 
+            className="relative z-10 shadow-lg border-none bg-white/95 backdrop-blur-sm h-full  rounded-lg" 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.4, delay: 0.5 }}
           >
-            <CardHeader className="p-4">
-              <CardDescription className="text-emerald-600 font-bold text-sm">
-                Pending Payments
+            <CardHeader className="px-4">
+              <CardDescription className="flex font-bold text-lg ">
+                <h1 className='bg-gradient-to-r from-emerald-600  to-teal-600 bg-clip-text text-transparent'>
+                  Pending Payments
+                </h1>
               </CardDescription>
             </CardHeader>
             <div className="flex flex-col justify-between h-full">
@@ -219,7 +220,7 @@ const MainDashboard = () => {
         </MotionDiv>
 
         <MotionDiv 
-          className="relative col-span-1 sm:col-span-1 lg:col-span-4 rounded-2xl border duration-200 hover:-translate-y-1"
+          className="relative col-span-1 sm:col-span-2 lg:col-span-4 rounded-lg border duration-200 hover:-translate-y-1"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.6 }}
@@ -235,14 +236,16 @@ const MainDashboard = () => {
             className="z-0"
           />
           <MotionCard 
-            className="relative z-10 shadow-lg border-none bg-white/95 backdrop-blur-sm h-full rounded-2xl" 
+            className="relative z-10 shadow-lg border-none bg-white/95 backdrop-blur-sm h-full rounded-lg" 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.4, delay: 0.6 }}
           >
-            <CardHeader className="p-4">
-              <CardDescription className="text-emerald-600 font-bold text-sm">
-                Sector Split this month
+            <CardHeader className="px-4">
+              <CardDescription className="text-emerald-600 font-bold text-lg">
+                <h1 className='bg-gradient-to-r from-emerald-600  to-teal-600 bg-clip-text text-transparent'>
+                  Sectoral Analysis
+                </h1>
               </CardDescription>
             </CardHeader>
             <CardContent className="flex items-center justify-center h-full p-4">
