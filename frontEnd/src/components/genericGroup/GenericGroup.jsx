@@ -196,12 +196,13 @@ const calculateBalances = (transactions, currentUser, members) => {
 
 
 const containerVariants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 0 ,y:20},
   visible: {
     opacity: 1,
+    y:0,
     transition: {
       staggerChildren: 0.1,
-      duration: 0.15,
+      duration: 0.5,
     },
   },
 };
@@ -349,7 +350,7 @@ export default function GenericGroup() {
 
 
       {/* MAIN CONTENT */}
-      <div className="space-y-6 px-4">
+      <div className="space-y-6 sm:px-4">
         {/* GROUP MEMBERS BALANCES */}
         <motion.section variants={cardVariants}>
 
@@ -453,7 +454,7 @@ export default function GenericGroup() {
           <Card className="bg-white dark:bg-gray-800 shadow-none border-none mb-20">
             <CardHeader className="px-0">
               <CardTitle className="text-xl font-semibold text-emerald-600 dark:text-emerald-400 mb-3">
-                <div className="flex flex-wrap text-center"><h1 className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">All Group Transactions</h1></div>
+                <div className="flex flex-wrap text-center"><h1 className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Group Transactions</h1></div>
               
               </CardTitle>
             </CardHeader>
@@ -577,7 +578,7 @@ export default function GenericGroup() {
 
 
               </div>
-              <div className="overflow-x-auto border-1 rounded-lg">
+              <div className="overflow-x-auto border-1 shadow-lg rounded-lg">
                 <Table className={""}>
                   <TableHeader className={"bg-gray-100 dark:bg-gray-700"}>
                     <TableRow>

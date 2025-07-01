@@ -23,12 +23,9 @@ const config = {
 } 
 const CharBar = () => {
   return (
-    <Card className="border-none shadow-none bg-white  " >
-      <CardHeader>
-        <CardTitle className="text-xl font-bold mb-5 text-emerald-600">Monthly Breakdown</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div  className=' mt-10'>
+    <Card className=" shadow-lg bg-white px-0 " >
+      <CardContent className={"p-0"}>
+        <div  className=' mt-3'>
           <ChartContainer className="h-[200px] w-full" config={config}>
             <BarChart data={data}>
               <CartesianGrid vertical={false} />
@@ -40,14 +37,6 @@ const CharBar = () => {
           </ChartContainer>
         </div>
       </CardContent>
-      {/* <CardFooter className="flex flex-col items-start gap-1 text-sm">
-        <div className="flex gap-2 items-center font-medium">
-          Yearly Trend <TrendingUp className="w-4 h-4" />
-        </div>
-        <div className="text-muted-foreground">
-          Data reflects total debit and credit per month
-        </div>
-      </CardFooter> */}
     </Card>
   )
 }

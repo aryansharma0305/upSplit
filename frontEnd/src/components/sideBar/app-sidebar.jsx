@@ -39,7 +39,7 @@ const data = {
   navMain: [
     {
       title: "Groups",
-      url: "/dashboard/groups",
+      url: "/dashboard/group",
       icon: Users,
       isActive: true,
       items: [
@@ -59,7 +59,7 @@ const data = {
     },
     {
       title: "Contacts",
-      url: "/dashboard/contacts",
+      url: "/dashboard/contact",
       icon: User,
       items: [
         {

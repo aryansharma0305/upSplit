@@ -161,7 +161,7 @@ export default function GenericContact() {
 
   return (
     <motion.div
-      className="w-full min-h-screen p-0 pt-4 sm:p-4"
+      className="w-full min-h-screen  pt-4 sm:p-4"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -232,15 +232,18 @@ export default function GenericContact() {
 
 
       {/* MAIN CONTENT */}
-      <div className="space-y-8">
+      <div className=" px-0">
         {/* TRANSACTIONS TABS */}
         <motion.section variants={cardVariants}>
-          <Card className="bg-white shadow-none border-none">
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold text-emerald-600">Recent Transactions</CardTitle>
+          <Card className="bg-white px-0 shadow-none border-none">
+            <CardHeader className={"px-0 mb-2 sm:px-4"}> 
+              <CardTitle className="text-xl  px-0 font-semibold text-emerald-600 mb">
+                <div className="flex flex-wrap text-center"><h1 className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Recent Transactions</h1></div>
+           
+              </CardTitle>
             </CardHeader>
-            <Tabs defaultValue="all" className="w-full">
-              <TabsList className="flex justify-start gap-2 bg-gray-50 p-2 mb-3 mt-3 rounded-lg mx-4">
+            <Tabs defaultValue="all" className="w-full px-0 ">
+              <TabsList className="flex justify-start gap-2 bg-gray-50 p-2 shadow-lg rounded-lg sm:mx-3">
                 {['All', 'To Pay', 'To Receive'].map((label, index) => (
                   <TabsTrigger
                     key={label.toLowerCase()}
@@ -252,15 +255,15 @@ export default function GenericContact() {
                 ))}
               </TabsList>
               {['all', 'debit', 'credit'].map((key) => (
-                <TabsContent key={key} value={key} className="px-4">
-                  <CardContent className="mt-4 overflow-hidden">
+                <TabsContent key={key} value={key} className="sm:px-4 px-0  ">
+                  <CardContent className="px-0 overflow-hidden border-1  shadow-lg mt-3  rounded-lg">
                     <motion.div
                       variants={containerVariants}
                       initial="hidden"
                       animate="visible"
                     >
-                      <Table>
-                        <TableHeader>
+                      <Table className={"rounded-lg shadow-lg  "}>
+                        <TableHeader className={"bg-gray-50 hover:bg-gray-100  rounded-lg"}>
                           <TableRow>
                             <TableHead className="text-gray-600">Description</TableHead>
                             <TableHead className="text-gray-600">Date Created</TableHead>
@@ -327,23 +330,29 @@ export default function GenericContact() {
                         </TableBody>
                       </Table>
                     </motion.div>
-                  </CardContent>
-                  <CardFooter className="flex justify-start gap-2 pt-4">
+                     <CardFooter className="flex justify-start gap-2 pb-2 px-1">
                     
                     <History user="Rohan" />
                   </CardFooter>
+                  </CardContent>
+                 
                 </TabsContent>
               ))}
             </Tabs>
           </Card>
         </motion.section>
 
-        <Separator className="my-8" />
-
         {/* ANALYTICS */}
-        <motion.section variants={cardVariants}>
-          <Card className="bg-white shadow-none border-none">
-            <CardContent>
+        <motion.section variants={cardVariants} className="mt-6 mb-24 pb-2">
+          <Card className="bg-white sm:mx-4 p-0 border-none  shadow-none">
+            <CardHeader className="px-2 mb-3">
+              <CardTitle className="text-xl font-semibold text-emerald-600">
+                <div className="flex flex-wrap text-center"><h1 className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Monthly Analytics</h1></div>
+           
+              </CardTitle>
+             
+            </CardHeader>
+            <CardContent className={"p-0"}>
               <CharBar data={analytics} className="w-full" />
             </CardContent>
           </Card>

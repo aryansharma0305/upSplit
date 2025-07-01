@@ -38,10 +38,10 @@ const App = () => {
           <Route index element={<MainDashboard />} />         
           <Route path="pending-payments" element={<PaymentCardList/>} />
           <Route path="transaction-history" element={<TransactionHistoryTable/>} />
-          <Route path="groups" element={<AllGroupsPage/>} />
-          <Route path="contacts" element={<AllContactsPage/>} />
           <Route path="group/*" element={<GenericGroup />}/>
+          <Route path="group" element={<AllGroupsPage />}/>
           <Route path="contact/*" element={<GenericContact/>} />
+          <Route path="contact" element={<AllContactsPage/>} />
           {/* <Route path="notifications" element={<NotificationPage/>} /> */}
           <Route path="*" element={<NotFoundPage/>} />
       </Route>

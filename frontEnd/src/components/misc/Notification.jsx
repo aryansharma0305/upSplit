@@ -67,9 +67,9 @@ const Notification = (props) => {
           
         </SheetHeader>
 
-        <div className="grid flex-1 auto-rows-min gap-4 px-3 mt-4 h-full pb-7 overflow-y-auto">
+        <div className="grid flex-1 auto-rows-min gap-4 px-3 mt-4 h-full pb-7 overflow-y-auto pt-2">
           {notifications.map((notification) => (
-            <Card key={notification.id} className={notification.new?"shadow-lg border border-emerald-600" :"shadow-lg border border-gray-300 "}>
+            <Card key={notification.id} className={notification.new?"shadow-lg border border-emerald-600 hover:-translate-y-1 duration-100" :"shadow-lg border border-gray-300 hover:-translate-y-1 duration-100 "}>
               <CardHeader className="flex flex-row items-center gap-3">
                   <img
                     src={notification.pfp}

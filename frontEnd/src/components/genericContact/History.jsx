@@ -1,5 +1,7 @@
 "use client"
 
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationEllipsis, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
+
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -120,10 +122,10 @@ export function History({ user }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="link" className="px-2">View All Transactions</Button>
+        <Button variant="link" className="px-2 underline hover:cursor-pointer hover:-translate-y-0.5 duration-75 hover:text-emerald-700">View All Transactions</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[900px]">
-        <div className="overflow-y-scroll max-h-[80vh] flex flex-col gap-4 mt-6 px-2">
+      <DialogContent className="sm:max-w-[900px] px-3">
+        <div className="overflow-y-scroll max-h-[80vh] flex flex-col gap-4 mt-6 px-4">
           <DialogTitle>Transaction History for {user}</DialogTitle>
           <DialogDescription>
             View all transactions associated with {user}.
@@ -229,7 +231,35 @@ export function History({ user }) {
                 </TableBody>
               </Table>
             </div>
+
+              <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href="#" />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#">1</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#" isActive>
+              2
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#">3</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext href="#" />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+
+
           </div>
+            
           <div className="flex justify-end gap-2">
             <DialogClose asChild>
               <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-100">
