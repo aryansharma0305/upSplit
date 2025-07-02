@@ -33,7 +33,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import AddGroupExpense from "./AddGroupExpense";
-import { GroupSettings } from "./GroupSettings";
+import  GroupSettings  from "./GroupSettings";
 import { GlowingEffect } from "../ui/glowing-effect";
 
 // Sample group data with payment status for each member
@@ -338,7 +338,7 @@ export default function GenericGroup() {
         </div>
 
         {/* ACTIONS */}
-        <div className="flex gap-4 items-center justify-center xl:justify-end w-full xl:w-auto">
+        <div className="flex gap-2 items-center justify-center xl:justify-end w-full xl:w-auto">
           <GroupSettings />
           <AddGroupExpense />
         </div>

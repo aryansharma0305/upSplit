@@ -13,9 +13,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import confetti from "canvas-confetti";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
+import StatefulButton from "@/components/ui/stateful-button";
 import {
   Select,
   SelectContent,
@@ -184,6 +186,28 @@ export default function AddGroupExpense() {
     console.log(formData);
     // Add logic to save expense (e.g., fetch('/api/group-expenses', { method: 'POST', body: JSON.stringify(formData) }))
   };
+
+
+  const CloseButtonRef = React.useRef(null);
+
+  const handleAddExpenseButtonClick=()=>{
+    return new Promise((resolve, reject) => {
+
+      setTimeout(() => {
+        resolve();
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.85 },
+          colors: ['#34D399', '#10B981', '#059669'],
+        })
+        setTimeout(() => {
+          CloseButtonRef.current.click(); // Close the dialog after confetti animation
+        }, 500); // Close after 1 second
+      }, 1000); // Simulate a delay of 1 second
+
+    })
+  }
 
   return (
     <Dialog>
@@ -414,17 +438,19 @@ export default function AddGroupExpense() {
                 <DialogClose asChild>
                   <Button
                     variant="outline"
+                    ref={CloseButtonRef}
                     className="border-gray-300 text-gray-700 hover:bg-gray-100 hover:-translate-y-1 duration-200"
                   >
                     Cancel
                   </Button>
                 </DialogClose>
-                <Button
+                {/* <Button
                   type="submit"
                   className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 hover:bg-gradient-to-r hover:-translate-y-1 duration-200 text-white"
                 >
                   Add Expense
-                </Button>
+                </Button> */}
+                <StatefulButton onClick={handleAddExpenseButtonClick} className={"bg-gradient-to-r from-emerald-600 p-1 px-3 to-teal-600 hover:from-emerald-700 hover:to-teal-700 hover:bg-gradient-to-r hover:-translate-y-1 duration-200 text-white hover:ring-0 rounded-lg"}>Add Expense</StatefulButton>
               </DialogFooter>
             </div>
           </div>

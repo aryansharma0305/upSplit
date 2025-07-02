@@ -2,7 +2,10 @@
 
 import React, { useState } from "react"
 import { motion } from "framer-motion"
+import { useRef } from "react"
 import { Button } from "@/components/ui/button"
+import StateFullButton from "@/components/ui/stateful-button"
+import * as DialogPrimitive from "@radix-ui/react-dialog"
 import {
   Dialog,
   DialogClose,
@@ -26,10 +29,13 @@ import { Calendar } from "@/components/ui/calendar"
 import { CalendarIcon, Plus } from "lucide-react"
 import { format, addWeeks } from "date-fns"
 import { cn } from "@/lib/utils"
+import confetti from "canvas-confetti"
 
 // DatePicker Component
 const DatePicker = ({ value, onChange, disabled }) => {
   const [open, setOpen] = useState(false)
+
+  
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -77,6 +83,7 @@ const AddExpense = () => {
   const [description, setDescription] = useState("")
   const [dueDate, setDueDate] = useState(addWeeks(new Date(), 1))
   const [errors, setErrors] = useState({})
+  const closeButtonRef = useRef(null)
 
   const validateForm = () => {
     const newErrors = {}
@@ -129,6 +136,28 @@ const AddExpense = () => {
         ? ((parseFloat(amount) * (100 - parseFloat(splitValue))) / 100).toFixed(2)
         : (parseFloat(amount) - parseFloat(splitValue)).toFixed(2)
       : "0.00"
+
+  const handleAddExpenseButtonClick = () => {
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+         confetti({
+            particleCount: 100,
+            spread: 100,
+            origin: { y: 0.85 },
+            colors: ['#4ade80', '#22c55e', '#16a34a'],
+        });
+
+        setTimeout(() => {
+          closeButtonRef.current.click() // Close the dialog
+        }, 500) // Close dialog after 1 second
+        
+        resolve(true)
+      }, 1000) // Simulate a 2-second delay
+    })
+
+  }
+
 
   return (
     <Dialog>
@@ -279,20 +308,22 @@ const AddExpense = () => {
               />
               {errors.dueDate && <p className="text-sm text-red-500">{errors.dueDate}</p>}
             </div>
-            <DialogClose asChild>
+            <DialogClose asChild >
               <Button
                 variant="outline"
                 className="border-gray-300 text-gray-700 hover:bg-gray-100"
+                ref={closeButtonRef}
               >
                 Cancel
               </Button>
             </DialogClose>
-            <Button
+            {/* <Button
               type="submit"
               className="bg-emerald-600 hover:bg-emerald-700 text-white"
             >
               Add Expense
-            </Button>
+            </Button> */}
+            <StateFullButton className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 mb-5 hover:ring-0 rounded-lg" onClick={handleAddExpenseButtonClick}>Add Expense </StateFullButton>
           </div>
             </div>
          
