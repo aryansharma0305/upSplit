@@ -16,16 +16,17 @@ import TransactionHistoryTable from './components/transactionHistory/Transaction
 import NotificationPage from './components/notificationsPage/NotificationPage'
 
 
-
-
-
-
+import { ReactLenis } from 'lenis/react'
+import { useLenis } from 'lenis/react'
 
 
 
 
 const App = () => {
+  
   return (
+    <>
+    {/* <ReactLenis root /> */}
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/register" element={<RegisterPage />} />
@@ -48,6 +49,7 @@ const App = () => {
       {/* 404 route */}
       <Route path="*" element={<NotFoundPage/>} />
       </Routes> 
+      </>
   )
 }
 export default App
