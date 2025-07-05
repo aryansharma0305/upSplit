@@ -17,7 +17,7 @@ export const HomePageBar = () => {
     <>
     
     <div className="w-full h-15 fixed top-0 left-0 z-10 flex items-center bg-white justify-between px-6 shadow-md">
-      <Logo className='h-12 bg-gradient-to-r from-emerald-600  to-teal-600 bg-clip-text text-transparent'/>
+      <Logo height="60px" width="150px" />
         
       <div className='sm:block hidden font-semibold'> 
          <NavigationMenu>

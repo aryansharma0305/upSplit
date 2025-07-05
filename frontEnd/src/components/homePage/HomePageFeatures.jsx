@@ -194,7 +194,7 @@ export function GridPattern({ width, height, x, y, squares, ...props }) {
           {squares.map(([x, y]) => (
             <rect
               strokeWidth="0"
-              key={`${x}-${y}`}
+              key={`${x}-${y}-${Math.random()}`}
               width={width + 1}
               height={height + 1}
               x={x * width}

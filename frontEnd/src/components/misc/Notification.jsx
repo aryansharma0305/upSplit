@@ -61,8 +61,8 @@ const Notification = (props) => {
       </SheetTrigger>
       <SheetContent >
         <SheetHeader>
-          <SheetTitle className='font-bold text-2xl text-emerald-600 flex items-center gap-2'>
-            <Bell strokeWidth={2.4} size={25} absoluteStrokeWidth /> Notifications
+          <SheetTitle className='font-bold text-2xl text-emerald-600  flex items-center gap-2'>
+            <Bell strokeWidth={2.4} size={25} absoluteStrokeWidth /><h1 className="bg-gradient-to-r flex from-emerald-600 to-teal-600  bg-clip-text text-transparent"> Notifications</h1>
           </SheetTitle>
           
         </SheetHeader>
@@ -95,10 +95,9 @@ const Notification = (props) => {
 
         <SheetFooter className="mt-6">
 
-            <Button variant="outline">View All</Button>
           <SheetClose asChild>
 
-            <Button variant="default">Close</Button>
+            <Button variant="default" className="bg-gradient-to-r from-emerald-600  to-teal-600  hover:bg-gradient-to-r hover:from-emerald-700 hover:to-teal-700 text-white hover:-translate-y-1">Close</Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

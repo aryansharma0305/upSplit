@@ -104,8 +104,8 @@ export function AppSidebar({
     // collapsible="icon"
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <div className="mb-5 flex mt-2 pl-1">
-        <Logo className='h-10' />
+        <div className="mb-0 flex mt-2 pl-1">
+        <Logo height="70px" width="150px"  />
         </div>
       </SidebarHeader>
       <SidebarContent>

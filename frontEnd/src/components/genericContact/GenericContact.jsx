@@ -32,6 +32,8 @@ import AddExpense from "./AddExpense";
 import Settings from "./Settings";
 import { History } from "./History";
 import { Separator } from "@/components/ui/separator";
+import { AreYouSureSendReminder } from "./AreYouSureSendReminder";
+import { SettleUp } from "./SettleUp";
 
 
 
@@ -262,8 +264,8 @@ export default function GenericContact() {
                       initial="hidden"
                       animate="visible"
                     >
-                      <Table className={"rounded-lg shadow-lg  "}>
-                        <TableHeader className={"bg-gray-50 hover:bg-gray-100  rounded-lg"}>
+                      <Table className={"rounded-none shadow-lg  "}>
+                        <TableHeader className={"bg-gray-50 hover:bg-gray-100  "}>
                           <TableRow>
                             <TableHead className="text-gray-600">Description</TableHead>
                             <TableHead className="text-gray-600">Date Created</TableHead>
@@ -273,7 +275,7 @@ export default function GenericContact() {
                             <TableHead className="text-gray-600">Action</TableHead>
                           </TableRow>
                         </TableHeader>
-                        <TableBody>
+                        <TableBody className={"rounded-xl"}>
                           {recentTransactions
                             .filter((txn) => key === 'all' || txn.type === key)
                             .map((txn) => (
@@ -292,27 +294,13 @@ export default function GenericContact() {
                                 </TableCell>
                                 <TableCell className="text-gray-500">{txn.sector}</TableCell>
                                 <TableCell className="px-2">
-                                  {txn.settled ? (
-                                    <Badge variant="secondary" className="py-1 my-0.5">
-                                      Settled
-                                    </Badge>
-                                  ) : (
-                                    <div className="flex gap-2 justify-between">
-                                      <Button
-                                        size="sm"
-                                        variant="outline"
-                                        onClick={() => console.log(`Action: ${txn.type === "debit" ? "Settle Up" : "Send Reminder"} for ${txn.id}`)}
-                                      >
-                                        {txn.type === "debit" ? (
-                                          <>
-                                            Settle Up <ArrowRightLeft className="w-4 h-4" />
-                                          </>
-                                        ) : (
-                                          <>
-                                            Send Reminder <AlarmClock className="w-4 h-4" />
-                                          </>
-                                        )}
-                                      </Button>
+                                   <div className="flex items-center gap-2 justify-between pr-10">
+                                        {txn.type=="debit" ? (
+                                            <SettleUp txn={txn}/>
+                                            ):(
+                                            <AreYouSureSendReminder txn={txn} />)
+                                        }
+
                                       <Button
                                         size="sm"
                                         variant="outline"
@@ -323,7 +311,7 @@ export default function GenericContact() {
                                         <Trash2 className="w-4 h-4" />
                                       </Button>
                                     </div>
-                                  )}
+                                
                                 </TableCell>
                               </motion.tr>
                             ))}
