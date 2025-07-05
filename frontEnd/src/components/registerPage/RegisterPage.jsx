@@ -3,16 +3,22 @@ import RegisterForm from '@/components/ui/register-form'
 import Logo from '../logo'
 import { Typewriter } from 'react-simple-typewriter'
 import RiveSplitAnim from '../riveSplitAnim'
+import { useEffect } from 'react'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 
 
 const RegisterPage = () => {
+  useEffect(() => {
+    AOS.init({ once: false, duration: 800, offset: -100 })
+  }, [])
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       
       <div className="bg-gray-100 relative hidden lg:flex lg:flex-col justify-center items-center">
 
-             <div className=" w-full flex h-full text-black  text-5xl flex-col items-center justify-center">
-                    <div className='flex'><h1 className='py-1 mr-3 w-auto text-black font-semibold '>
+             <div className=" w-full flex h-full text-black  text-5xl flex-col items-center justify-center" >
+                    <div className='flex' data-aos="fade-down"><h1 className='py-1 mr-3 w-auto text-black font-semibold '>
                     Split Bills 
                     </h1>
                     <h1 className='py-1 w-auto font-semibold bg-gradient-to-r from-emerald-600  to-teal-600 bg-clip-text text-transparent'>
@@ -26,7 +32,7 @@ const RegisterPage = () => {
                         delaySpeed={2000}
                     />
                     </h1></div>
-                    <RiveSplitAnim height={window.innerHeight*4/6} width="1000px" />
+                    <RiveSplitAnim height={window.innerHeight*4/6} width="1000px" data-aos="fade-right"/>
             </div>
       </div>
 

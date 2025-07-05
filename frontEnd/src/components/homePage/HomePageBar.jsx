@@ -11,15 +11,22 @@ import {
     NavigationMenuTrigger,
     NavigationMenuViewport,
 } from "@/components/ui/navigation-menu"
+import { Grid } from "lucide-react"
+import { useEffect } from "react";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 export const HomePageBar = () => {
+  useEffect(() => {
+    AOS.init({ once: false, duration: 800 });
+  }, []);
   return (
     <>
     
     <div className="w-full h-15 fixed top-0 left-0 z-10 flex items-center bg-white justify-between px-6 shadow-md">
       <Logo height="60px" width="150px" />
         
-      <div className='sm:block hidden font-semibold'> 
+      <div className='sm:block hidden font-semibold' data-aos="fade-down"> 
          <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
@@ -43,9 +50,9 @@ export const HomePageBar = () => {
       </div>
 
 
-      <div className=" font-bold flex gap-3">
-      <Button className="bg-gradient-to-r from-emerald-600 to-teal-600"> <a href="/login">Login</a></Button> 
-      <Button className="bg-gradient-to-r from-emerald-600 to-teal-600"><a href="/register">Register</a></Button> 
+      <div className=" font-bold flex gap-3" data-aos="fade-left">
+      <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:bg-gradient-to-r hover:from-emerald-700 hover:to-teal-700 duration-200 hover:-translate-y-1 font-bold"> <a href="/login">Login</a></Button> 
+      <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:bg-gradient-to-r hover:from-emerald-700 hover:to-teal-700 duration-200 hover:-translate-y-1 font-bold"><a href="/register">Register</a></Button> 
      </div>
     
     </div>

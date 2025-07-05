@@ -2,12 +2,19 @@ import React from 'react'
 import { Typewriter } from 'react-simple-typewriter'
 import { Button } from '../ui/button'
 import { ArrowRight } from 'lucide-react'
+import { useEffect } from "react";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
 
 const HomePageTopSection = () => {
+  useEffect(() => {
+    AOS.init({ once: false, duration: 800, offset: 100 });
+  }, []);
   return (
     <div className='w-full px-5 pt-5 flex justify-center flex-col items-center '>
 
-      <div className=" w-full flex justify-center mt-20  text-black  sm:text-7xl text-4xl">
+      <div className=" w-full flex justify-center mt-20  text-black  sm:text-7xl text-4xl" data-aos="fade-down">
         <h1 className='py-1 mr-3 w-auto text-black font-semibold'>
           Split Bills 
         </h1>
@@ -23,16 +30,16 @@ const HomePageTopSection = () => {
           />
         </h1>
       </div>
-      <div className="flex justify-center  text-center mt-10">
+      <div className="flex justify-center  text-center mt-10" data-aos='flip-down'>
         <h1 className='text-black sm:w-1/2  w-3/4'>
         Begin by exploring your dashboard — create your first group, split an expense, or just get familiar. It's simple, fast, and designed to keep things crystal clear from the start.
          </h1>  
       </div>
       <div className="flex justify-center mt-10">
-        <Button className="bg-gradient-to-r from-emerald-600 to-teal-600" >
+        <Button className="bg-gradient-to-r from-emerald-600 to-teal-600" data-aos="zoom-in" >
           Get Started  <ArrowRight />
         </Button>
-        <Button variant='outline' className='ml-3'>
+        <Button variant='outline' className='ml-3' data-aos="zoom-in">
           <a href="#how-it-works">How It Works</a>
         </Button>
       </div>

@@ -113,37 +113,46 @@ import {
   AlarmClock,
   Divide,
 } from "lucide-react";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { useEffect } from "react";
 
 const features = [
   {
     title: "Create Groups",
     description: "Easily form groups for trips, events, or roommates.",
     icon: <Users className="w-6 h-6 text-primary" />,
+    aos:"fade-right"
   },
   {
     title: "Split Expenses",
     description: "Split bills and expenses in just a few clicks.",
     icon: <Wallet className="w-6 h-6 text-primary" />,
+    aos:"fade-up"
   },
   {
     title: "Track Everything",
     description: "Stay on top of who owes what, always.",
     icon: <PieChart className="w-6 h-6 text-primary " />,
+    aos:"fade-left"
   },
   {
     title: "Instant Notifications",
     description: "Get real-time updates when someone adds or settles an expense.",
     icon: <Bell className="w-6 h-6 text-primary" />,
+    aos:"fade-right"
   },
   {
     title: "Payment Reminders",
     description: "Receive friendly nudges when it's time to pay someone back.",
     icon: <AlarmClock className="w-6 h-6 text-primary" />,
+    aos:"fade-up"
   },
   {
     title: "Multiple Split Types",
     description: "Choose equal, exact amount, or percentage-based splits.",
     icon: <Divide className="w-6 h-6 text-primary" />,
+    aos:"fade-left"
   },
 ];
 
@@ -208,19 +217,27 @@ export function GridPattern({ width, height, x, y, squares, ...props }) {
 }
 
 const HomePageFeatures = () => {
+
+
+    useEffect(() => {
+    AOS.init({ once: false, duration: 1000 ,offset: 100 });
+    }, []);
+  
+
   return (
-    <div className="w-full relative z-0  mb-20">
+    <div className="w-full relative z-0  mb-20" >
     <section className=" mt-20 p-10  bg-gradient-to-b from-gray-50 via-white" id="features">
 
-    <div className="flex flex-wrap justify-center">
-    <h1 className=" text-4xl mb-15 font-semibold  bg-gradient-to-r from-emerald-600  to-teal-600 bg-clip-text text-transparent text-center">Features</h1>
-   </div> 
+    <div className="flex flex-wrap justify-center" data-aos="fade-down">
+      <h1 className=" text-4xl mb-15 font-semibold  bg-gradient-to-r from-emerald-600  to-teal-600 bg-clip-text text-transparent text-center">Features</h1>
+    </div> 
        
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-10 w-full lg:w-4/5 px-10  mx-auto">
         {features.map((feature) => (
           <div
             key={feature.title}
             className="relative bg-gradient-to-b dark:from-neutral-900 from-neutral-100 dark:to-neutral-950 to-white p-6 rounded-3xl overflow-hidden hover:shadow-lg duration-200 "
+            data-aos={feature.aos}
           >
             <Grid size={20} />
             <div className="mb-4 flex justify-center items-center relative z-20">

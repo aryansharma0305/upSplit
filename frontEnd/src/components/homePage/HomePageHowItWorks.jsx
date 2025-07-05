@@ -1,24 +1,36 @@
 import React from "react";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { useEffect } from "react";
 
 const steps = [
   {
     title: "Create a Group",
     description: "Sign up and form a group for your trip, event, or household.",
     image: "/images/hpss1.png",
+    aos: "flip-down",
   },
   {
     title: "Add Expenses",
     description: "Enter expenses, choose how to split them, and keep it fair.",
     image: "/images/hpss2.png",
+    aos: "flip-down",
   },
   {
     title: "Track & Settle",
     description: "Monitor who owes what and settle up easily anytime.",
     image: "/images/hpss3.png",
+    aos: "flip-down"
   },
 ];
 // 
 const HowItWorks = () => {
+
+
+  useEffect(() => {
+  AOS.init({ once: false, duration: 800 });
+  }, []);
+
   return (
     <section className="pb-20 text-foreground" id="how-it-works">
       <div className="max-w-4xl mx-auto px-4 justify-center  content-center">
@@ -29,7 +41,7 @@ const HowItWorks = () => {
           <div className="bg-white">
             {steps.map((step, index) => (
               <div key={index} className="mb-16 ml-6 relative">
-                <div className={`md:flex items-center ${index % 2 === 1 ? "flex-row-reverse" : ""}`}>
+                <div className={`md:flex items-center ${index % 2 === 1 ? "flex-row-reverse" : ""}`} data-aos={step.aos}>
                   <img
                     src={step.image}
                     alt={`Step ${index + 1}: ${step.title}`}
