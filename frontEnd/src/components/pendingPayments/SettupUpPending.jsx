@@ -18,7 +18,7 @@ import StateFullButton from "@/components/ui/stateful-button";
 
 import { QRCodeSVG } from 'qrcode.react';
 
-export function SettleUPDialog({ txn }) {
+export function SettleUpPending({ txn }) {
 
 
 
@@ -49,9 +49,9 @@ export function SettleUPDialog({ txn }) {
 
 
   const upiID='ruchisharmaggic@okaxis'
-  const upiLink = `upi://pay?pa=${upiID}&am=${Math.abs(txn.net)}&cu=INR&tn=${encodeURIComponent(`Settle Transaction for ${txn.id}`)}`;
+  const upiLink = `upi://pay?pa=${upiID}&am=${Math.abs(txn.amount)}&cu=INR&tn=${encodeURIComponent(`Settle Transaction for ${txn.id}`)}`;
 
-  // const upiLink = `upi://pay?pa=${upiID}&am=${Math.abs(txn.net)}&cu=INR&tn=Settle%20Transaction%20for%20${txn.id}`;
+  // const upiLink = `upi://pay?pa=${upiID}&am=${Math.abs(txn.amount)}&cu=INR&tn=Settle%20Transaction%20for%20${txn.id}`;
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -69,7 +69,7 @@ export function SettleUPDialog({ txn }) {
         <DialogHeader>
           <DialogTitle>Settle Transaction</DialogTitle>
           <DialogDescription>
-            Settle the transaction of ₹{Math.abs(txn.net)} using UPI.
+            Settle the transaction of ₹{Math.abs(txn.amount)} using UPI.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -83,7 +83,7 @@ export function SettleUPDialog({ txn }) {
                 rel="noopener noreferrer"
                 className="text-emerald-600 mb-3 font-semibold hover:underline"
               >
-                Pay ₹{Math.abs(txn.net)} via UPI
+                Pay ₹{Math.abs(txn.amount)} via UPI
               </a> 
            
             <QRCodeSVG

@@ -15,7 +15,7 @@ import { useRef } from "react"
 
 import StateFullButton from "@/components/ui/stateful-button"
 
-export function AreYouSureSendReminderGroup({txn}) {
+export function AreYouSureSendRemind({txn}) {
 
   const cancelButtonRef = useRef(null);
 

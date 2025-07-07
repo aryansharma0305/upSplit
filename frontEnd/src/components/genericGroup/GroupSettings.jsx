@@ -265,7 +265,7 @@ const GroupSettings = () => {
         <Button
           variant="outline"
           size=""
-          className="hover:-translate-y-1 transition-all duration-200"
+          className="hover:-translate-y-1 transition-all duration-200 cursor-pointer"
         >
           Settings
 
@@ -416,7 +416,7 @@ const GroupSettings = () => {
             <DialogClose asChild>
               <Button
                 variant="outline"
-                className="border-gray-300 text-gray-700 hover:bg-gray-100"
+                className="border-gray-300 cursor-pointer text-gray-700 hover:bg-gray-100"
                 ref={cancelButtonRef}
               >
                 Cancel

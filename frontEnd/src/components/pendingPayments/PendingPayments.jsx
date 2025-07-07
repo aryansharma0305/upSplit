@@ -29,6 +29,8 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip"
 import { GlowingEffect } from "../ui/glowing-effect"
+import { SettleUpPending } from "./SettupUpPending"
+import { AreYouSureSendRemind } from "./AreYouSureSendRemind"
 
 const data = [
   {
@@ -272,18 +274,12 @@ export default function PaymentCardList() {
                 </div>
 
                 <div className="flex justify-between items-center mt-2">
-                  <Button size="sm" className="w-fit bg-gradient-to-br cursor-pointer from-emerald-600  to-teal-600 ">
                     {item.direction === "To Pay" ? (
-                      <>
-                        Settle Up <ArrowRightLeft className="w-4 h-4 ml-1" />
-                      </>
+                      <SettleUpPending txn={item}/>
                     ) : (
-                      <>
-                        Send Reminder <AlarmCheck className="w-4 h-4 ml-1" />
-                      </>
+                      <AreYouSureSendRemind txn={item} />
                     )}
-                  </Button>
-
+                 
                   <Button size="icon" variant="ghost" className="text-red-500 cursor-pointer">
                     <Trash2 className="w-4 h-4" />
                   </Button>

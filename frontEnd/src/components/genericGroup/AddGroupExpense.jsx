@@ -383,7 +383,7 @@ export default function AddGroupExpense() {
                     variant="outline"
                     size="sm"
                     onClick={handleSplitEqually}
-                    className=" "
+                    className=" cursor-pointer"
                   >
                     Split Equally
                   </Button>
@@ -439,7 +439,7 @@ export default function AddGroupExpense() {
                   <Button
                     variant="outline"
                     ref={CloseButtonRef}
-                    className="border-gray-300 text-gray-700 hover:bg-gray-100 hover:-translate-y-1 duration-200"
+                    className=" cursor-pointer border-gray-300 text-gray-700 hover:bg-gray-100 hover:-translate-y-1 duration-200"
                   >
                     Cancel
                   </Button>
@@ -450,7 +450,7 @@ export default function AddGroupExpense() {
                 >
                   Add Expense
                 </Button> */}
-                <StatefulButton onClick={handleAddExpenseButtonClick} className={"bg-gradient-to-r from-emerald-600 p-1 px-3 to-teal-600 hover:from-emerald-700 hover:to-teal-700 hover:bg-gradient-to-r hover:-translate-y-1 duration-200 text-white hover:ring-0 rounded-lg"}>Add Expense</StatefulButton>
+                <StatefulButton onClick={handleAddExpenseButtonClick} className={"cursor-pointer bg-gradient-to-r from-emerald-600 p-1 px-3 to-teal-600 hover:from-emerald-700 hover:to-teal-700 hover:bg-gradient-to-r hover:-translate-y-1 duration-200 text-white hover:ring-0 rounded-lg"}>Add Expense</StatefulButton>
               </DialogFooter>
             </div>
           </div>
