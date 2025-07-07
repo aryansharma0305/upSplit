@@ -213,9 +213,9 @@ export default function PaymentCardList() {
                     className="z-0"
                 />
 
-                <div className="absolute top-3 right-4 text-xs text-muted-foreground underline cursor-pointer">
+                {/* <div className="absolute top-3 right-4 text-xs text-muted-foreground underline cursor-pointer">
                   View details
-                </div>
+                </div> */}
 
                 <div className="flex items-center gap-3">
                   <img
@@ -272,7 +272,7 @@ export default function PaymentCardList() {
                 </div>
 
                 <div className="flex justify-between items-center mt-2">
-                  <Button size="sm" className="w-fit bg-gradient-to-br from-emerald-600  to-teal-600 ">
+                  <Button size="sm" className="w-fit bg-gradient-to-br cursor-pointer from-emerald-600  to-teal-600 ">
                     {item.direction === "To Pay" ? (
                       <>
                         Settle Up <ArrowRightLeft className="w-4 h-4 ml-1" />
@@ -284,7 +284,7 @@ export default function PaymentCardList() {
                     )}
                   </Button>
 
-                  <Button size="icon" variant="ghost" className="text-red-500">
+                  <Button size="icon" variant="ghost" className="text-red-500 cursor-pointer">
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>

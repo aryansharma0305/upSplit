@@ -9,7 +9,8 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { AlarmCheck, ArrowRightLeft } from 'lucide-react'
-
+import { AreYouSureSendReminder } from '../genericContact/AreYouSureSendReminder'
+import { AreYouSureSendReminderGroup } from './AreYouSureSendReminderGroup'
 
 const MemberBalances = ({  members }) => {
   return (
@@ -69,13 +70,7 @@ const MemberBalances = ({  members }) => {
                   </div>
                   <div className="flex justify-end gap-2 mt-2">
                     {isOwed ? (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleReminder(member.name)}
-                      >
-                        Send Reminder <AlarmCheck className="w-4 h-4 ml-1" />
-                      </Button>
+                      <AreYouSureSendReminderGroup/>
                     ) : (
                       <Button
                         size="sm"

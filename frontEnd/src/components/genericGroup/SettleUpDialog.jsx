@@ -11,14 +11,14 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ArrowRightLeft } from "lucide-react"
+import { ArrowLeftRight, ArrowRightLeft } from "lucide-react"
 import React from "react";
 import confetti from "canvas-confetti";
 import StateFullButton from "@/components/ui/stateful-button";
 
 import { QRCodeSVG } from 'qrcode.react';
 
-export function SettleUp({ txn }) {
+export function SettleUPDialog({ txn }) {
 
 
 
@@ -49,26 +49,27 @@ export function SettleUp({ txn }) {
 
 
   const upiID='ruchisharmaggic@okaxis'
-  const upiLink = `upi://pay?pa=${upiID}&am=${Math.abs(txn.amount)}&cu=INR&tn=${encodeURIComponent(`Settle Transaction for ${txn.id}`)}`;
+  const upiLink = `upi://pay?pa=${upiID}&am=${Math.abs(txn.net)}&cu=INR&tn=${encodeURIComponent(`Settle Transaction for ${txn.id}`)}`;
 
-  // const upiLink = `upi://pay?pa=${upiID}&am=${Math.abs(txn.amount)}&cu=INR&tn=Settle%20Transaction%20for%20${txn.id}`;
+  // const upiLink = `upi://pay?pa=${upiID}&am=${Math.abs(txn.net)}&cu=INR&tn=Settle%20Transaction%20for%20${txn.id}`;
   return (
     <Dialog>
       <DialogTrigger asChild>
+        
         <Button
-          size="sm"
-          variant="outline"
-          onClick={() => console.log(`Action: Settle Up for ${txn.id}`)}
-          className="flex items-center gap-2"
-        >
-          Settle Up <ArrowRightLeft className="w-4 h-4" />
-        </Button>
+                                      size="sm"
+                                      variant="default"
+                                      className="bg-gradient-to-br from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
+                                    >
+                                      Settle Up <ArrowLeftRight className="w-4 h-4 ml-1" />
+                                    </Button>
+
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Settle Transaction</DialogTitle>
           <DialogDescription>
-            Settle the transaction of ₹{Math.abs(txn.amount)} using UPI.
+            Settle the transaction of ₹{Math.abs(txn.net)} using UPI.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -82,7 +83,7 @@ export function SettleUp({ txn }) {
                 rel="noopener noreferrer"
                 className="text-emerald-600 mb-3 font-semibold hover:underline"
               >
-                Pay ₹{Math.abs(txn.amount)} via UPI
+                Pay ₹{Math.abs(txn.net)} via UPI
               </a> 
            
             <QRCodeSVG

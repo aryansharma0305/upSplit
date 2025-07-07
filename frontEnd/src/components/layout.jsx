@@ -72,7 +72,7 @@ const DashboardLayout = () => {
           
           
 
-          <Logo className="ml-3  h-8 md:hidden block"  />
+          {window.innerWidth<768?<Logo   height="100px" width="100px" />:<div></div>}
           <Notification className="w-12 md:w-auto " />
           
 

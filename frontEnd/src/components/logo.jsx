@@ -17,7 +17,7 @@ const Logo = (props) => {
 
   return (
     <div >
-    <RiveComponent style={{height:props.height , width:props.width , verticalAlign:"center" }}  />
+    <RiveComponent style={{height:props.height , width:props.width , verticalAlign:"center" }} className={props.className} />
     </div>
   );
 };

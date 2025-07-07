@@ -15,11 +15,13 @@ import { Grid } from "lucide-react"
 import { useEffect } from "react";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { useNavigate } from 'react-router-dom';
 
 export const HomePageBar = () => {
   useEffect(() => {
     AOS.init({ once: false, duration: 800 });
   }, []);
+  const Navigate = useNavigate();
   return (
     <>
     
@@ -51,8 +53,8 @@ export const HomePageBar = () => {
 
 
       <div className=" font-bold flex gap-3" data-aos="fade-left">
-      <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:bg-gradient-to-r hover:from-emerald-700 hover:to-teal-700 duration-200 hover:-translate-y-1 font-bold"> <a href="/login">Login</a></Button> 
-      <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:bg-gradient-to-r hover:from-emerald-700 hover:to-teal-700 duration-200 hover:-translate-y-1 font-bold"><a href="/register">Register</a></Button> 
+      <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:bg-gradient-to-r hover:from-emerald-700 hover:to-teal-700 duration-200 hover:-translate-y-1 font-bold cursor-pointer" onClick={()=>{Navigate("/login")}}> Login</Button> 
+      <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:bg-gradient-to-r hover:from-emerald-700 hover:to-teal-700 duration-200 hover:-translate-y-1 font-bold cursor-pointer" onClick={()=>{Navigate("/register")}}>Register</Button> 
      </div>
     
     </div>

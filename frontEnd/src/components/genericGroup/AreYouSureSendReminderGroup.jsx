@@ -15,12 +15,12 @@ import { useRef } from "react"
 
 import StateFullButton from "@/components/ui/stateful-button"
 
-export function AreYouSureSendReminder({txn}) {
+export function AreYouSureSendReminderGroup({txn}) {
 
   const cancelButtonRef = useRef(null);
 
 
-  const handleContinue = () => {
+  const handleClick = () => {
     return new Promise((resolve) => {
     
       setTimeout(() => {
@@ -40,20 +40,12 @@ export function AreYouSureSendReminder({txn}) {
       
       <AlertDialogTrigger asChild>  
         <Button
-        size="sm"
-        variant="outline"
-        onClick={() => console.log(`Action: ${txn.type === "debit" ? "Settle Up" : "Send Reminder"} for ${txn.id}`)}
-        >
-        {txn.type === "debit" ? (
-            <>
-            Settle Up <ArrowRightLeft className="w-4 h-4" />
-            </>
-        ) : (
-            <>
-            Send Reminder <AlarmClock className="w-4 h-4" />
-            </>
-        )}
-        </Button>
+                                      size="sm"
+                                      variant="default"
+                                      className="bg-gradient-to-br from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
+                                    >
+                                      Send Reminder <AlarmClock className="w-4 h-4 ml-1" />
+                                    </Button>
       </AlertDialogTrigger>
 
 
@@ -61,14 +53,14 @@ export function AreYouSureSendReminder({txn}) {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you  sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will send a reminder to the contact for the transaction of <strong>  INR {txn.amount}</strong>  which is currently pending.
+            This action cannot be undone. This will send a reminder to the contact for the transaction of <strong>  INR {txn.net}</strong>  which is currently pending.
             <br />
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel ref={cancelButtonRef} >Cancel</AlertDialogCancel>
 
-         <StateFullButton size="p-10" className=" p-0 hover:-translate-y-1 duration-200 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 mb-0 hover:ring-0 rounded-lg" onClick={handleContinue}>Confirm </StateFullButton>
+         <StateFullButton size="p-10" className=" p-0 hover:-translate-y-1 duration-200 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 mb-0 hover:ring-0 rounded-lg" onClick={handleClick}>Confirm </StateFullButton>
           
         </AlertDialogFooter>
       </AlertDialogContent>

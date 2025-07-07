@@ -35,6 +35,8 @@ import {
 import AddGroupExpense from "./AddGroupExpense";
 import  GroupSettings  from "./GroupSettings";
 import { GlowingEffect } from "../ui/glowing-effect";
+import { AreYouSureSendReminderGroup } from "./AreYouSureSendReminderGroup";
+import { SettleUPDialog } from "./SettleUpDialog";
 
 // Sample group data with payment status for each member
 const groupData = {
@@ -414,23 +416,9 @@ export default function GenericGroup() {
                         </div>
                         <div className="flex justify-end gap-2 mt-5">
                           {isOwed ? (
-                            <Button
-                              size="sm"
-                              variant="default"
-                              className="bg-gradient-to-br from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
-                              onClick={() => handleReminder(member.name)}
-                            >
-                              Send Reminder <AlarmCheck className="w-4 h-4 ml-1" />
-                            </Button>
+                            <AreYouSureSendReminderGroup txn={balance}/>
                           ) : (
-                            <Button
-                              size="sm"
-                              variant="default"
-                              onClick={() => handleSettle(member.name)}
-                              className="bg-gradient-to-br from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
-                            >
-                              Settle Up <ArrowRightLeft className="w-4 h-4 ml-1" />
-                            </Button>
+                            <SettleUPDialog txn={balance} />
                           )}
                         </div>
                       </motion.div>

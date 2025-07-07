@@ -15,6 +15,7 @@ import {
   Settings2,
   SquareTerminal,
 } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 import { NavMain } from "@/components/sideBar/nav-main"
 import { NavDefault } from "@/components/sideBar/nav-default"
@@ -100,11 +101,15 @@ const data = {
 export function AppSidebar({
   ...props
 }) {
+
+  const Navigate=useNavigate()
+
+
   return (
     // collapsible="icon"
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <div className="mb-0 flex mt-2 pl-1">
+        <div className="mb-0 flex mt-2 pl-1 cursor-pointer" onClick={()=>Navigate("/dashboard")}>
         <Logo height="70px" width="150px"  />
         </div>
       </SidebarHeader>

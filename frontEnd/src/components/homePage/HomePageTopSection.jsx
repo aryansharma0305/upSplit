@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react'
 import { useEffect } from "react";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { useNavigate } from 'react-router-dom';
 import RiveButton from '../riveButton';
 
 
@@ -12,6 +13,8 @@ const HomePageTopSection = () => {
   useEffect(() => {
     AOS.init({ once: false, duration: 800, offset: 100 });
   }, []);
+
+  const Navigate = useNavigate();
   return (
     <div className='w-full px-5 pt-5 flex justify-center flex-col items-center '>
 
@@ -40,10 +43,8 @@ const HomePageTopSection = () => {
         {/* <Button className="bg-gradient-to-r from-emerald-600 to-teal-600" data-aos="zoom-in" >
           Get Started  <ArrowRight />
         </Button> */}
-        <RiveButton height="100px" width="150px" onClick={()=>{console.log("hello")}}/>
-        <Button variant='outline' className='mt-[60px] h-[40px]' data-aos="zoom-in">
-          <a href="#how-it-works">How It Works</a>
-        </Button>
+        <RiveButton height="120px" width="200px" onClick={()=>{Navigate("/dashboard")}}/>
+        
       </div>
     </div>
   )

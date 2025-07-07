@@ -14,8 +14,9 @@ import { ArrowRightLeft, AlarmClock } from "lucide-react"
 import { useRef } from "react"
 
 import StateFullButton from "@/components/ui/stateful-button"
+import { Trash2 } from "lucide-react";
 
-export function AreYouSureSendReminder({txn}) {
+export function AreYouSureDelete({txn}) {
 
   const cancelButtonRef = useRef(null);
 
@@ -39,20 +40,10 @@ export function AreYouSureSendReminder({txn}) {
       
       
       <AlertDialogTrigger asChild>  
-        <Button
-        size="sm"
-        variant="outline"
-        onClick={() => console.log(`Action: ${txn.type === "debit" ? "Settle Up" : "Send Reminder"} for ${txn.id}`)}
-        >
-        {txn.type === "debit" ? (
-            <>
-            Settle Up <ArrowRightLeft className="w-4 h-4" />
-            </>
-        ) : (
-            <>
-            Send Reminder <AlarmClock className="w-4 h-4" />
-            </>
-        )}
+        <Button variant={"outline"} className="border-red-600 text-red-600">
+
+        <Trash2 className="w-4 h-4" />
+        
         </Button>
       </AlertDialogTrigger>
 
@@ -61,7 +52,7 @@ export function AreYouSureSendReminder({txn}) {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you  sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will send a reminder to the contact for the transaction of <strong>  INR {txn.amount}</strong>  which is currently pending.
+            This action cannot be undone. This will DELETE the transaction of <strong>  INR {Math.abs(txn.amount)}</strong>  which is currently pending.
             <br />
           </AlertDialogDescription>
         </AlertDialogHeader>

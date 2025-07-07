@@ -222,7 +222,7 @@ export default function AddGroupExpense() {
           <Button
             variant="default"
             size=""
-            className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-md hover:-translate-y-1 transition-all duration-200"
+            className="cursor-pointer bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-md hover:-translate-y-1 transition-all duration-200"
           >
             Add Expense <Plus className="w-4 h-4 ml-2" />
           </Button>

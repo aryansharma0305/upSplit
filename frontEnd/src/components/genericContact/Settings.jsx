@@ -37,7 +37,15 @@ import { CalendarIcon, ClockIcon } from "lucide-react"
 import { format, parse } from "date-fns"
 import { cn } from "@/lib/utils"
 import { SettingsIcon } from "lucide-react"
-// DatePicker Component
+import StateFullButton from "@/components/ui/stateful-button"
+import { useRef } from "react"
+
+
+
+
+
+
+
 const DatePicker = ({ value, onChange, disabled }) => {
   const [open, setOpen] = useState(false)
 
@@ -189,6 +197,21 @@ const TimePicker = ({ value, onChange, disabled }) => {
   )
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const Settings = () => {
   const [notifications, setNotifications] = useState(true)
   const [autoReminders, setAutoReminders] = useState(false)
@@ -215,6 +238,26 @@ const Settings = () => {
     })
     // Add logic to save settings (e.g., API call)
   }
+
+
+
+
+
+   const cancelButtonRef = useRef(null);
+  
+  
+    const handleSaveChanges = () => {
+      return new Promise((resolve) => {
+      
+        setTimeout(() => {
+          resolve();
+          cancelButtonRef.current.click(); 
+        }, 1000); 
+      
+      });
+    };
+
+
 
   return (
     <Dialog>
@@ -374,16 +417,13 @@ const Settings = () => {
               <Button
                 variant="outline"
                 className="border-gray-300 text-gray-700 hover:bg-gray-100"
+                ref={cancelButtonRef}
               >
                 Cancel
               </Button>
             </DialogClose>
-            <Button
-              type="submit"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white"
-            >
-              Save changes
-            </Button>
+            <StateFullButton size="p-10" className=" p-1.5  hover:-translate-y-1 duration-200 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 mb-0 hover:ring-0 rounded-lg" onClick={handleSaveChanges}>Save Changes </StateFullButton>
+         
           </div>
         </DialogContent>
       </motion.form>

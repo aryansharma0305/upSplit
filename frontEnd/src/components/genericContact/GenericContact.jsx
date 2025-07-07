@@ -34,6 +34,7 @@ import { History } from "./History";
 import { Separator } from "@/components/ui/separator";
 import { AreYouSureSendReminder } from "./AreYouSureSendReminder";
 import { SettleUp } from "./SettleUp";
+import { AreYouSureDelete } from "./AreYouSureDelete";
 
 
 
@@ -301,7 +302,7 @@ export default function GenericContact() {
                                             <AreYouSureSendReminder txn={txn} />)
                                         }
 
-                                      <Button
+                                      {/* <Button
                                         size="sm"
                                         variant="outline"
                                         className="border-red-300 text-red-600 hover:bg-red-50"
@@ -309,7 +310,8 @@ export default function GenericContact() {
                                         aria-label={`Delete transaction ${txn.description}`}
                                       >
                                         <Trash2 className="w-4 h-4" />
-                                      </Button>
+                                      </Button> */}
+                                      <AreYouSureDelete txn={txn} />
                                     </div>
                                 
                                 </TableCell>
