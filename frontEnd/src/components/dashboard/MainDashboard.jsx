@@ -19,6 +19,8 @@ import DashboardTransactionsTable from './DashboardTransactionsTable'
 import DashboardPieChart from './DashboardPieChart'
 import UpcomingPaymentsCard from './UpcomingPaymentsCard'
 import DashboardSectorChart from './DashboardsSectorChart'
+import { AddContactDialog } from './AddContanctDialog';
+import { CreateGroupDialog } from './CreateGroupDialog';
 
 const MotionCard = motion.create(Card)
 const MotionDiv = motion.div
@@ -31,15 +33,9 @@ const MainDashboard = () => {
           Dashboard
         </h1>
         <div className='flex gap-2'>
-        <Button className="cursor-pointer bg-gradient-to-r from-emerald-600  to-teal-600  hover:bg-gradient-to-r hover:from-emerald-700 hover:to-teal-700  text-white gap-2 hover:-translate-y-0.5 transition-all duration-200">
-          <PlusCircle className="w-4 h-4" />
-          Add Contact
-        </Button>
+        <AddContactDialog/>
         
-        <Button className="cursor-pointer bg-gradient-to-r from-emerald-600  to-teal-600  hover:bg-gradient-to-r hover:from-emerald-700 hover:to-teal-700  text-white gap-2 hover:-translate-y-0.5 transition-all duration-200">
-          <Users className="w-4 h-4" />
-          Create Group
-        </Button>
+        <CreateGroupDialog/>
         </div>
       </div>
 

@@ -108,8 +108,8 @@ export function AppSidebar({
   return (
     // collapsible="icon"
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <div className="mb-0 flex mt-2 pl-1 cursor-pointer" onClick={()=>Navigate("/dashboard")}>
+      <SidebarHeader className={"pt-0"}>
+        <div className="mb-0 flex mt-0 pl-1 cursor-pointer" onClick={()=>Navigate("/dashboard")}>
         <Logo height="70px" width="150px"  />
         </div>
       </SidebarHeader>
