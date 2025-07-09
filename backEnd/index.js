@@ -34,11 +34,18 @@ const distPath = path.join(__dirname, './dist');
 app.use(express.static(distPath));
 
 
-app.get('*', (req, res) => {
+app.get('/:wildcard/:something/:anything', (req, res) => {
+  res.sendFile(path.join(distPath, 'index.html'));
+});
+app.get('/:wildcard/:something', (req, res) => {
+  res.sendFile(path.join(distPath, 'index.html'));
+});
+app.get('/:wildcard', (req, res) => {
   res.sendFile(path.join(distPath, 'index.html'));
 });
 
-// Start server
+
+
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });
