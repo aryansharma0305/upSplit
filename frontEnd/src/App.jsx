@@ -14,7 +14,7 @@ import GenericContact from './components/genericContact/GenericContact'
 import PaymentCardList from './components/pendingPayments/PendingPayments'
 import TransactionHistoryTable from './components/transactionHistory/TransactionHistory'
 import NotificationPage from './components/notificationsPage/NotificationPage'
-
+import { Toaster } from "sonner"
 
 import { ReactLenis } from 'lenis/react'
 import { useLenis } from 'lenis/react'
@@ -26,6 +26,8 @@ const App = () => {
   
   return (
     <>
+
+      <Toaster   position="top-center" richColors />
     {/* <ReactLenis root /> */}
     <Routes>
       <Route path="/" element={<HomePage />} />

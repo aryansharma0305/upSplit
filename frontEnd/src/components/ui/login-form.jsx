@@ -6,6 +6,8 @@ import React from "react"
 import { useEffect } from "react"
 import AOS from "aos" 
 import "aos/dist/aos.css"
+import { toast } from "sonner"
+import axios from "axios"
 
 
 import { signInWithPopup } from "firebase/auth"
@@ -27,9 +29,22 @@ const LoginForm=({
     const result = await signInWithPopup(auth, provider)
     const user = result.user
     const token = await user.getIdToken()
-    console.log("TOKEN:", token)
-    console.log("Google Sign-In successful:", user)
+    
+    try{
+        const response = await axios.post(`api/auth/verifyLoginWithGoogle`, {token},{withCredentials: true})
+        console.log("Response from server:", response.data)
+        toast.success("Google Sign-In successful!")
+      }
+    catch(error) {
+        toast.error("Error during server communication!")
+        console.error("Error during server communication:", error.message)
+        return
+    }
+    // toast.success("Google Sign-In successful!")
+
   } catch (error) {
+
+     toast.error("Something Went Wrong!")
     console.error("Google Sign-In error:", error.message)
   }
 }
