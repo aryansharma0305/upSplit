@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
+import admin from './firebase-admin.js'; 
 
 
 const PORT = process.env.PORT || 3000;
@@ -35,12 +35,26 @@ app.use(express.static(distPath));
 
 
 
-app.get('/testroute', (req, res) => {
+app.get('/testroute', async(req, res) => {
 
-  console.log(req.cookies?.JWTAuth)
- 
-  res.send("Hello Guys")
+  const cookie = req.cookies?.JWTAuth
+   
+  try{
+    const token = await admin.auth().verifyIdToken(cookie)
 
+    const email = token.email;
+    const name = token.name;
+    const picture = token.picture;
+
+
+    console.log( email, name, picture);
+    res.send("Done")
+
+  }
+  catch (error) {
+    console.error("Error verifying token:", error);
+    res.status(401).send("Unauthorized");
+  }
 })
 
 //wildcard route
