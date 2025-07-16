@@ -20,6 +20,9 @@ const userSchema = new mongoose.Schema({
 
   profileCompleted: { type: Boolean, default: false },
   
+  opt: { type: String, default: "" },
+
+  authToken: { type: String, default: "" },
 
 
 }, { timestamps: true })

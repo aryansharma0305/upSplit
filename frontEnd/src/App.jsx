@@ -18,6 +18,7 @@ import { Toaster } from "sonner"
 
 import { ReactLenis } from 'lenis/react'
 import { useLenis } from 'lenis/react'
+import OnBoardingPage from './components/onBoardingPage/OnBoardingPage'
 
 
 
@@ -33,7 +34,7 @@ const App = () => {
       <Route path="/" element={<HomePage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/login" element={<LoginPage />} />
-
+      <Route path="/onboarding" element={<OnBoardingPage/>} />
 
 
       {/* Dashboard Layout Outlet */}

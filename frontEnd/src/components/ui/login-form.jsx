@@ -12,6 +12,7 @@ import axios from "axios"
 
 import { signInWithPopup } from "firebase/auth"
 import { auth, provider } from "@/firebase"
+import { useNavigate } from "react-router-dom"
 
 
 const LoginForm=({
@@ -23,6 +24,7 @@ const LoginForm=({
     AOS.init({ once: false, duration: 800, offset: -100 })
   }, [])
 
+  const Navigate = useNavigate()
 
   const handleGoogleSignIn = async () => {
   try {
@@ -34,7 +36,10 @@ const LoginForm=({
         const response = await axios.post(`api/auth/verifyLoginWithGoogle`, {token},{withCredentials: true})
         console.log("Response from server:", response.data)
         toast.success("Google Sign-In successful!")
-      }
+        //local storage
+        localStorage.setItem('userDetails', JSON.stringify(response.data.user))
+        Navigate(response.data.redirect)
+    }
     catch(error) {
         toast.error("Error during server communication!")
         console.error("Error during server communication:", error.message)
