@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
 
   authToken: { type: String, default: "" },
 
+  phoneNumber: { type: String, default: "" },
+
+  isVerified: { type: Boolean, default: false },
+
 
 }, { timestamps: true })
 

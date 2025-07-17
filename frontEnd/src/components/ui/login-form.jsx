@@ -54,6 +54,59 @@ const LoginForm=({
   }
 }
 
+  const [isLoading, setIsLoading] = React.useState(false)
+  const handleNormalLogin = async () => {
+    setIsLoading(true)
+    try {
+      let email = document.getElementById("email").value
+      email =  email.toLowerCase()
+     
+      
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(email)) {
+        toast.error("Please enter a valid email address")
+        setIsLoading(false)
+        return
+      }
+      const password = document.getElementById("password").value
+
+      if (!email || !password) {
+        toast.error("Please fill in all fields")
+        setIsLoading(false)
+        return
+      }
+
+      const response = await axios.post('/api/auth/normalLogin', { email, password }, { withCredentials: true })
+
+      console.log("Response from server:", response.data)
+
+      if (response.data.redirect) {
+        Navigate(response.data.redirect)
+      } else {
+        toast.success("Login successful!")
+      }
+
+    } catch (error) {
+      console.log(error)
+      if(error.response?.data?.error ==="Invalid password") {
+        toast.error("Invalid password. Please try again.")
+      } else if(error.response?.data?.error ==="User not found") {
+        toast.error("User not found. Please check your email.")
+      }
+      else if(error.response?.data?.error ==="UseGoogleLogin") {
+        toast.error("Please use Google to login.")
+      } 
+      else {
+        toast.error("An error occurred during login. Please try again.")
+        console.error("Login error:", error.message)
+      }
+
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+
 
   return (
     <form onSubmit={(e)=>{ e.preventDefault() } }className={cn("flex flex-col gap-6 pt-0", className)} {...props}>
@@ -81,9 +134,27 @@ const LoginForm=({
         </div>
 
 
-        <Button className="w-full bg-gradient-to-r from-emerald-600  to-teal-600  hover:bg-gradient-to-r hover:from-emerald-700 hover:to-teal-700 text-white hover:-translate-y-1" type="submit" data-aos="fade-up" data-aos-delay="100">
-          Login
-        </Button>
+        {/* <Button className="w-full bg-gradient-to-r from-emerald-600  to-teal-600  hover:bg-gradient-to-r hover:from-emerald-700 hover:to-teal-700 text-white hover:-translate-y-1" type="submit" data-aos="fade-up" data-aos-delay="100">
+          
+        </Button> */}
+        <Button
+          type="button"
+          onClick={handleNormalLogin}
+          disabled={isLoading}
+          className={cn(
+            "w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white hover:-translate-y-1 relative",
+            isLoading && "cursor-not-allowed opacity-70"
+          )}
+        >
+          {isLoading ? (
+            <div className="flex items-center justify-center">
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+              Saving...
+            </div>
+          ) : (
+            "Save Profile"
+          )}
+      </Button>
 
 
         <div 
