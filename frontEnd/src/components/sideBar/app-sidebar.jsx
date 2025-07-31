@@ -28,14 +28,11 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import Logo from "../logo"
+import { useEffect, useState } from "react"
 
 // This is sample data.
 const data = {
-  user: {
-    name: "Aryan Sharma",
-    email: "aryansharma0305@examdsksdljflple.com",
-    avatar: "https://avatars.githubusercontent.com/u/37801977?v=4",
-  },
+
   
   navMain: [
     {
@@ -119,7 +116,7 @@ export function AppSidebar({
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={props.user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const userSchema = new mongoose.Schema({
 
-  uid: { type: String},
+  uid: { type: String , default: "",unique: false },
   
   name: {type: String},
   
@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema({
 
   isVerified: { type: Boolean, default: false },
 
+  contacts: [{type:mongoose.Schema.Types.ObjectId, ref: 'users', default: [] }],
 
 }, { timestamps: true })
 

@@ -530,12 +530,7 @@ const OnBoardingPage = () => {
                 </div>
               </div>
               <div className="text-center text-sm">
-                <a
-                  href="/dashboard"
-                  className="underline underline-offset-4 font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent hover:text-emerald-700"
-                >
-                  Skip for now
-                </a>
+             
               </div>
             </form>
           </div>

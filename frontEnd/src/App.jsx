@@ -13,12 +13,11 @@ import GenericGroup from './components/genericGroup/GenericGroup'
 import GenericContact from './components/genericContact/GenericContact'
 import PaymentCardList from './components/pendingPayments/PendingPayments'
 import TransactionHistoryTable from './components/transactionHistory/TransactionHistory'
-import NotificationPage from './components/notificationsPage/NotificationPage'
 import { Toaster } from "sonner"
-
-import { ReactLenis } from 'lenis/react'
-import { useLenis } from 'lenis/react'
+import VerifyEmail from './components/VerifyEmail'
 import OnBoardingPage from './components/onBoardingPage/OnBoardingPage'
+import ProfilePage from './components/profilePage/ProfilePage'
+import LogoutPage from './components/misc/LogoutPage'
 
 
 
@@ -29,28 +28,31 @@ const App = () => {
     <>
 
       <Toaster   position="top-center" richColors />
-    {/* <ReactLenis root /> */}
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/onboarding" element={<OnBoardingPage/>} />
+      <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path='/logout' element={<LogoutPage />} />
+          <Route path="/onboarding" element={<OnBoardingPage/>} />
+          <Route path="/verifyEmail" element={<VerifyEmail/>} />
 
 
-      {/* Dashboard Layout Outlet */}
-      <Route path='/dashboard' element={<DashboardLayout/>}>
-          <Route index element={<MainDashboard />} />         
-          <Route path="pending-payments" element={<PaymentCardList/>} />
-          <Route path="transaction-history" element={<TransactionHistoryTable/>} />
-          <Route path="group/*" element={<GenericGroup />}/>
-          <Route path="group" element={<AllGroupsPage />}/>
-          <Route path="contact/*" element={<GenericContact/>} />
-          <Route path="contact" element={<AllContactsPage/>} />
-          {/* <Route path="notifications" element={<NotificationPage/>} /> */}
+          {/* Dashboard Layout Outlet */}
+          <Route path='/dashboard' element={<DashboardLayout/>}>
+              <Route index element={<MainDashboard />} />         
+              <Route path="pending-payments" element={<PaymentCardList/>} />
+              <Route path="transaction-history" element={<TransactionHistoryTable/>} />
+              <Route path="group/*" element={<GenericGroup />}/>
+              <Route path="group" element={<AllGroupsPage />}/>
+              <Route path="contact/*" element={<GenericContact/>} />
+              <Route path="contact" element={<AllContactsPage/>} />
+              {/* <Route path="notifications" element={<NotificationPage/>} /> */}
+              <Route path="profile" element={<ProfilePage/>} />
+              <Route path="*" element={<NotFoundPage/>} />
+          </Route>
+
+          {/* 404 route */}
           <Route path="*" element={<NotFoundPage/>} />
-      </Route>
-      {/* 404 route */}
-      <Route path="*" element={<NotFoundPage/>} />
       </Routes> 
       </>
   )

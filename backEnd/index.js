@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import admin from './firebase-admin.js'; 
 import dotenv from 'dotenv';
 import AuthRouter from './routes/auth.js';
+import UsersRouter from './routes/users.js';
 import connectDB from './config/dbConnnection.js';
 
 
@@ -39,6 +40,7 @@ connectDB()
 
 // ROUTERS
 app.use('/api/auth', AuthRouter);
+app.use('/api/users', UsersRouter);
 
 
 

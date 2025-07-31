@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { use, useLayoutEffect } from "react"
 import { Outlet, useLocation, Link } from "react-router-dom"
 import Notification from "./misc/Notification"
 import { AppSidebar } from "@/components/sideBar/app-sidebar"
@@ -19,6 +19,11 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import Logo from "./logo"
+import { useEffect } from "react"
+import axios from "axios"
+import { useNavigate } from "react-router-dom"
+import { set } from "date-fns"
+import { useState } from "react"
 
 const DashboardLayout = () => {
   const location = useLocation()
@@ -36,9 +41,39 @@ const DashboardLayout = () => {
     return { label, path }
   })
 
+  const Navigate= useNavigate()
+  const [user, setUser] = useState({name: "Guest", email: "guest", photoURL: ""})
+  useLayoutEffect(() => {
+    try{
+      axios.get("/api/auth/checkIfAuthorized")
+      .then((response) => {
+        if (response.status === 200) {
+          console.log("User is authorized")
+        }
+        const userData= response.data.user? response.data.user : null
+        if(!userData){
+          console.log("User data not found, redirecting to login")
+          Navigate("/logout")
+        }
+        localStorage.setItem("userDetails", JSON.stringify(userData))
+        setUser(userData)
+      })
+      .catch((error) => {
+        
+          console.log("User is not authorized or there is a problem with api connection, redirecting to login")
+          Navigate("/logout")          
+      })
+
+    }
+    catch{
+
+    }
+  },[])
+
+
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar user = {user} />
       <SidebarInset className="overflow-x-hidden">
         <header className="flex h-16  justify-between items-center gap-2 shadow-md    ">
           <div className="flex items-center gap-2 px-4" >

@@ -6,12 +6,53 @@ import RiveSplitAnim from '../riveSplitAnim'
 import { useEffect } from 'react'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import { signInWithPopup } from 'firebase/auth'
+import { auth, provider } from '@/firebase'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
+import axios from 'axios'
+
 
 
 const RegisterPage = () => {
   useEffect(() => {
     AOS.init({ once: false, duration: 800, offset: -100 })
   }, [])
+
+
+  const Navigate = useNavigate()
+  
+    const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider)
+      const user = result.user
+      const token = await user.getIdToken()
+      
+      try{
+          const response = await axios.post(`api/auth/verifyLoginWithGoogle`, {token},{withCredentials: true})
+          console.log("Response from server:", response.data)
+          toast.success("Google Sign-In successful!")
+          //local storage
+          localStorage.setItem('userDetails', JSON.stringify(response.data.user))
+          Navigate(response.data.redirect)
+      }
+      catch(error) {
+          toast.error("Error during server communication!")
+          console.error("Error during server communication:", error.message)
+          return
+      }
+      // toast.success("Google Sign-In successful!")
+  
+    } catch (error) {
+  
+       toast.error("Something Went Wrong!")
+      console.error("Google Sign-In error:", error.message)
+    }
+  }
+
+
+
+
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       
