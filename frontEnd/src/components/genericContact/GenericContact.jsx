@@ -364,7 +364,7 @@ export default function GenericContact() {
                       </Table>
                     </motion.div>
                     <CardFooter className="flex justify-start gap-2 pb-2 px-1">
-                      <History user={name} />
+                      <History user={name} contactId={contactData._id} />
                     </CardFooter>
                   </CardContent>
                 </TabsContent>
@@ -373,7 +373,7 @@ export default function GenericContact() {
           </Card>
         </motion.section>
 
-        <motion.section variants={cardVariants} className="mt-6 mb-24 pb-2">
+        {/* <motion.section variants={cardVariants} className="mt-6 mb-24 pb-2">
           <Card className="bg-white sm:mx-4 p-0 border-none shadow-none">
             <CardHeader className="px-2 mb-3">
               <CardTitle className="text-xl font-semibold text-emerald-600">
@@ -386,7 +386,7 @@ export default function GenericContact() {
               <CharBar data={analytics} className="w-full" />
             </CardContent>
           </Card>
-        </motion.section>
+        </motion.section> */}
       </div>
     </motion.div>
   );

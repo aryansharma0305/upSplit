@@ -1,72 +1,39 @@
-"use client"
+"use client";
 
-import React, { use, useState } from "react"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useNavigate } from "react-router-dom"
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useNavigate } from "react-router-dom";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import {
   User,
   Mail,
   MoreVertical,
   Trash2,
   Edit,
-} from "lucide-react"
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
   TooltipProvider,
-} from "@/components/ui/tooltip"
-import { GlowingEffect } from "../ui/glowing-effect"
-import { Nav } from "react-day-picker"
-
-const contactData = [
-  {
-    id: "1",
-    name: "Riya Sharma",
-    email: "riya.sharma@example.com",
-    phone: "+91 98765 43210",
-    profilePic: "https://randomuser.me/api/portraits/women/1.jpg",
-    owe: 1500,
-    toReceive: 500,
-    notes: "Friend from college, shares travel expenses",
-  },
-  {
-    id: "2",
-    name: "Aryan Patel",
-    email: "aryan.patel@example.com",
-    phone: "+91 87654 32109",
-    profilePic: "https://randomuser.me/api/portraits/men/75.jpg",
-    owe: 0,
-    toReceive: 600,
-    notes: "Roommate, handles utility bills",
-  },
-  {
-    id: "3",
-    name: "Saanvi Kiran",
-    email: "saanvi.kiran@example.com",
-    phone: "+91 76543 21098",
-    profilePic: "https://randomuser.me/api/portraits/women/2.jpg",
-    owe: 250,
-    toReceive: 0,
-    notes: "Colleague, part of Netflix group",
-  },
-]
+} from "@/components/ui/tooltip";
+import { GlowingEffect } from "../ui/glowing-effect";
+import { toast } from "sonner"; // For error notifications
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -77,7 +44,7 @@ const containerVariants = {
       delayChildren: 0.05,
     },
   },
-}
+};
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -89,29 +56,49 @@ const cardVariants = {
       duration: 0.06,
     },
   },
-}
+};
 
 export default function AllContactsPage() {
+  const Navigate = useNavigate();
+  const [filterText, setFilterText] = useState("");
+  const [filterStatus, setFilterStatus] = useState("All");
+  const [contacts, setContacts] = useState([]);
 
-  const Navigate = useNavigate()
+  // Fetch contacts on mount
+  useEffect(() => {
+    const fetchContacts = async () => {
+      try {
+        const response = await fetch("/api/contacts/getAllContacts");
+        if (!response.ok) {
+          throw new Error("Failed to fetch contacts");
+        }
+        const data = await response.json();
+        console.log("Fetched contacts:", data); // Debug log
+        setContacts(data);
+      } catch (error) {
+        console.error("Error fetching contacts:", error);
+        toast.error("Failed to load contacts. Please try again.");
+      }
+    };
 
-  const [filterText, setFilterText] = useState("")
-  const [filterStatus, setFilterStatus] = useState("All")
+    fetchContacts();
+  }, []);
 
   const resetFilters = () => {
-    setFilterText("")
-    setFilterStatus("All")
-  }
+    setFilterText("");
+    setFilterStatus("All");
+  };
 
-  const filteredData = contactData.filter((contact) => {
-    const matchesText = contact.name.toLowerCase().includes(filterText.toLowerCase())
-    const matchesStatus = filterStatus !== "All" 
-      ? filterStatus === "Owe" 
-        ? contact.owe > 0 
-        : contact.toReceive > 0 
-      : true
-    return matchesText && matchesStatus
-  })
+  const filteredData = contacts.filter((contact) => {
+    const matchesText = contact.name.toLowerCase().includes(filterText.toLowerCase());
+    const matchesStatus =
+      filterStatus !== "All"
+        ? filterStatus === "Owe"
+          ? contact.owe > 0
+          : contact.toReceive > 0
+        : true;
+    return matchesText && matchesStatus;
+  });
 
   return (
     <div className="w-full p-0 pt-4 sm:p-4">
@@ -177,25 +164,7 @@ export default function AllContactsPage() {
                   className="z-0"
                 />
 
-                <div className="absolute top-3 right-4">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="text-muted-foreground">
-                        <MoreVertical className="w-4 h-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-white dark:bg-gray-800">
-                      <DropdownMenuItem>
-                        <Edit className="w-4 h-4 mr-2" />
-                        Edit Contact
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-red-500">
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        Delete Contact
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
+               
 
                 <div className="flex items-center gap-3">
                   <img
@@ -216,12 +185,11 @@ export default function AllContactsPage() {
                     To Receive: ₹{contact.toReceive.toLocaleString("en-IN")}
                   </span>
                 </div>
-         
+
                 <div className="text-xs text-muted-foreground truncate flex items-center gap-1 cursor-default">
-                      <Mail className="w-3.5 h-3.5 text-muted-foreground" />
-                      <span className="truncate">{contact.email}</span>
+                  <Mail className="w-3.5 h-3.5 text-muted-foreground" />
+                  <span className="truncate">{contact.email}</span>
                 </div>
-                 
 
                 <div className="grid gap-1">
                   <div className="flex items-center gap-1 text-muted-foreground">
@@ -236,7 +204,7 @@ export default function AllContactsPage() {
                   <Button
                     size="sm"
                     className="w-fit bg-gradient-to-br from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
-                    onClick={() => {Navigate(`/dashboard/contact/${contact.id}`)}}
+                    onClick={() => Navigate(`/dashboard/contact/${contact.username}`)}
                   >
                     View Contact
                   </Button>
@@ -251,5 +219,5 @@ export default function AllContactsPage() {
         </motion.div>
       </TooltipProvider>
     </div>
-  )
+  );
 }

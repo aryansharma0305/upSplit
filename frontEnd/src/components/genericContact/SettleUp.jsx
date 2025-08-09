@@ -55,7 +55,8 @@ export function SettleUp({ txn , upiID }) {
           
                   setTimeout(() => {
                     closeButtonRef.current.click() 
-                  }, 10)
+                    window.location.reload();
+                  }, 1000)
                   
                   resolve(true)
                 }, 1000) 

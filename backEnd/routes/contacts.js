@@ -1,5 +1,5 @@
 import express from "express";
-import { discardTransaction, getTransactionsWithUser, isContact, settleUpTransaction } from "../controllers/contactsController.js";
+import { discardTransaction, getAllContacts, getAllTransactionsWithUser, getMonthlyAnalytics, getTransactionsWithUser, isContact, settleUpTransaction } from "../controllers/contactsController.js";
 import { addTransaction } from "../controllers/contactsController.js";
 import { get } from "mongoose";
 
@@ -18,9 +18,15 @@ ContactsRouter.post("/addTransaction", addTransaction);
 
 ContactsRouter.get("/getTransactionWithUser", getTransactionsWithUser)
 
+ContactsRouter.get("/getAllTransactionsWithUser", getAllTransactionsWithUser)
+
 ContactsRouter.post("/settleUpTransaction", settleUpTransaction);
 
 ContactsRouter.post("/discardtTransaction", discardTransaction);
+
+ContactsRouter.get('/getMonthlyAnalytics',getMonthlyAnalytics);
+
+ContactsRouter.get("/getAllContacts", getAllContacts);
 
 
 export default ContactsRouter;
