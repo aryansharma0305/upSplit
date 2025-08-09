@@ -82,7 +82,7 @@ export const verifyIfUserNameIsUnique = async (req, res) => {
   }
 
   try {
-    const existingUser = await users.findOne({ username: userName });
+    const existingUser = await users.findOne({  username: { $regex: new RegExp(`^${userName}$`, "i") } });
     if (existingUser) {
       return res
         .status(200)

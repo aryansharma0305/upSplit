@@ -79,7 +79,7 @@ export function NavUser({
             <DropdownMenuSeparator />
             
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {Navigate('/dashboard/profile')}}>
                 <Settings/>
                 Account Settings
               </DropdownMenuItem>

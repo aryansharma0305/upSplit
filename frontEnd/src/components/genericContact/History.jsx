@@ -122,7 +122,7 @@ export function History({ user }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="link" className="px-2 underline hover:cursor-pointer hover:-translate-y-0.5 duration-75 hover:text-emerald-700">View All Transactions</Button>
+        <Button variant="link" className="px-2 underline hover:cursor-pointer hover:-translate-y-0.5 duration-75 hover:text-emerald-700">Past Transactions</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[900px] px-3">
         <div className="overflow-y-scroll max-h-[80vh] flex flex-col gap-4 mt-6 px-4">

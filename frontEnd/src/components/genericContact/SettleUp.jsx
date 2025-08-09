@@ -12,46 +12,67 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ArrowRightLeft } from "lucide-react"
-import React from "react";
+import React, { use, useEffect } from "react";
 import confetti from "canvas-confetti";
 import StateFullButton from "@/components/ui/stateful-button";
 
 import { QRCodeSVG } from 'qrcode.react';
 
-export function SettleUp({ txn }) {
+export function SettleUp({ txn , upiID }) {
 
 
 
 
     const closeButtonRef = React.useRef(null);
 
-    const handleConfirm = () => {
+  useEffect(() => {
+    console.log(txn,upiID);
+  }, []);
+
+    const handleConfirm = async() => {
     
-        return new Promise((resolve) => {
-          setTimeout(() => {
-             confetti({
-                particleCount: 100,
-                spread: 100,
-                origin: { y: 0.85 },
-                colors: ['#4ade80', '#22c55e', '#16a34a'],
-            });
-    
-            setTimeout(() => {
-              closeButtonRef.current.click() 
-            }, 10)
-            
-            resolve(true)
-          }, 1000) 
+        fetch("/api/contacts/settleUpTransaction", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ transactionId: txn.id }),
         })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.error) {
+              console.error("Error settling up:", data.error);
+            } else {
+              console.log("Transaction settled successfully:", data);
+              return new Promise((resolve) => {
+                setTimeout(() => {
+                  confetti({
+                      particleCount: 100,
+                      spread: 100,
+                      origin: { y: 0.85 },
+                      colors: ['#4ade80', '#22c55e', '#16a34a'],
+                  });
+          
+                  setTimeout(() => {
+                    closeButtonRef.current.click() 
+                  }, 10)
+                  
+                  resolve(true)
+                }, 1000) 
+              })
+            }
+          })
+          .catch((error) => {
+            console.error("Error settling up transaction:", error);
+          });
     
       }
 
 
 
-  const upiID='ruchisharmaggic@okaxis'
-  const upiLink = `upi://pay?pa=${upiID}&am=${Math.abs(txn.amount)}&cu=INR&tn=${encodeURIComponent(`Settle Transaction for ${txn.id}`)}`;
+  const upiLink = `upi://pay?pa=${upiID}&am=${Math.abs(txn.totalAmount)}&cu=INR&tn=${encodeURIComponent(`Settle Transaction for ${txn.id}`)}`;
 
-  // const upiLink = `upi://pay?pa=${upiID}&am=${Math.abs(txn.amount)}&cu=INR&tn=Settle%20Transaction%20for%20${txn.id}`;
+  // const upiLink = `upi://pay?pa=${upiID}&am=${Math.abs(txn.totalAmount)}&cu=INR&tn=Settle%20Transaction%20for%20${txn.id}`;
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -68,7 +89,7 @@ export function SettleUp({ txn }) {
         <DialogHeader>
           <DialogTitle>Settle Transaction</DialogTitle>
           <DialogDescription>
-            Settle the transaction of ₹{Math.abs(txn.amount)} using UPI.
+            Settle the transaction of ₹{Math.abs(txn.totalAmount)} using UPI.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -82,7 +103,7 @@ export function SettleUp({ txn }) {
                 rel="noopener noreferrer"
                 className="text-emerald-600 mb-3 font-semibold hover:underline"
               >
-                Pay ₹{Math.abs(txn.amount)} via UPI
+                Pay ₹{Math.abs(txn.totalAmount)} via UPI
               </a> 
            
             <QRCodeSVG

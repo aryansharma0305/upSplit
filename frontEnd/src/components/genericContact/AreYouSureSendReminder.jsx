@@ -44,15 +44,9 @@ export function AreYouSureSendReminder({txn}) {
         variant="outline"
         onClick={() => console.log(`Action: ${txn.type === "debit" ? "Settle Up" : "Send Reminder"} for ${txn.id}`)}
         >
-        {txn.type === "debit" ? (
-            <>
-            Settle Up <ArrowRightLeft className="w-4 h-4" />
-            </>
-        ) : (
-            <>
             Send Reminder <AlarmClock className="w-4 h-4" />
-            </>
-        )}
+        
+       
         </Button>
       </AlertDialogTrigger>
 

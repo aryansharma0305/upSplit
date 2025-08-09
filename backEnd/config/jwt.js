@@ -11,6 +11,7 @@ export const generateAccessToken = async(id,email) => {
     expiresIn: "1d",
   });
 };
+
 export const verifyToken = async(token) => {
   return jwt.verify(token, secret);
 }

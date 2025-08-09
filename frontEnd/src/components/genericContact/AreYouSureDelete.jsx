@@ -11,25 +11,46 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { ArrowRightLeft, AlarmClock } from "lucide-react"
-import { useRef } from "react"
+import { use, useRef } from "react"
 
 import StateFullButton from "@/components/ui/stateful-button"
 import { Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom"
 
 export function AreYouSureDelete({txn}) {
 
   const cancelButtonRef = useRef(null);
 
-
+  const Navigate=useNavigate();
   const handleContinue = () => {
-    return new Promise((resolve) => {
     
-      setTimeout(() => {
-        resolve();
-        cancelButtonRef.current.click(); 
-      }, 1000); 
-    
-    });
+    fetch("/api/contacts/discardtTransaction", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ transactionId: txn.id }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          console.error("Error:", data.error);
+        } else {
+          console.log("Transaction discarded successfully:", data);
+          window.location.reload(); // Reload the page to reflect changes
+          
+          return new Promise((resolve) => {
+              setTimeout(() => {
+                resolve();
+                cancelButtonRef.current.click(); 
+              }, 1000); 
+            });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+
   };
 
 
@@ -52,7 +73,7 @@ export function AreYouSureDelete({txn}) {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you  sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will DELETE the transaction of <strong>  INR {Math.abs(txn.amount)}</strong>  which is currently pending.
+            This action cannot be undone. This will DELETE the transaction of <strong>  INR {Math.abs(txn.totalAmount)}</strong>  which is currently pending.
             <br />
           </AlertDialogDescription>
         </AlertDialogHeader>

@@ -9,7 +9,9 @@ import dotenv from 'dotenv';
 import AuthRouter from './routes/auth.js';
 import UsersRouter from './routes/users.js';
 import connectDB from './config/dbConnnection.js';
-
+import { authChecker } from './middleware/authChecker.js';
+import users from './models/users.js';
+import ContactsRouter from './routes/contacts.js';
 
 
 
@@ -38,9 +40,13 @@ app.use(express.static(distPath));
 connectDB()
 
 
-// ROUTERS
+// Unprotected Routes
 app.use('/api/auth', AuthRouter);
-app.use('/api/users', UsersRouter);
+
+
+// Protected Routes
+app.use('/api/users', authChecker, UsersRouter)
+app.use('/api/contacts', authChecker, ContactsRouter);
 
 
 
@@ -55,6 +61,11 @@ app.get("/api",(req,res)=>{
 app.get(/^\/(?!api).*/,(req,res)=>{
   res.sendFile(path.join(distPath, 'index.html'));  
 });
+
+
+
+
+
 
 
 
