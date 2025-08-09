@@ -18,7 +18,7 @@ import StateFullButton from "@/components/ui/stateful-button";
 
 import { QRCodeSVG } from 'qrcode.react';
 
-export function SettleUPDialog({ txn }) {
+export function SettleUPDialog({ txn,groupId, memberId  }) {
 
 
 
@@ -26,23 +26,35 @@ export function SettleUPDialog({ txn }) {
     const closeButtonRef = React.useRef(null);
 
     const handleConfirm = () => {
-    
-        return new Promise((resolve) => {
-          setTimeout(() => {
-             confetti({
-                particleCount: 100,
-                spread: 100,
-                origin: { y: 0.85 },
-                colors: ['#4ade80', '#22c55e', '#16a34a'],
-            });
-    
-            setTimeout(() => {
-              closeButtonRef.current.click() 
-            }, 10)
+        console.log("Payment Done for txn:", txn, groupId, memberId);
+        const resp= fetch('/api/groups/settleUpWithMember', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            groupId: groupId,
+            memberId: memberId,
             
-            resolve(true)
-          }, 1000) 
+          }),
         })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Success:', data);
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#4CAF50', '#8BC34A', '#CDDC39'],
+          });
+          closeButtonRef.current.click();
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          alert("Something went wrong, please try again later.");
+        }
+      );
+        console.log("Response:", resp);
     
       }
 

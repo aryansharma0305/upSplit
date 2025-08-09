@@ -11,7 +11,7 @@ export const authChecker= async( req, res, next) => {
     try{
     const decoded = await verifyToken(cookie);
     const user = await users.findById(decoded.id);
-    console.log(user)
+    // console.log(user)
     if(!user){
         return res.status(404).json({ error: "User not found" });
     }

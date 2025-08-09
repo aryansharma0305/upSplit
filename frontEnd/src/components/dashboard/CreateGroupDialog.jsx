@@ -25,6 +25,8 @@ import { toast, Toaster } from "sonner"
 import { useNavigate } from "react-router-dom"
 
 import confetti from "canvas-confetti"
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
+import { storage } from "@/firebase.js" // Adjust the path to your Firebase config
 
 
 
@@ -41,30 +43,49 @@ export function CreateGroupDialog() {
   const [searchResults, setSearchResults] = useState([])
   const [isDragging, setIsDragging] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [initialUsers, setInitialUsers] = useState([])
 
   const fileInputRef = useRef(null)
   const maxLength = 50
   const maxFileSize = 5 * 1024 * 1024 // 5MB in bytes
 
-  const mockUsers = [
-    { id: 1, name: "Tanu Mehra", email: "tanu@example.com", profilePic: "https://randomuser.me/api/portraits/women/1.jpg" },
-    { id: 2, name: "Rishi Patel", email: "rishi@example.com", profilePic: "https://randomuser.me/api/portraits/men/75.jpg" },
-    { id: 3, name: "Megha Jain", email: "megha@example.com", profilePic: "https://randomuser.me/api/portraits/women/2.jpg" },
-    { id: 4, name: "Aryan Sharma", email: "aryan.sharma@example.com", profilePic: "https://randomuser.me/api/portraits/men/3.jpg" },
-    { id: 5, name: "Saanvi Kiran", email: "saanvi.kiran@example.com", profilePic: "https://randomuser.me/api/portraits/women/5.jpg" },
-  ]
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch("/api/users/getrandomusers")
+      if (!response.ok) {
+        throw new Error("Failed to fetch users")
+      }
+      const data = await response.json()
+      setInitialUsers(data)
+    } catch (error) {
+      console.error("Error fetching users:", error)
+    }
+  }
+
+  useEffect(() => {
+    fetchUsers()
+  }, [])
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      const filtered = mockUsers.filter(
-        user =>
-          user.name.toLowerCase().includes(query.toLowerCase()) ||
-          user.email.toLowerCase().includes(query.toLowerCase())
-      )
-      setSearchResults(filtered)
+      if (!query) {
+        setSearchResults(initialUsers)
+        return
+      }
+
+      const searchQuery = query.trim()
+      fetch(`/api/users/search?q=${encodeURIComponent(searchQuery)}`)
+        .then(response => response.json())
+        .then(data => {
+          setSearchResults(data)
+        })
+        .catch(error => {
+          console.error("Error searching users:", error)
+          setSearchResults([])
+        })
     }, 300)
     return () => clearTimeout(timeout)
-  }, [query])
+  }, [query, initialUsers])
 
   const validateFile = (file) => {
     if (!file) {
@@ -177,15 +198,15 @@ export function CreateGroupDialog() {
   }
 
   const toggleMember = (user) => {
-    if (selectedMembers.find((m) => m.id === user.id)) {
-      setSelectedMembers((prev) => prev.filter((m) => m.id !== user.id))
+    if (selectedMembers.find((m) => m._id === user._id)) {
+      setSelectedMembers((prev) => prev.filter((m) => m._id !== user._id))
     } else {
       setSelectedMembers((prev) => [...prev, user])
     }
   }
 
-  const removeMember = (id) => {
-    setSelectedMembers((prev) => prev.filter((m) => m.id !== id))
+  const removeMember = (_id) => {
+    setSelectedMembers((prev) => prev.filter((m) => m._id !== _id))
   }
 
   const CloseButtonRef = useRef(null)
@@ -193,40 +214,102 @@ export function CreateGroupDialog() {
 
   const Navigate=useNavigate()
 
-  const handleCreateGroup=()=>{
+  const handleCreateGroup= async ()=>{
 
     console.log("Button Clicked")
-    toast("Creating event...")
+    toast("Creating group...")
      if(selectedMembers.length === 0) {
     
             console.log("No members selected")
-        toast("Event has been created");
+        toast("Group has been created");
 
             
      }
     
 
-      return new Promise((resolve, reject) => {
-  
-       
+      const user = localStorage.getItem('userDetails') ? JSON.parse(localStorage.getItem('userDetails')) : null;
+      if (!user) {
+        toast.error('User not authenticated. Please log in.');
+        Navigate('/login');
+        return;
+      }
 
-            setTimeout(() => {
-            resolve();
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.85 },
-                colors: ['#34D399', '#10B981', '#059669'],
-            })
-            setTimeout(() => {
-                CloseButtonRef.current.click();
-                Navigate("/dashboard/group/1")
-            }, 500); 
-            }, 1000); 
-        
+      let photoURL = null;
+      if (groupImage) {
+        // Upload cropped image to Firebase Storage
+        const storageRef = ref(storage, `groups/${user._id}/${Date.now()}.jpg`);
+        console.log('Storage Path:', storageRef.toString()); // Debug: Log storage path
+        const response = await fetch(groupImage);
+        const blob = await response.blob();
+        console.log('Blob Size:', blob.size); // Debug: Log blob size
+        const uploadTask = uploadBytesResumable(storageRef, blob, { contentType: 'image/jpeg' });
+
+        photoURL = await new Promise((resolve, reject) => {
+          uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log('Upload is ' + progress + '% done');
+            },
+            (error) => {
+              console.error('Upload error:', error);
+              toast.error('Error uploading image to Firebase Storage!');
+              reject(error);
+            },
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref)
+                .then((downloadURL) => {
+                  console.log('Download URL:', downloadURL); // Debug: Log download URL
+                  resolve(downloadURL);
+                })
+                .catch((error) => {
+                  console.error('Download URL error:', error);
+                  toast.error('Error getting download URL!');
+                  reject(error);
+                });
+            }
+          );
+        });
+      }
+
+      const membersIds = selectedMembers.map(m => m._id);
+
+      try {
+        const response = await fetch('/api/groups/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name: groupName, photoURL, members: membersIds }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to create group');
         }
-    
-    )
+
+        const data = await response.json();
+        console.log("Group created successfully:", data);
+        toast.success('Group created');
+
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.85 },
+              colors: ['#34D399', '#10B981', '#059669'],
+            });
+            setTimeout(() => {
+              CloseButtonRef.current.click();
+              Navigate(`/dashboard/group/${data.group._id}`); // Assuming the response includes group._id
+              resolve();
+            }, 500);
+          }, 1000);
+        });
+      } catch (error) {
+        console.error("Error creating group:", error);
+        toast.error("Failed to create group. Please try again.");
+      }
     }
 
 
@@ -433,11 +516,11 @@ export function CreateGroupDialog() {
                   <div className="flex flex-wrap gap-2">
                     {selectedMembers.map((member) => (
                       <div
-                        key={member.id}
+                        key={member._id}
                         className="flex items-center gap-2 bg-emerald-100 dark:bg-emerald-900/40 p-2 rounded-md"
                       >
                         <img
-                          src={member.profilePic}
+                          src={member.photoURL}
                           alt={member.name}
                           className="w-6 h-6 rounded-full border"
                         />
@@ -446,7 +529,7 @@ export function CreateGroupDialog() {
                           variant="ghost"
                           size="icon"
                           className="h-5 w-5"
-                          onClick={() => removeMember(member.id)}
+                          onClick={() => removeMember(member._id)}
                         >
                           <X className="h-4 w-4" />
                         </Button>
@@ -476,10 +559,10 @@ export function CreateGroupDialog() {
               {searchResults.length ? (
                 searchResults.map((user) => (
                   <div
-                    key={user.id}
+                    key={user._id}
                     className={cn(
                       "flex items-center justify-between p-2 rounded-md transition cursor-pointer",
-                      selectedMembers.find((m) => m.id === user.id)
+                      selectedMembers.find((m) => m._id === user._id)
                         ? "bg-emerald-100 dark:bg-emerald-900/40"
                         : "hover:bg-muted"
                     )}
@@ -487,7 +570,7 @@ export function CreateGroupDialog() {
                   >
                     <div className="flex items-center gap-3 overflow-hidden">
                       <img
-                        src={user.profilePic}
+                        src={user.photoURL}
                         alt={user.name}
                         className="w-8 h-8 rounded-full border"
                       />
@@ -498,7 +581,7 @@ export function CreateGroupDialog() {
                         </p>
                       </div>
                     </div>
-                    {selectedMembers.find((m) => m.id === user.id) && (
+                    {selectedMembers.find((m) => m._id === user._id) && (
                       <Check className="h-5 w-5 text-emerald-600" />
                     )}
                   </div>

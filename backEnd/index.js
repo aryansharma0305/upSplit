@@ -12,6 +12,7 @@ import connectDB from './config/dbConnnection.js';
 import { authChecker } from './middleware/authChecker.js';
 import users from './models/users.js';
 import ContactsRouter from './routes/contacts.js';
+import GroupsRouter from './routes/groups.js';
 
 
 
@@ -47,6 +48,7 @@ app.use('/api/auth', AuthRouter);
 // Protected Routes
 app.use('/api/users', authChecker, UsersRouter)
 app.use('/api/contacts', authChecker, ContactsRouter);
+app.use('/api/groups', authChecker, GroupsRouter);
 
 
 

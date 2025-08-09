@@ -1,10 +1,8 @@
 import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
 
 
-
-
-
-
+dotenv.config();
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.zoho.com',  // or smtp.zoho.com for global domains
@@ -15,8 +13,6 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_SMTP_PASS, // Use environment variable for security
   },
 });
-
-
 
 const mailOptions = {
   from: 'upsplit@aryan-sharma.xyz',

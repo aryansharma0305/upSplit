@@ -1,18 +1,18 @@
-"use client"
+"use client";
 
-import React, { useState } from "react"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useNavigate } from "react-router-dom"
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useNavigate } from "react-router-dom";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import {
   Users,
   CalendarDays,
@@ -20,56 +20,21 @@ import {
   Trash2,
   LogOut,
   Settings,
-} from "lucide-react"
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
   TooltipProvider,
-} from "@/components/ui/tooltip"
-import { GlowingEffect } from "../ui/glowing-effect"
-
-const groupData = [
-  {
-    id: "1",
-    name: "Trip Buddies",
-    members: ["Riya", "Aryan", "Rohan"],
-    created: "2024-06-10",
-    notes: "Group for our annual road trip planning and expenses",
-    profilePic: "https://randomuser.me/api/portraits/lego/3.jpg",
-    isOwner: true,
-    owe: 1500,
-    toReceive: 500,
-  },
-  {
-    id: "2",
-    name: "Netflix Group",
-    members: ["Riya", "Saanvi", "Kiran"],
-    created: "2024-05-15",
-    notes: "Shared Netflix subscription costs",
-    profilePic: "https://randomuser.me/api/portraits/lego/6.jpg",
-    isOwner: false,
-    owe: 250,
-    toReceive: 0,
-  },
-  {
-    id: "3",
-    name: "Apartment Mates",
-    members: ["Aryan", "Rohan", "Neha"],
-    created: "2024-04-20",
-    notes: "Household expenses for shared apartment",
-    profilePic: "https://randomuser.me/api/portraits/lego/8.jpg",
-    isOwner: true,
-    owe: 3000,
-    toReceive: 1200,
-  },
-]
+} from "@/components/ui/tooltip";
+import { GlowingEffect } from "../ui/glowing-effect";
+import axios from "axios";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -80,7 +45,7 @@ const containerVariants = {
       delayChildren: 0.05,
     },
   },
-}
+};
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -92,29 +57,55 @@ const cardVariants = {
       duration: 0.06,
     },
   },
-}
+};
 
-export default function AllGroups() {
+export default function AllGroupsPage() {
+  const navigate = useNavigate();
+  const [groupData, setGroupData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [filterText, setFilterText] = useState("");
+  const [filterStatus, setFilterStatus] = useState("All");
 
-  const Navigate= useNavigate()
+  const fetchGroups = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get("/api/groups/getAllGroups", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      console.log("Fetched groups:", response.data);
+      setGroupData(response.data);
+    } catch (err) {
+      console.error("Error fetching groups:", err);
+      setError(err.response?.data?.message || "Failed to fetch groups");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const [filterText, setFilterText] = useState("")
-  const [filterStatus, setFilterStatus] = useState("All")
+  useEffect(() => {
+    fetchGroups();
+  }, []);
 
   const resetFilters = () => {
-    setFilterText("")
-    setFilterStatus("All")
-  }
+    setFilterText("");
+    setFilterStatus("All");
+  };
 
   const filteredData = groupData.filter((group) => {
-    const matchesText = group.name.toLowerCase().includes(filterText.toLowerCase())
-    const matchesStatus = filterStatus !== "All" 
-      ? filterStatus === "Owner" 
-        ? group.isOwner 
-        : !group.isOwner 
-      : true
-    return matchesText && matchesStatus
-  })
+    const matchesText = group.name.toLowerCase().includes(filterText.toLowerCase());
+    const matchesStatus =
+      filterStatus !== "All"
+        ? filterStatus === "Owner"
+          ? group.isOwner
+          : !group.isOwner
+        : true;
+    return matchesText && matchesStatus;
+  });
+
+  if (loading) return <div className="text-center">Loading...</div>;
+  if (error) return <div className="text-center text-red-500">Error: {error}</div>;
 
   return (
     <div className="w-full p-0 pt-4 sm:p-4">
@@ -181,29 +172,7 @@ export default function AllGroups() {
                 />
 
                 <div className="absolute top-3 right-4">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="text-muted-foreground">
-                        <MoreVertical className="w-4 h-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-white dark:bg-gray-800">
-                      <DropdownMenuItem>
-                        <Settings className="w-4 h-4 mr-2" />
-                        Edit Group
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Leave Group
-                      </DropdownMenuItem>
-                      {group.isOwner && (
-                        <DropdownMenuItem className="text-red-500">
-                          <Trash2 className="w-4 h-4 mr-2" />
-                          Delete Group
-                        </DropdownMenuItem>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -217,10 +186,10 @@ export default function AllGroups() {
                   </div>
                 </div>
 
-                 <div className="text-xs text-muted-foreground truncate flex items-center gap-1 cursor-default">
-                      <Users className="w-3.5 h-3.5 text-muted-foreground" />
-                      <span className="truncate">{group.members.join(", ")}</span>
-                    </div>
+                <div className="text-xs text-muted-foreground truncate flex items-center gap-1 cursor-default">
+                  <Users className="w-3.5 h-3.5 text-muted-foreground" />
+                  <span className="truncate">{group.members.join(", ")}</span>
+                </div>
 
                 <div className="flex flex-wrap gap-2 items-center">
                   <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded-full text-xs font-medium">
@@ -232,30 +201,12 @@ export default function AllGroups() {
                 </div>
 
                 
-                   
-                 
-
-                {/* <div className="grid gap-1">
-                  <div className="flex items-center gap-1 text-muted-foreground">
-                    <CalendarDays className="w-4 h-4" />
-                    <span className="text-xs">
-                      Created: <strong className="text-foreground">{group.created}</strong>
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1 text-muted-foreground">
-                    <Users className="w-4 h-4" />
-                    <span className="text-xs">
-                      {group.members.length} Members
-                    </span>
-                  </div>
-                </div> */}
-
                 <div className="flex justify-between items-center mt-2">
                   <Button
                     size="sm"
                     className="w-fit bg-gradient-to-br from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white hover:-translate-y-1 duration-100"
-                    onClick={() => Navigate(`/dashboard/group/${group.id}`)}
-                    >
+                    onClick={() => navigate(`/dashboard/group/${group.id}`)}
+                  >
                     View Group
                   </Button>
                 </div>
@@ -269,5 +220,5 @@ export default function AllGroups() {
         </motion.div>
       </TooltipProvider>
     </div>
-  )
+  );
 }
