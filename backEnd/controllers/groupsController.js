@@ -69,17 +69,18 @@ export const createGroup = async (req, res) => {
 
 
 
+
+
 export const getGroupData = async (req, res) => {
   try {
     const { q: groupId } = req.query;
     const userId = req.user._id;
 
-    // Validate groupId
     if (!mongoose.isValidObjectId(groupId)) {
       return res.status(400).json({ message: "Invalid group ID" });
     }
 
-    // Fetch group with populated members and createdBy
+    // Fetch group and members
     const group = await groups.findById(groupId)
       .populate("members", "name photoURL username email")
       .populate("createdBy", "name photoURL username email");
@@ -88,73 +89,170 @@ export const getGroupData = async (req, res) => {
       return res.status(404).json({ message: "Group not found" });
     }
 
-    // Verify user is a member
-    const isMember = group.members.some((member) => member._id.toString() === userId.toString());
+    const isMember = group.members.some(m => m._id.toString() === userId.toString());
     if (!isMember) {
       return res.status(403).json({ message: "You are not a member of this group" });
     }
 
-    // Fetch the 5 most recent transactions
+    // Recent transactions (for UI)
     const transactions = await groupTransaction.find({ groupId })
       .sort({ date: -1 })
       .limit(5)
       .populate("paidBy", "name photoURL username email")
       .populate("createdBy", "name photoURL username email");
 
-    // Calculate member summaries
+    // All unsettled transactions (we'll use these to compute ledger + update DB)
     const allTransactions = await groupTransaction.find({ groupId, settled: false })
-      .populate("paidBy", "name");
+      .populate("paidBy", "name _id");
 
-    const balances = {};
-    group.members.forEach((member) => {
-      if (member.name) {
-        balances[member.name] = {
-          _id: member._id.toString(),
-          iOwe: 0,
-          iOwed: 0,
-          net: 0,
-        };
-      }
-    });
-
-    allTransactions.forEach((txn) => {
-      if (!txn.memberShares || !txn.paidBy?.name) {
-        console.warn(`Skipping transaction ${txn._id} due to missing memberShares or paidBy`);
-        return;
-      }
-
-      group.members.forEach((member) => {
-        const memberName = member.name;
-        const memberId = member._id.toString();
-        const share = txn.memberShares.get(memberId) || { amount: 0, paid: false };
-        if (typeof share.amount === "undefined" || typeof share.paid === "undefined") {
-          console.warn(`Missing or invalid share for ${memberName} in transaction ${txn._id}`);
-          return;
-        }
-
-        const shareAmount = parseFloat(share.amount) || 0;
-        if (txn.paidBy.name === memberName) {
-          balances[memberName].iOwed += parseFloat(txn.amount) || 0;
-        }
-        if (!share.paid && memberName !== txn.paidBy.name) {
-          balances[memberName].iOwe += shareAmount;
-        }
+    // 1) Build directed ledger: ledger[A][B] = total A owes B (sum of unpaid memberShares where paidBy=B)
+    const ledger = {};
+    group.members.forEach(m1 => {
+      const id1 = m1._id.toString();
+      ledger[id1] = {};
+      group.members.forEach(m2 => {
+        const id2 = m2._id.toString();
+        if (id1 !== id2) ledger[id1][id2] = 0;
       });
     });
 
-    // Calculate net balances
-    Object.keys(balances).forEach((memberName) => {
-      balances[memberName].net = balances[memberName].iOwed - balances[memberName].iOwe;
+    // Fill ledger from unsettled transactions
+    allTransactions.forEach(txn => {
+      if (!txn.paidBy || !txn.paidBy._id) return; // defensive
+      const payerId = txn.paidBy._id.toString();
+
+      // memberShares is a Mongoose Map — iterate safely
+      if (txn.memberShares && typeof txn.memberShares.forEach === "function") {
+        txn.memberShares.forEach((share, memberId) => {
+          // only consider unpaid shares and members other than payer
+          if (!share || share.paid || memberId === payerId) return;
+          const amount = parseFloat(share.amount) || 0;
+          ledger[memberId][payerId] = (ledger[memberId][payerId] || 0) + amount;
+        });
+      } else {
+        // fallback if it's plain object
+        Object.keys(txn.memberShares || {}).forEach(memberId => {
+          const share = txn.memberShares[memberId];
+          if (!share || share.paid) return;
+          if (memberId === payerId) return;
+          const amount = parseFloat(share.amount) || 0;
+          ledger[memberId][payerId] = (ledger[memberId][payerId] || 0) + amount;
+        });
+      }
     });
 
-    // Format transactions for frontend
-    const formattedTransactions = transactions.map((txn) => {
+   
+    const memberIds = group.members.map(m => m._id.toString()).sort();
+    for (let i = 0; i < memberIds.length; i++) {
+      for (let j = i + 1; j < memberIds.length; j++) {
+        const a = memberIds[i];
+        const b = memberIds[j];
+
+        const aOwesB = ledger[a][b] || 0;
+        const bOwesA = ledger[b][a] || 0;
+        const net = aOwesB - bOwesA;
+
+        if (net === 0) {
+         
+          await groupTransaction.updateMany(
+            {
+              groupId,
+              settled: false,
+              paidBy: b,
+              [`memberShares.${a}.paid`]: false
+            },
+            { $set: { [`memberShares.${a}.paid`]: true } }
+          );
+
+          // Mark memberShares[b].paid = true where paidBy = a
+          await groupTransaction.updateMany(
+            {
+              groupId,
+              settled: false,
+              paidBy: a,
+              [`memberShares.${b}.paid`]: false
+            },
+            { $set: { [`memberShares.${b}.paid`]: true } }
+          );
+
+          // Zero them in ledger
+          ledger[a][b] = 0;
+          ledger[b][a] = 0;
+        } else if (net > 0) {
+          // a is net owed by b (aOwesB > bOwesA => actually a owed more? careful: ledger[a][b] is A owes B)
+          // normalize: ledger[a][b] = net, ledger[b][a] = 0
+          ledger[a][b] = net;
+          ledger[b][a] = 0;
+          // Do not partially mark DB here — partial matching becomes complex. We only auto-mark when net==0.
+        } else {
+          // net < 0 -> b is net owed by a
+          ledger[b][a] = -net;
+          ledger[a][b] = 0;
+        }
+      }
+    }
+
+    // 3) After marking memberShares paid above, some transactions may now have all shares paid.
+    // Mark those transactions as settled.
+    // We'll find unsettled transactions in the group and mark settled=true if ALL memberShares.*.paid === true
+    const possiblySettled = await groupTransaction.find({ groupId, settled: false });
+
+    const toSettleIds = [];
+    for (const txn of possiblySettled) {
+      // txn.memberShares is a Map — check values
+      let allPaid = true;
+      if (txn.memberShares && typeof txn.memberShares.forEach === "function") {
+        txn.memberShares.forEach((share) => {
+          if (!share || !share.paid) allPaid = false;
+        });
+      } else {
+        for (const key of Object.keys(txn.memberShares || {})) {
+          const share = txn.memberShares[key];
+          if (!share || !share.paid) {
+            allPaid = false;
+            break;
+          }
+        }
+      }
+      if (allPaid) toSettleIds.push(txn._id);
+    }
+
+    if (toSettleIds.length > 0) {
+      await groupTransaction.updateMany(
+        { _id: { $in: toSettleIds } },
+        { $set: { settled: true } }
+      );
+    }
+
+    // 4) Build final balances object for response from the (now netted) ledger
+    const balances = {};
+    group.members.forEach(m => {
+      const id = m._id.toString();
+      const owedToMe = Object.values(ledger[id] || {}).reduce((s, v) => s + (v || 0), 0);
+      const iOweOthers = Object.values(ledger).reduce((sum, row) => sum + (row[id] || 0), 0);
+      balances[m.name] = {
+        _id: id,
+        iOwe: parseFloat(iOweOthers.toFixed(2)),
+        iOwed: parseFloat(owedToMe.toFixed(2)),
+        net: parseFloat((owedToMe - iOweOthers).toFixed(2))
+      };
+    });
+
+    // 5) Format transactions (recent ones we fetched earlier)
+    const formattedTransactions = transactions.map(txn => {
       const memberShares = {};
-      group.members.forEach((member) => {
-        const share = txn.memberShares.get(member._id.toString()) || { amount: 0, paid: false };
+      group.members.forEach(member => {
+        let share = { amount: 0, paid: false };
+        if (txn.memberShares && typeof txn.memberShares.get === "function") {
+          const s = txn.memberShares.get(member._id.toString());
+          if (s) share = s;
+        } else if (txn.memberShares && txn.memberShares[member._id.toString()]) {
+          share = txn.memberShares[member._id.toString()];
+        }
+
         memberShares[member.name] = {
           amount: parseFloat(share.amount || 0).toFixed(2),
-          paid: share.paid,
+          paid: !!share.paid
         };
       });
 
@@ -167,24 +265,24 @@ export const getGroupData = async (req, res) => {
         split: txn.split || "absolute",
         settled: txn.settled || false,
         direction: txn.direction || "To Pay",
-        party: txn.party || group.members.map((m) => m.name).join(", "),
+        party: txn.party || group.members.map(m => m.name).join(", "),
         sector: txn.sector || "Other",
         due: txn.due ? txn.due.toISOString() : new Date().toISOString(),
-        memberShares,
+        memberShares
       };
     });
 
-    // Prepare response
+    // Response payload
     const response = {
       _id: group._id,
       name: group.name,
       photoURL: group.photoURL,
-      members: group.members.map((member) => ({
-        _id: member._id,
-        name: member.name,
-        profilePic: member.photoURL,
-        username: member.username,
-        email: member.email,
+      members: group.members.map(m => ({
+        _id: m._id,
+        name: m.name,
+        profilePic: m.photoURL,
+        username: m.username,
+        email: m.email
       })),
       notes: group.notes || "Group for shared expenses.",
       createdBy: {
@@ -192,19 +290,29 @@ export const getGroupData = async (req, res) => {
         name: group.createdBy.name,
         photoURL: group.createdBy.photoURL,
         username: group.createdBy.username,
-        email: group.createdBy.email,
+        email: group.createdBy.email
       },
       transactions: formattedTransactions,
-      balances,
+      balances
     };
 
-    console.log("Group data fetched successfully:", JSON.stringify(response, null, 2));
-    res.status(200).json(response);
+    console.log("Group data fetched successfully.");
+    return res.status(200).json(response);
   } catch (error) {
-    console.error("Error fetching group data:", error.message);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error fetching group data:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -233,7 +341,7 @@ export const addExpense = async (req, res) => {
     }
 
     // Check if group exists
-    const group = await group.findById(groupId);
+    const group = await groups.findById(groupId);
     if (!group) {
       return res.status(404).json({ message: "Group not found" });
     }
@@ -277,6 +385,7 @@ export const addExpense = async (req, res) => {
     memberIds.forEach((id) => {
       const share = memberShares[id];
       validatedMemberShares.set(id, {
+        memberId: id,
         amount: parseFloat(share.amount) || 0,
         paid: share.paid || false,
       });
@@ -409,102 +518,49 @@ export const addExpense = async (req, res) => {
 
 
 
-
-
-
 export const settleUpWithMember = async (req, res) => {
-  try {
-    const { groupId, memberId } = req.body;
-    const userId = req.user._id;
-    console.log("Received settleUpWithMember payload:", JSON.stringify(req.body, null, 2));
-    // Validate groupId
-    if (!mongoose.isValidObjectId(groupId)) {
-      return res.status(400).json({ message: "Invalid group ID" });
-    }
-    // Check if group exists
-    const group = await group.findById(groupId);
-    if (!group) {
-        return res.status(404).json({ message: "Group not found" });
-        }
-    // Verify user is a member of the group
-    if (!group.members.includes(userId)) {
-        return res.status(403).json({ message: "You are not a member of this group" });
-    }
-    // Validate memberId
-    if (!mongoose.isValidObjectId(memberId)) {
-      return res.status(400).json({ message: "Invalid member ID" });
-    }
-    // Check if member is part of the group
-    if (!group.members.includes(memberId)) {
-        return res.status(404).json({ message: "Member not found in this group" });
-        }   
-    // Find all unsettled transactions for the group
-    const unsettledTransactions = await groupTransaction.find({
-        groupId,
-        settled: false,
-        "memberShares": { $exists: true, $ne: null }
-    }).populate("paidBy", "name photoURL username email");
-    if (!unsettledTransactions || unsettledTransactions.length === 0) {
-      return res.status(404).json({ message: "No unsettled transactions found for this group" });
-    }
-    // Calculate total amount owed by the member
-    let totalOwed = 0;
-    unsettledTransactions.forEach((txn) => {
-        const memberShare = txn.memberShares.get(memberId);
-        if (memberShare && !memberShare.paid) {
-            totalOwed += parseFloat(memberShare.amount || 0);
-        }
-    });
-    if (totalOwed <= 0) {
-        return res.status(400).json({ message: "Member has no outstanding dues" });
-        }
-    // Settle up the member by marking their shares as paid
-    const session = await mongoose.startSession();
-    session.startTransaction();
     try {
-        for (const txn of unsettledTransactions) {
-            const memberShare = txn.memberShares.get(memberId);
-            if (memberShare && !memberShare.paid) {
-            memberShare.paid = true;
-            await txn.save({ session });
+        const { groupId, memberId } = req.body;
+        const userId = req.user._id;
+
+        // Find unsettled transactions in the group where 'memberId' is the payer
+        const transactions = await groupTransaction.find({
+            groupId,
+            paidBy: memberId,
+            settled: false
+        });
+
+        if (!transactions || transactions.length === 0) {
+            return res.status(404).json({
+                message: "No unsettled transactions found for this member in the group."
+            });
+        }
+
+        // Update each transaction's memberShares for the current user
+        for (let tx of transactions) {
+            if (tx.memberShares.has(userId.toString())) {
+                tx.memberShares.get(userId.toString()).paid = true;
+
+                // Check if all shares are paid, mark transaction as settled if true
+                const allPaid = Array.from(tx.memberShares.values()).every(share => share.paid);
+                if (allPaid) {
+                    tx.settled = true;
+                }
+
+                await tx.save();
             }
         }
-        // Create a new transaction to record the settlement
-        const settlementTransaction = new groupTransaction({
-            groupId,
-            title: `Settlement with ${memberId}`,
-            amount: totalOwed,
-            description: `Settlement for dues with member ${memberId}`,
-            split: "absolute",
-            paidBy: userId,
-            sector: "Settlement",
-            due: new Date(),
-            memberShares: new Map([[memberId, { amount: totalOwed, paid: true }]]),
-            date: new Date(),
-            settled: true,
-            direction: "To Receive",
-            party: group.members.map((m) => m.name).join(", "),
-            createdBy: userId,
+
+        res.status(200).json({
+            message: "Transactions updated successfully",
+            updatedTransactions: transactions
         });
-        await settlementTransaction.save({ session });
-        await session.commitTransaction();
-        console.log("Member settled successfully:", memberId);
-        res.status(200).json({ message: "Member settled successfully", totalOwed });
-        }
-    catch (error) {
-        await session.abortTransaction();
-        console.error("Error settling member:", error.message);
+    } catch (err) {
+        console.error(err);
         res.status(500).json({ message: "Internal server error" });
     }
-    finally {
-        session.endSession();
-    }
-  } catch (error) {
-    console.error("Error settling up with member:", error.message);
-    res.status(500).json({ message: "Internal server error" });
-  }
-
 };
+
 
 
 
@@ -681,3 +737,128 @@ export default {
   addExpense,
   settleUpWithMember,
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -91,7 +91,7 @@ const RegisterForm = ({ className, ...props }) => {
 
       if(error.response && error.response.data.error==="User already exists") {
         console.error("User already exists:", error.response.data)
-        toast.error("User already exists with this email!")
+        toast.error("User already exists with this email! Email Verification link sent to your email if you did not verify it already.")
         return
       }
       

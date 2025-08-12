@@ -4,6 +4,8 @@ import users from "../models/users.js";
 import { generateAccessToken } from "../config/jwt.js";
 import { verifyToken } from "../config/jwt.js";
 
+import { scheduleEmail } from "../queue.js";
+
 export const testRoute = async (req, res) => {
   res.send("Hello from the auth controller");
 };
@@ -272,7 +274,80 @@ export const  handleRegister = async (req, res) => {
     const existingUser = await users.findOne({ email: email });
 
     if (existingUser) {
-      // TODO : Resend Email Verification Link
+      if(existingUser.isVerified){
+        return res.status(409).json({ error: "User already exists" });
+      }
+      // If user exists but is not verified, we can resend the verification email
+
+                  const htmlBody = `
+              <!DOCTYPE html>
+              <html>
+              <head>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <title>Email Verification</title>
+                <style>
+                  body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f7f9fc;
+                    padding: 20px;
+                    color: #333;
+                  }
+                  .container {
+                    background-color: #ffffff;
+                    max-width: 500px;
+                    margin: auto;
+                    padding: 20px;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                    text-align: center;
+                  }
+                  h1 {
+                    color: #16a34a;
+                    font-size: 22px;
+                  }
+                  p {
+                    font-size: 15px;
+                    line-height: 1.5;
+                  }
+                  a.verify-btn {
+                    display: inline-block;
+                    padding: 12px 20px;
+                    margin-top: 20px;
+                    background: linear-gradient(90deg, #16a34a, #0d9488);
+                    color: white;
+                    font-weight: bold;
+                    text-decoration: none;
+                    border-radius: 8px;
+                  }
+                  a.verify-btn:hover {
+                    background: linear-gradient(90deg, #0d9488, #16a34a);
+                  }
+                </style>
+              </head>
+              <body>
+                <div class="container">
+                  <h1>Verify Your Email</h1>
+                  <p>Hello,</p>
+                  <p>Thank you for signing up for <strong>upSplit</strong>. Please confirm your email address by clicking the button below.</p>
+                  <a class="verify-btn" href="https://upsplit.aryan-sharma.xyz/verifyEmail?authToken=${existingUser.authToken}">
+                    Verify Email
+                  </a>
+                  <p>If you did not create this account, you can safely ignore this email.</p>
+                </div>
+              </body>
+              </html>
+              `;
+
+                  scheduleEmail(
+                email,
+                "Verify your email",
+                htmlBody,
+                1,
+                Date.now() + 10
+              );
+
+      
       return res.status(409).json({ error: "User already exists" });
     }
 
@@ -301,7 +376,74 @@ export const  handleRegister = async (req, res) => {
     await newUser.save();
  
 
-    // TODO : Send verification email with authToken
+    const htmlBody = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Email Verification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f9fc;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      background-color: #ffffff;
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+    h1 {
+      color: #16a34a;
+      font-size: 22px;
+    }
+    p {
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    a.verify-btn {
+      display: inline-block;
+      padding: 12px 20px;
+      margin-top: 20px;
+      background: linear-gradient(90deg, #16a34a, #0d9488);
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+    a.verify-btn:hover {
+      background: linear-gradient(90deg, #0d9488, #16a34a);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Verify Your Email</h1>
+    <p>Hello,</p>
+    <p>Thank you for signing up for <strong>upSplit</strong>. Please confirm your email address by clicking the button below.</p>
+    <a class="verify-btn" href="https://upsplit.aryan-sharma.xyz/verifyEmail?authToken=${result}">
+      Verify Email
+    </a>
+    <p>If you did not create this account, you can safely ignore this email.</p>
+  </div>
+</body>
+</html>
+`;
+
+    scheduleEmail(
+  email,
+  "Verify your email",
+  htmlBody,
+  1,
+  Date.now() + 10
+);
+
 
     res.status(201).json({
       message: "User registered successfully",

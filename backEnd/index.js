@@ -4,16 +4,14 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import admin from './firebase-admin.js'; 
 import dotenv from 'dotenv';
 import AuthRouter from './routes/auth.js';
 import UsersRouter from './routes/users.js';
 import connectDB from './config/dbConnnection.js';
 import { authChecker } from './middleware/authChecker.js';
-import users from './models/users.js';
 import ContactsRouter from './routes/contacts.js';
 import GroupsRouter from './routes/groups.js';
-
+import TransactionsRouter from './routes/transactions.js';
 
 
 dotenv.config();
@@ -49,6 +47,7 @@ app.use('/api/auth', AuthRouter);
 app.use('/api/users', authChecker, UsersRouter)
 app.use('/api/contacts', authChecker, ContactsRouter);
 app.use('/api/groups', authChecker, GroupsRouter);
+app.use('/api/transactions', authChecker, TransactionsRouter);
 
 
 

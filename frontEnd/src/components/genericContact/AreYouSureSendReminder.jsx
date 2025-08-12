@@ -21,6 +21,29 @@ export function AreYouSureSendReminder({txn}) {
 
 
   const handleContinue = () => {
+
+    console.log(txn)
+
+    fetch(`/api/transactions/sendReminderForContactTransation`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ amount: txn.amount , id: txn.id}),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);   
+      });
+
     return new Promise((resolve) => {
     
       setTimeout(() => {

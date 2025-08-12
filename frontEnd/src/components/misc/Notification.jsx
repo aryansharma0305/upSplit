@@ -24,27 +24,19 @@ import { Bell } from "lucide-react"
 const notifications = [
   {
     id: 1,
-    title: "New Message",
-    description: "You received a new message from Riya.",
-    content: "“Hey! Are you joining the meeting today at 4?”",
+    title: "UnderDevelopment",
+    description: "You received a new message ",
+    content: "“Hey! This feature is UnderDevelopment”",
     time: "2 minutes ago",
     new: true,
     pfp: "https://randomuser.me/api/portraits/women/1.jpg"
   },
-  {
-    id: 2,
-    title: "System Alert",
-    description: "Your password will expire in 3 days.",
-    content: "Please update your password to maintain account security.",
-    time: "1 hour ago",
-    new: true,
-    pfp: "https://randomuser.me/api/portraits/men/2.jpg"
-  },
+  
   {
     id: 3,
     title: "Task Reminder",
-    description: "You have a deadline tomorrow.",
-    content: "Finish and submit your UI Design Review by 5 PM.",
+    description: "Under Dvelopment Notification",
+    content: " UnderDevelopment", 
     time: "8 hours ago",
     new: false,
     pfp: "https://randomuser.me/api/portraits/men/3.jpg"

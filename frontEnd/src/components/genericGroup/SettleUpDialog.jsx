@@ -48,6 +48,7 @@ export function SettleUPDialog({ txn,groupId, memberId  }) {
             colors: ['#4CAF50', '#8BC34A', '#CDDC39'],
           });
           closeButtonRef.current.click();
+          window.location.reload();
         })
         .catch((error) => {
           console.error('Error:', error);
