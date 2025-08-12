@@ -58,6 +58,13 @@ It allows users to manage contacts, track transactions, settle up amounts, and s
 * PM2 (for process management)
 
 ---
+**Virtual Machine Diagram**
+
+![Virtual Machine Diagram](./vm.png)
+
+![Virtual Machine Diagram](./emailService.png)
+
+---
 
 ## 📂 Project Structure
 
