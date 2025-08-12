@@ -55,7 +55,15 @@ It allows users to manage contacts, track transactions, settle up amounts, and s
 * Node.js + Express
 * MongoDB
 * BullMQ + Redis (for background email worker)
-* PM2 (for process management)
+
+**Deployment**
+
+* Microsoft Azure Virtual Machine
+* Nginx
+* Let's Encrypt Certbot
+* Godaddy's Domain Naming System (DNS)
+* PM2 Process Manager
+
 
 ---
 **Virtual Machine Diagram**
