@@ -114,6 +114,7 @@ npm install
 **Backend**
 
 ```bash
+sudo apt install redis-server
 cd server
 npm install
 ```
@@ -150,7 +151,7 @@ npm run dev
 **Start Email Worker**
 
 ```bash
-pm2 start emailworker.js --name upsplit-worker
+node emailworker.js ]
 ```
 
 ---
