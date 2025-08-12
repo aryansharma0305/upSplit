@@ -11,14 +11,12 @@ export const testRoute = async (req, res) => {
 };
 
 export const verifyLoginWithGoogle = async (req, res) => {
-  // if there is no token in the body
   if (!req.body.token) {
     return res.status(400).json({ error: "Token is required" });
   }
 
   const { token } = req.body;
 
-  // Let's verify the token using Firebase Admin SDK
   try {
     const decodedToken = await admin.auth().verifyIdToken(token);
     const { email, name, picture } = decodedToken;
@@ -27,7 +25,6 @@ export const verifyLoginWithGoogle = async (req, res) => {
 
     if (db_query_user) {
       if (db_query_user.profileCompleted) {
-        // if the user is already registered and profile is completed
         const token = await generateAccessToken(
           db_query_user._id,
           db_query_user.email
@@ -277,7 +274,6 @@ export const  handleRegister = async (req, res) => {
       if(existingUser.isVerified){
         return res.status(409).json({ error: "User already exists" });
       }
-      // If user exists but is not verified, we can resend the verification email
 
                   const htmlBody = `
               <!DOCTYPE html>
@@ -351,11 +347,10 @@ export const  handleRegister = async (req, res) => {
       return res.status(409).json({ error: "User already exists" });
     }
 
-    //random 32 alphanumeric character authID
     const length = 64;
     let result = '';
     while (result.length < length) {
-      result += Math.random().toString(36).substring(2); // Remove "0." prefix
+      result += Math.random().toString(36).substring(2); 
     }
     result = result.substring(0, length);
     result = result+"_"+email.replace(/[^a-zA-Z0-9]/g, '_')
@@ -480,7 +475,7 @@ export const verifyEmailLinkForRegister = async (req, res) => {
     }
 
     user.isVerified = true;
-    user.authToken = ""; // Clear the auth token after verification
+    user.authToken = "";
     await user.save();
 
     res.status(200).json({
@@ -503,7 +498,6 @@ export const verifyEmailLinkForRegister = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    // Clear the JWT cookie
     res.clearCookie("jwt");
  
     res.status(200).json({ message: "Logout successful" });

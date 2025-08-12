@@ -8,12 +8,10 @@ export const createGroup = async (req, res) => {
     const { name, photoURL, members } = req.body;
     const createdBy = req.user._id;
 
-    // Validate input
     if (!name || !createdBy) {
       return res.status(400).json({ message: "Name and creator are required." });
     }
 
-    // Validate member IDs
     const memberIds = members || [];
     for (const id of memberIds) {
       if (!mongoose.isValidObjectId(id)) {
@@ -25,7 +23,6 @@ export const createGroup = async (req, res) => {
       }
     }
 
-    // Create new group
     const newGroup = new groups({
       name,
       photoURL,

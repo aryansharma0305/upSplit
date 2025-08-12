@@ -33,10 +33,9 @@ const OnBoardingPage = () => {
   const [scale, setScale] = useState(1);
   const [showCropper, setShowCropper] = useState(false);
   const [croppedImage, setCroppedImage] = useState(null);
-  const [isLoading, setIsLoading] = useState(false); // New loading state
+  const [isLoading, setIsLoading] = useState(false);
   const editorRef = useRef(null);
 
-  // Load user details from localStorage
   useEffect(() => {
     const userDetails = localStorage.getItem('userDetails');
     if (userDetails) {
@@ -57,7 +56,6 @@ const OnBoardingPage = () => {
     }
   }, [Navigate]);
 
-  // Check if profile is already completed
   useEffect(() => {
     const checkProfile = async () => {
       try {
@@ -178,11 +176,11 @@ const OnBoardingPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Start loading
+    setIsLoading(true); 
     try {
       const flag = await validateStep();
       if (!flag) {
-        setIsLoading(false); // Stop loading if validation fails
+        setIsLoading(false); 
         return;
       }
 
@@ -190,19 +188,18 @@ const OnBoardingPage = () => {
       if (!user) {
         toast.error('User not authenticated. Please log in.');
         Navigate('/login');
-        setIsLoading(false); // Stop loading
+        setIsLoading(false); 
         return;
       }
 
-      let photoURL = formData.photo; // Use existing photo URL by default
+      let photoURL = formData.photo; 
       if (image && croppedImage) {
-        // Upload cropped image to Firebase Storage
         const sanitizedEmail = user.email.replace(/[^a-zA-Z0-9]/g, '_');
         const storageRef = ref(storage, `users/profileImage/${sanitizedEmail}/${Date.now()}.jpg`);
-        console.log('Storage Path:', storageRef.toString()); // Debug: Log storage path
+        console.log('Storage Path:', storageRef.toString()); 
         const response = await fetch(croppedImage);
         const blob = await response.blob();
-        console.log('Blob Size:', blob.size); // Debug: Log blob size
+        console.log('Blob Size:', blob.size); 
         const uploadTask = uploadBytesResumable(storageRef, blob, { contentType: 'image/jpeg' });
 
         photoURL = await new Promise((resolve, reject) => {
@@ -220,7 +217,7 @@ const OnBoardingPage = () => {
             () => {
               getDownloadURL(uploadTask.snapshot.ref)
                 .then((downloadURL) => {
-                  console.log('Download URL:', downloadURL); // Debug: Log download URL
+                  console.log('Download URL:', downloadURL); 
                   resolve(downloadURL);
                 })
                 .catch((error) => {
@@ -233,7 +230,6 @@ const OnBoardingPage = () => {
         });
       }
 
-      // Send data to MERN backend
       console.log('Sending to backend:', {
         email: user.email,
         name: formData.name,
@@ -242,7 +238,7 @@ const OnBoardingPage = () => {
         upiID: formData.upiId,
         photo: photoURL,
         phoneNumber: formData.phoneNumber,
-      }); // Debug: Log backend payload
+      }); 
 
       const response = await axios.post(
         '/api/auth/onBoardingComplete',
@@ -258,7 +254,6 @@ const OnBoardingPage = () => {
         { withCredentials: true }
       );
 
-      // Update localStorage
       localStorage.setItem(
         'userDetails',
         JSON.stringify({
@@ -285,7 +280,7 @@ const OnBoardingPage = () => {
                   origin: { y: 0.85 },
                   colors: ['#34D399', '#10B981', '#059669'],
                 })
-      setIsLoading(false); // Stop loading
+      setIsLoading(false);
     }
   };
 

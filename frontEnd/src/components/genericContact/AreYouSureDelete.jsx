@@ -37,7 +37,7 @@ export function AreYouSureDelete({txn}) {
           console.error("Error:", data.error);
         } else {
           console.log("Transaction discarded successfully:", data);
-          window.location.reload(); // Reload the page to reflect changes
+          window.location.reload(); 
           
           return new Promise((resolve) => {
               setTimeout(() => {

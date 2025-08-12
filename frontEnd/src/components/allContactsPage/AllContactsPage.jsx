@@ -64,7 +64,6 @@ export default function AllContactsPage() {
   const [filterStatus, setFilterStatus] = useState("All");
   const [contacts, setContacts] = useState([]);
 
-  // Fetch contacts on mount
   useEffect(() => {
     const fetchContacts = async () => {
       try {

@@ -40,7 +40,6 @@ import confetti from "canvas-confetti"
 import { toast } from "sonner"
 import { th } from "date-fns/locale"
 
-// DatePicker Component
 const DatePicker = ({ value, onChange, disabled }) => {
   const [open, setOpen] = useState(false)
 
@@ -147,7 +146,6 @@ const AddExpense = ({contactData}) => {
       dueDate: dueDate.toLocaleDateString(),
     }
     console.log(formData)
-    // Add logic to save expense (e.g., fetch('/api/expenses', { method: 'POST', body: JSON.stringify(formData) }))
   }
 
   const theirShare =
@@ -201,12 +199,12 @@ const AddExpense = ({contactData}) => {
           });
 
           setTimeout(() => {
-            closeButtonRef.current.click() // Close the dialog
-            window.location.reload() // Reload the page to reflect changes
-          }, 1000) // Close dialog after 1 second
+            closeButtonRef.current.click() 
+            window.location.reload() 
+          }, 1000)
           
           resolve(true)
-        }, 1000) // Simulate a 2-second delay
+        }, 1000)
       })
     })
     .catch((error) => {

@@ -335,7 +335,7 @@ export function History({ user, contactId }) {
   const [currentPage, setCurrentPage] = useState(1);
   const transactionsPerPage = 5;
 
-  // Fetch transactions
+
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
@@ -344,7 +344,7 @@ export function History({ user, contactId }) {
           throw new Error("Failed to fetch transactions");
         }
         const data = await response.json();
-        console.log("Fetched all transactions:", data); // Debug log
+        console.log("Fetched all transactions:", data);
         setTransactions(
           data.map((txn) => ({
             id: txn._id,
@@ -352,7 +352,7 @@ export function History({ user, contactId }) {
             direction: txn.id_creator.toString() === contactId ? "Received" : "Paid",
             amount: parseFloat(txn.amount || 0),
             sector: txn.sector,
-            settled: txn.status.charAt(0).toUpperCase() + txn.status.slice(1), // Capitalize status
+            settled: txn.status.charAt(0).toUpperCase() + txn.status.slice(1), 
             settledDate: txn.dateSettled ? new Date(txn.dateSettled).toLocaleDateString("en-IN") : "-",
             dateCreated: new Date(txn.dateCreated).toLocaleDateString("en-IN"),
             dateDue: new Date(txn.dueDate).toLocaleDateString("en-IN"),
@@ -367,10 +367,8 @@ export function History({ user, contactId }) {
     fetchTransactions();
   }, [contactId, user]);
 
-  // Get unique sectors for filter
   const uniqueSectors = [...new Set(transactions.map((item) => item.sector))];
 
-  // Reset filters and search
   const resetFilters = () => {
     setSearchText("");
     setFilterDirection("All");
@@ -378,7 +376,6 @@ export function History({ user, contactId }) {
     setCurrentPage(1);
   };
 
-  // Filter transactions
   const filteredTransactions = transactions
     .filter((item) => item.party === user)
     .filter((item) => {
@@ -388,7 +385,6 @@ export function History({ user, contactId }) {
       return matchSearch && matchDirection && matchSector;
     });
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
   const paginatedTransactions = filteredTransactions.slice(
     (currentPage - 1) * transactionsPerPage,
@@ -401,7 +397,6 @@ export function History({ user, contactId }) {
     }
   };
 
-  // Export to PDF
   const handleExportPDF = () => {
     const doc = new jsPDF();
     doc.setFontSize(16);

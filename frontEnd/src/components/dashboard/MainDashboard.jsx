@@ -139,13 +139,11 @@ export default function MainDashboard() {
     let mounted = true;
     async function fetchData() {
       try {
-        // Replace with your real API
         const res = await fetch('/api/transactions/getDashBoard');
         if (!res.ok) throw new Error('fetch failed');
         const json = await res.json();
         if (!mounted) return;
 
-        // Expecting { toReceive, toPay, net, transactions: [], sector: [] }
         setKpis({
           toReceive: json.toReceive || 0,
           toPay: json.toPay || 0,
@@ -155,7 +153,6 @@ export default function MainDashboard() {
         setSectorData(json.sector || []);
       } catch (e) {
         console.error('Dashboard fetch error', e);
-        // Fallback: demo data
         if (!mounted) return;
         setKpis({ toReceive: 1250, toPay: 250, net: 1000 });
         setTransactions([

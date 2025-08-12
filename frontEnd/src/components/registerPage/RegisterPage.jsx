@@ -32,7 +32,6 @@ const RegisterPage = () => {
           const response = await axios.post(`api/auth/verifyLoginWithGoogle`, {token},{withCredentials: true})
           console.log("Response from server:", response.data)
           toast.success("Google Sign-In successful!")
-          //local storage
           localStorage.setItem('userDetails', JSON.stringify(response.data.user))
           Navigate(response.data.redirect)
       }
@@ -41,7 +40,6 @@ const RegisterPage = () => {
           console.error("Error during server communication:", error.message)
           return
       }
-      // toast.success("Google Sign-In successful!")
   
     } catch (error) {
   

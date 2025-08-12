@@ -78,17 +78,14 @@ const DatePicker = ({ value, onChange, disabled }) => {
   )
 }
 
-// TimePicker Component
 const TimePicker = ({ value, onChange, disabled }) => {
   const [open, setOpen] = useState(false)
 
-  // Parse current time value or default to 9:00 AM
   const currentTime = value ? parse(value, "h:mm a", new Date()) : new Date(2025, 0, 1, 9, 0)
   const currentHour = format(currentTime, "h")
   const currentMinute = format(currentTime, "mm")
   const currentPeriod = format(currentTime, "a")
 
-  // Generate options
   const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString())
   const minutes = ["00", "10", "20", "30", "40", "50"]
   const periods = ["AM", "PM"]
@@ -106,13 +103,11 @@ const TimePicker = ({ value, onChange, disabled }) => {
       newPeriod = selectedValue
     }
 
-    // Adjust hour for 12-hour format and AM/PM
     if (newPeriod === "PM" && newHour !== 12) {
       newHour += 12
     } else if (newPeriod === "AM" && newHour === 12) {
       newHour = 0
     } else if (newPeriod === "AM" && newHour !== 12) {
-      // No adjustment needed
     } else if (newPeriod === "PM" && newHour === 12) {
       newHour = 12
     }
@@ -140,7 +135,6 @@ const TimePicker = ({ value, onChange, disabled }) => {
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-4" align="start">
         <div className="flex justify-between gap-2">
-          {/* Hours Select */}
           <Select
             value={currentHour}
             onValueChange={(value) => handleTimeSelect("hour", value)}
@@ -157,7 +151,6 @@ const TimePicker = ({ value, onChange, disabled }) => {
               ))}
             </SelectContent>
           </Select>
-          {/* Minutes Select */}
           <Select
             value={currentMinute}
             onValueChange={(value) => handleTimeSelect("minute", value)}
@@ -174,7 +167,6 @@ const TimePicker = ({ value, onChange, disabled }) => {
               ))}
             </SelectContent>
           </Select>
-          {/* AM/PM Select */}
           <Select
             value={currentPeriod}
             onValueChange={(value) => handleTimeSelect("period", value)}
@@ -236,7 +228,6 @@ const GroupSettings = () => {
       reminderDate: reminderDate ? reminderDate.toLocaleDateString() : undefined,
       notificationType,
     })
-    // Add logic to save settings (e.g., API call)
   }
 
 
@@ -288,7 +279,6 @@ const GroupSettings = () => {
 
           <Card className="border-none bg-white shadow-none ">
             <CardContent className="space-y-8 pt-6">
-              {/* Notifications Section */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <Label className="text-sm font-medium text-gray-700">Notifications</Label>
@@ -332,7 +322,6 @@ const GroupSettings = () => {
 
               <Separator className="bg-gray-200" />
 
-              {/* Auto Reminders Section */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <Label className="text-sm font-medium text-gray-700">Auto Reminders</Label>

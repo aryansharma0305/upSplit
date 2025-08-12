@@ -26,7 +26,7 @@ import { useNavigate } from "react-router-dom"
 
 import confetti from "canvas-confetti"
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
-import { storage } from "@/firebase.js" // Adjust the path to your Firebase config
+import { storage } from "@/firebase.js" 
 
 
 
@@ -47,7 +47,7 @@ export function CreateGroupDialog() {
 
   const fileInputRef = useRef(null)
   const maxLength = 50
-  const maxFileSize = 5 * 1024 * 1024 // 5MB in bytes
+  const maxFileSize = 5 * 1024 * 1024 
 
   const fetchUsers = async () => {
     try {
@@ -117,7 +117,7 @@ export function CreateGroupDialog() {
     reader.onload = () => {
       setTempImage(reader.result)
       setIsLoading(false)
-      console.log("File loaded:", reader.result) // Remove in production
+      console.log("File loaded:", reader.result) 
     }
     reader.onerror = () => {
       setIsLoading(false)
@@ -139,7 +139,7 @@ export function CreateGroupDialog() {
     reader.onload = () => {
       setTempImage(reader.result)
       setIsLoading(false)
-      console.log("File dropped:", reader.result) // Remove in production
+      console.log("File dropped:", reader.result) 
     }
     reader.onerror = () => {
       setIsLoading(false)
@@ -236,12 +236,11 @@ export function CreateGroupDialog() {
 
       let photoURL = null;
       if (groupImage) {
-        // Upload cropped image to Firebase Storage
         const storageRef = ref(storage, `groups/${user._id}/${Date.now()}.jpg`);
-        console.log('Storage Path:', storageRef.toString()); // Debug: Log storage path
+        console.log('Storage Path:', storageRef.toString()); 
         const response = await fetch(groupImage);
         const blob = await response.blob();
-        console.log('Blob Size:', blob.size); // Debug: Log blob size
+        console.log('Blob Size:', blob.size); 
         const uploadTask = uploadBytesResumable(storageRef, blob, { contentType: 'image/jpeg' });
 
         photoURL = await new Promise((resolve, reject) => {
@@ -259,7 +258,7 @@ export function CreateGroupDialog() {
             () => {
               getDownloadURL(uploadTask.snapshot.ref)
                 .then((downloadURL) => {
-                  console.log('Download URL:', downloadURL); // Debug: Log download URL
+                  console.log('Download URL:', downloadURL); 
                   resolve(downloadURL);
                 })
                 .catch((error) => {
@@ -301,7 +300,7 @@ export function CreateGroupDialog() {
             });
             setTimeout(() => {
               CloseButtonRef.current.click();
-              Navigate(`/dashboard/group/${data.group._id}`); // Assuming the response includes group._id
+              Navigate(`/dashboard/group/${data.group._id}`);
               resolve();
             }, 500);
           }, 1000);
@@ -350,7 +349,6 @@ export function CreateGroupDialog() {
 
         {step === 1 && (
           <div className="grid gap-6 py-4">
-            {/* Group Name */}
             <div className="grid gap-2">
               <Label htmlFor="group-name" className="text-sm font-medium">
                 Group Name
@@ -369,7 +367,6 @@ export function CreateGroupDialog() {
               </p>
             </div>
 
-            {/* Group Photo Upload */}
             <div className="grid gap-2 mb-30">
               <Label className="text-sm font-medium">Group Photo</Label>
               <div
@@ -508,7 +505,6 @@ export function CreateGroupDialog() {
 
         {step === 2 && (
           <div className="grid gap-4 py-4">
-            {/* Selected Members */}
             {selectedMembers.length > 0 && (
               <div className="grid gap-2">
                 <Label className="text-sm font-medium">Selected Members ({selectedMembers.length})</Label>
@@ -540,7 +536,6 @@ export function CreateGroupDialog() {
               </div>
             )}
 
-            {/* Search Members */}
             <div className="grid gap-2">
               <Label htmlFor="search" className="text-sm font-medium">
                 Add Members
@@ -554,7 +549,6 @@ export function CreateGroupDialog() {
               />
             </div>
 
-            {/* Search Results */}
             <ScrollArea className="max-h-52 border rounded-md p-2">
               {searchResults.length ? (
                 searchResults.map((user) => (

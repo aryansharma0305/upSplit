@@ -179,30 +179,27 @@ export const getAllTransactionsWithUser = async (req, res) => {
 
 
 export const getMonthlyAnalytics = async (req, res) => {
-  const userId = req.user._id; // Likely a string from authMiddleware
-  const contactId = req.query.q; // String from query parameter
+  const userId = req.user._id; 
+  const contactId = req.query.q; 
 
   if (!contactId) {
     return res.status(400).json({ error: "Contact ID is required" });
   }
 
   try {
-    // Convert string IDs to ObjectId
     const userObjectId = new mongoose.Types.ObjectId(userId);
     const contactObjectId = new mongoose.Types.ObjectId(contactId);
 
     const analytics = await contactTransaction.aggregate([
-      // Match transactions between user and contact, excluding settled and discarded
       {
         $match: {
           $or: [
             { id_creator: userObjectId, id_other: contactObjectId },
             { id_creator: contactObjectId, id_other: userObjectId },
           ],
-          status: { $nin: ["settled", "discarded"] }, // Include pending, overdue
+          status: { $nin: ["settled", "discarded"] }, 
         },
       },
-      // Group by month of dateCreated
       {
         $group: {
           _id: {
@@ -213,7 +210,7 @@ export const getMonthlyAnalytics = async (req, res) => {
             $sum: {
               $cond: [
                 { $eq: ["$id_creator", contactObjectId] },
-                "$share_other", // User owes share_other if contact is creator
+                "$share_other", 
                 0,
               ],
             },
@@ -222,14 +219,13 @@ export const getMonthlyAnalytics = async (req, res) => {
             $sum: {
               $cond: [
                 { $eq: ["$id_creator", userObjectId] },
-                "$share_other", // Contact owes share_other if user is creator
+                "$share_other", 
                 0,
               ],
             },
           },
         },
       },
-      // Project to format output
       {
         $project: {
           month: {
@@ -246,17 +242,15 @@ export const getMonthlyAnalytics = async (req, res) => {
           year: "$_id.year",
         },
       },
-      // Sort by year and month
       {
         $sort: { year: -1, "_id.month": -1 },
       },
-      // Limit to last 6 months
       {
         $limit: 6,
       },
     ]);
 
-    res.status(200).json(analytics.reverse()); // Reverse to show oldest to newest
+    res.status(200).json(analytics.reverse()); 
   } catch (error) {
     console.error("Error fetching monthly analytics:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -275,22 +269,18 @@ export const getAllContacts = async (req, res) => {
   const userId = req.user._id;
 
   try {
-    // Fetch user and their saved contacts
     const user = await users.findById(userId).select("contacts");
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Fetch transactions involving the user
     const transactions = await contactTransaction.find({
       $or: [
         { id_creator: userId },
         { id_other: userId },
       ],
       status: "pending",
-    }).sort({ updatedAt: -1 }); // Make sure transactions are sorted newest first
-
-    // Merge contacts from `user.contacts` and transaction participants
+    }).sort({ updatedAt: -1 }); 
     const contactIds = [
       ...new Set([
         ...user.contacts.map(id => id.toString()),
@@ -301,12 +291,10 @@ export const getAllContacts = async (req, res) => {
       ]),
     ].filter(id => id !== userId.toString());
 
-    // Fetch contact details
     const contacts = await users.find({
       _id: { $in: contactIds.map(id => new mongoose.Types.ObjectId(id)) },
     }).select("name email phoneNumber photoURL upi notes username");
 
-    // Build contact data with owe/toReceive + lastTransactionDate
     const contactData = contacts.map(contact => {
       const transactionsWithContact = transactions.filter(
         txn =>
@@ -346,7 +334,6 @@ export const getAllContacts = async (req, res) => {
       };
     });
 
-    // Sort contacts by most recent transaction date (nulls last)
     contactData.sort((a, b) => {
       if (!a.lastTransactionDate && !b.lastTransactionDate) return 0;
       if (!a.lastTransactionDate) return 1;

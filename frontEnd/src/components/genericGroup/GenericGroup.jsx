@@ -39,7 +39,6 @@ import { AreYouSureSendReminderGroup } from "./AreYouSureSendReminderGroup";
 import { SettleUPDialog } from "./SettleUpDialog";
 import { Loader2 } from "lucide-react";
 
-// Error Boundary Component
 class ErrorBoundary extends React.Component {
   state = { error: null };
   static getDerivedStateFromError(error) {
@@ -66,10 +65,9 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-// Sample transaction data (fallback)
 const sampleTransactions = [];
 
-const currentUser = "Aryan Sharma"; // Replace with auth context
+const currentUser = "Aryan Sharma";
 
 const calculateBalances = (transactions, currentUser, members) => {
   const balances = {};
@@ -89,14 +87,12 @@ const calculateBalances = (transactions, currentUser, members) => {
       return;
     }
 
-    // Ensure paidBy is a valid member
     const paidByMember = members.find((m) => m.name === txn.paidBy);
     if (!paidByMember) {
       console.warn("Invalid paidBy in transaction:", txn);
       return;
     }
 
-    // Calculate balances for members
     members.forEach((member) => {
       if (member.name !== currentUser) {
         const share = txn.memberShares[member.name];
@@ -115,7 +111,6 @@ const calculateBalances = (transactions, currentUser, members) => {
     });
   });
 
-  // Calculate net balances
   Object.keys(balances).forEach((memberName) => {
     balances[memberName].net = balances[memberName].iOwed - balances[memberName].iOwe;
   });
@@ -316,12 +311,10 @@ export default function GenericGroup({}) {
           initial="hidden"
           animate="visible"
         >
-          {/* HEADER */}
           <motion.header variants={cardVariants}>
             <div className="p-[1.5px] rounded-[12px] bg-gradient-to-br from-gray-600 to-slate-500 mb-6 shadow-lg">
               <Card className="bg-white dark:bg-gray-800 rounded-lg p-6 border-none">
                 <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6 flex-wrap">
-                  {/* GROUP PROFILE */}
                   <div className="flex items-center gap-4">
                     <Avatar className="w-20 h-20 ring-2 ring-emerald-600">
                       <AvatarImage
@@ -343,7 +336,6 @@ export default function GenericGroup({}) {
                     </div>
                   </div>
 
-                  {/* SUMMARY */}
                   <div className="grid grid-cols-2 gap-4 w-full xl:w-auto">
                     <div className="p-[1.5px] rounded-[12px] bg-gradient-to-r from-pink-400 via-pink-600 to-red-600">
                       <Card className="border-none shadow-none rounded-lg bg-white dark:bg-gray-800 w-full min-w-36">
@@ -369,7 +361,6 @@ export default function GenericGroup({}) {
                     </div>
                   </div>
 
-                  {/* ACTIONS */}
                   <div className="flex gap-2 items-center justify-center xl:justify-end w-full xl:w-auto">
                     <GroupSettings />
                     <AddGroupExpense
@@ -384,9 +375,7 @@ export default function GenericGroup({}) {
             </div>
           </motion.header>
 
-          {/* MAIN CONTENT */}
           <div className="space-y-6 sm:px-4">
-            {/* GROUP MEMBERS BALANCES */}
             <motion.section variants={cardVariants}>
               <Card className="bg-white dark:bg-gray-800 shadow-none border-none px-0">
                 <CardHeader className="px-0">
@@ -469,7 +458,6 @@ export default function GenericGroup({}) {
 
             <Separator className="my-4" />
 
-            {/* ALL TRANSACTIONS */}
             <motion.section variants={cardVariants}>
               <Card className="bg-white dark:bg-gray-800 shadow-none border-none mb-20">
                 <CardHeader className="px-0">

@@ -218,7 +218,6 @@ export default function AddGroupExpense({ memberList, onExpenseAdded, currentUse
     e.preventDefault();
     if (!validateForm()) return;
 
-    // Map memberShares to use IDs for API, prepare name-based version for GenericGroup
     const apiMemberShares = { ...memberShares };
     const displayMemberShares = {};
     memberList.forEach((member) => {
@@ -264,7 +263,6 @@ export default function AddGroupExpense({ memberList, onExpenseAdded, currentUse
       const data = await response.json();
       console.log("Expense created successfully:", data);
 
-      // Notify parent component with name-based memberShares
       onExpenseAdded({
         id: data._id || `txn${Date.now()}`,
         description: title,
@@ -280,7 +278,6 @@ export default function AddGroupExpense({ memberList, onExpenseAdded, currentUse
         memberShares: displayMemberShares,
       });
 
-      // Trigger confetti and close dialog
       return new Promise((resolve) => {
         setTimeout(() => {
           confetti({

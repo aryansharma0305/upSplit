@@ -7,10 +7,9 @@ export const getTransactionHistory = async (req, res) => {
   try {
     const userId = req.user._id;
     const page = parseInt(req.query.page) || 1;
-    const limit = 10; // Default limit per page
+    const limit = 10; 
     const skip = (page - 1) * limit;
 
-    // Fetch contact transactions involving the user
     const contactTx = await contactTransaction.find({
       $or: [{ id_creator: userId }, { id_other: userId }]
     })
@@ -19,7 +18,6 @@ export const getTransactionHistory = async (req, res) => {
       .sort({ dateCreated: -1 })
       .lean();
 
-    // Fetch group transactions where user paid or created
     const groupTx = await groupTransaction.find({
       $or: [{ paidBy: userId }, { createdBy: userId }]
     })
@@ -29,7 +27,6 @@ export const getTransactionHistory = async (req, res) => {
       .sort({ date: -1 })
       .lean();
 
-    // Format transactions to match frontend expectations
     const formattedContactTx = contactTx.map(tx => {
       const isCreator = tx.id_creator._id.toString() === userId.toString();
       const partyName = isCreator ? tx.id_other.name : tx.id_creator.name;
@@ -65,14 +62,11 @@ export const getTransactionHistory = async (req, res) => {
       type: 'group'
     }));
 
-    // Combine and sort by date descending
     const allTx = [...formattedContactTx, ...formattedGroupTx];
     allTx.sort((a, b) => new Date(b.dateCreated) - new Date(a.dateCreated));
 
-    // Paginate
     const paginatedTx = allTx.slice(skip, skip + limit);
 
-    // Total count for pagination info
     const total = allTx.length;
     const totalPages = Math.ceil(total / limit);
 
@@ -105,7 +99,6 @@ export const getDashboardSummary = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    // 1. Fetch contact transactions
     const contactTx = await contactTransaction.find({
       $or: [{ id_creator: userId }, { id_other: userId }]
     })
@@ -114,7 +107,6 @@ export const getDashboardSummary = async (req, res) => {
       .sort({ dateCreated: -1 })
       .lean();
 
-    // 2. Fetch group transactions
     const groupTx = await groupTransaction.find({
       $or: [{ paidBy: userId }, { createdBy: userId }]
     })
@@ -128,7 +120,6 @@ export const getDashboardSummary = async (req, res) => {
     let toPay = 0;
     const sectorMap = {};
 
-    // 3. Format contact transactions & calculate KPIs + sector
     const formattedContactTx = contactTx.map(tx => {
       const isCreator = tx.id_creator._id.toString() === userId.toString();
       const amount = parseFloat(tx.amount || 0);
@@ -152,7 +143,6 @@ export const getDashboardSummary = async (req, res) => {
       };
     });
 
-    // 4. Format group transactions & calculate KPIs + sector
     const formattedGroupTx = groupTx.map(tx => {
       const paidByUser = tx.paidBy._id.toString() === userId.toString();
       const amount = parseFloat(tx.amount || 0);
@@ -176,11 +166,9 @@ export const getDashboardSummary = async (req, res) => {
       };
     });
 
-    // 5. Combine transactions & sort by date
     const allTx = [...formattedContactTx, ...formattedGroupTx]
       .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    // 6. Prepare sector data for pie chart
     const sectorData = Object.entries(sectorMap).map(([name, value]) => ({
       name,
       value
@@ -190,7 +178,7 @@ export const getDashboardSummary = async (req, res) => {
       toReceive,
       toPay,
       net: toReceive - toPay,
-      transactions: allTx.slice(0, 6), // latest 6
+      transactions: allTx.slice(0, 6), 
       sector: sectorData
     });
 
@@ -207,13 +195,11 @@ export const sendReminderForContactTransaction = async (req, res) => {
     const { amount, id } = req.body;
     const userId = req.user._id;
 
-    // Find the transaction
     const transaction = await contactTransaction.findById(id);
     if (!transaction) {
       return res.status(404).json({ message: "Transaction not found" });
     }
 
-    // Check if the user is involved in the transaction
     if (transaction.id_creator.toString() !== userId.toString() && transaction.id_other.toString() !== userId.toString()) {
       return res.status(403).json({ message: "You are not authorized to send a reminder for this transaction" });
     }

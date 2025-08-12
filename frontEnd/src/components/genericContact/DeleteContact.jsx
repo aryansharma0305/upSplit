@@ -26,13 +26,13 @@ export function DeleteContact({contactID}) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ _id:contactID }) // Replace with actual contact ID
+            body: JSON.stringify({ _id:contactID }) 
         })
         .then(response => {
             if (response.ok) {
                 console.log('Contact deleted successfully');
                 toast.success('Contact deleted successfully');
-                Navigate('/dashboard/contact'); // Redirect to contacts page or update state
+                Navigate('/dashboard/contact'); 
 
             } else {
                 console.error('Failed to delete contact');

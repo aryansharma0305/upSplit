@@ -16,7 +16,7 @@ const AboutDeveloper = () => {
         </p>
         <div className="flex flex-col items-center gap-4">
           <img
-            src="/images/developerPhoto.jpeg" // Replace with your actual image
+            src="/images/developerPhoto.jpeg" 
             alt="Developer"
             className="w-32 h-32 rounded-full object-cover shadow-md"
             data-aos="zoom-in"

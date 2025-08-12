@@ -136,15 +136,15 @@ export default function GenericContact() {
         }));
         await isContact(data._id);
 
-        // Fetch transactions
+     
         const transactionsResponse = await fetch(`/api/contacts/getTransactionWithUser?q=${data._id}`);
         if (!transactionsResponse.ok) {
           throw new Error("Failed to fetch transactions");
         }
         const transactions = await transactionsResponse.json();
-        console.log("Fetched transactions:", transactions); // Debug log
+        console.log("Fetched transactions:", transactions); 
 
-        // Calculate summary and map transactions
+        
         const mappedTransactions = transactions.map((txn) => {
           const isContactCreator = txn.id_creator.toString() === data._id;
           return {
@@ -166,10 +166,10 @@ export default function GenericContact() {
           (acc, txn) => {
             if (txn.status !== "settled") {
               if (txn.id_creator.toString() === data._id) {
-                // Contact created, user owes share_other
+               
                 acc.owe += parseFloat(txn.share_other || 0);
               } else {
-                // User created, contact owes share_other
+               
                 acc.toReceive += parseFloat(txn.share_other || 0);
               }
             }
@@ -177,7 +177,7 @@ export default function GenericContact() {
           },
           { owe: 0, toReceive: 0 }
         );
-        console.log("Calculated summary:", summary); // Debug log
+        console.log("Calculated summary:", summary); 
 
         setContactData((prev) => ({
           ...prev,
@@ -196,8 +196,8 @@ export default function GenericContact() {
   const handleAddTransaction = (newTransaction, theirShare) => {
     const theirShareValue = parseFloat(theirShare);
     const myShareValue = parseFloat(newTransaction.amount);
-    const isContactCreator = newTransaction.type === "credit"; // Credit means contact paid
-    console.log("New transaction:", { newTransaction, theirShareValue, myShareValue, isContactCreator }); // Debug log
+    const isContactCreator = newTransaction.type === "credit"; 
+    console.log("New transaction:", { newTransaction, theirShareValue, myShareValue, isContactCreator });
 
     setContactData((prev) => ({
       ...prev,

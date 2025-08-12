@@ -512,7 +512,6 @@ export default function ProfilePage() {
   const [croppedImage, setCroppedImage] = useState(null)
   const editorRef = useRef(null)
 
-  // Fetch user data on mount
   useEffect(() => {
     const fetchUserData = async () => {
       const localStorageData = localStorage.getItem("userDetails")
@@ -606,7 +605,6 @@ export default function ProfilePage() {
       toast.error("Please select a valid date of birth.")
       return false
     }
-    // Check username uniqueness
     try {
       const resp = await axios.post(
         "/api/auth/verifyIfUserNameIsUnique",
@@ -678,7 +676,6 @@ export default function ProfilePage() {
         })
       }
 
-      // Update backend
       const response = await axios.post(
         "/api/users/updateUser",
         {
@@ -693,7 +690,6 @@ export default function ProfilePage() {
         { withCredentials: true }
       )
 
-      // Update localStorage
       localStorage.setItem(
         "userDetails",
         JSON.stringify({
@@ -757,7 +753,6 @@ export default function ProfilePage() {
           initial="hidden"
           animate="visible"
         >
-          {/* Profile Card */}
           <motion.div
             variants={cardVariants}
             className="relative rounded-lg border p-6 shadow-lg bg-white dark:bg-gray-800 text-sm flex flex-col gap-4"
@@ -773,7 +768,6 @@ export default function ProfilePage() {
               className="z-0"
             />
 
-            {/* Edit Profile Button */}
             <div className="absolute top-3 right-4">
               {!isEditing && (
                 <Button
@@ -788,7 +782,6 @@ export default function ProfilePage() {
               )}
             </div>
 
-            {/* Profile Picture */}
             <div className="flex items-center gap-4">
               <img
                 src={croppedImage || formData.photo}
@@ -809,7 +802,6 @@ export default function ProfilePage() {
               )}
             </div>
 
-            {/* Cropper */}
             {showCropper && (
               <div className="relative w-full mb-4 flex flex-col items-center justify-center bg-gray-50 p-4 rounded-lg shadow-md">
                 <AvatarEditor
@@ -848,7 +840,6 @@ export default function ProfilePage() {
               </div>
             )}
 
-            {/* Profile Details */}
             <div className="grid gap-3">
               <div className="flex items-center gap-2">
                 <User className="w-4 h-4 text-muted-foreground" />
