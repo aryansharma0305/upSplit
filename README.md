@@ -16,7 +16,7 @@ It allows users to manage contacts, track transactions, settle up amounts, and s
 
   * Track and update transactions per contact
   * Settlement and reminder functionality
-  * Voting system for community posts (planned/optional feature)
+  
 
 * **UI/UX**
 
